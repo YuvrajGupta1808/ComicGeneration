@@ -1,0 +1,35 @@
+{
+  "name": "comic-cli-agent",
+  "version": "1.0.0",
+  "description": "Professional CLI agent for comic generation",
+  "type": "module",
+  "main": "src/core/agent.js",
+  "bin": {
+    "comic-agent": "./bin/comic-agent.js"
+  },
+  "scripts": {
+    "start": "node src/core/agent.js",
+    "dev": "nodemon src/core/agent.js",
+    "test": "jest",
+    "build": "pkg . --out-path dist"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.0",
+    "axios": "^1.6.0",
+    "canvas": "^2.11.2",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "dotenv": "^17.2.3",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.12",
+    "ora": "^7.0.1",
+    "pdf-lib": "^1.17.1",
+    "sharp": "^0.33.0",
+    "yaml": "^2.3.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.0",
+    "pkg": "^5.8.0"
+  }
+}

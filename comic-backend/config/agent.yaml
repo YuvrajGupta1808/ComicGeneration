@@ -1,0 +1,50 @@
+agent:
+  name: "Comic Generation Agent"
+  version: "1.0.0"
+  description: "Professional CLI agent for comic generation workflows"
+
+anthropic:
+  apiKey: "${ANTHROPIC_API_KEY}"
+  model: "claude-3-5-sonnet-20241022"
+  maxTokens: 2000
+  temperature: 0.7
+
+memory:
+  persistence: true
+  maxHistory: 1000
+  autoSave: true
+  contextFile: ".comic-agent-context.json"
+
+tools:
+  comic-generation:
+    enabled: true
+    timeout: 300000
+    retries: 3
+    defaultStyle: "cinematic"
+
+  character-generation:
+    enabled: true
+    timeout: 300000
+    retries: 3
+    defaultCount: 2
+
+  layout-selection:
+    enabled: true
+    templatesFile: "./config/layouts.yaml"
+
+  dialogue-generation:
+    enabled: true
+    defaultMode: "context-aware"
+
+  dialogue-insert:
+    enabled: true
+    defaultStyle: "speech"
+
+  show-pages:
+    enabled: true
+    defaultFormat: "preview"
+
+logging:
+  level: "info"
+  format: "colored"
+  file: "comic-agent.log"
