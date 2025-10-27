@@ -16,15 +16,14 @@ import { ToolRegistry } from './tool-registry.js';
 class ComicAgent {
   constructor() {
     this.logger = new Logger();
-    this.context = new ContextMemory();
-    this.tools = new ToolRegistry();
-    this.cli = new ComicCLI(this.context, this.tools);
     
-    // Load configuration
+    // Load configuration first
     this.config = this.loadConfig();
     
-    // Initialize context
-    this.context.loadContext();
+    // Initialize context with configuration
+    this.context = new ContextMemory(this.config.memory || {});
+    this.tools = new ToolRegistry();
+    this.cli = new ComicCLI(this.context, this.tools);
   }
 
   /**
@@ -95,8 +94,15 @@ class ComicAgent {
     try {
       this.logger.info('Shutting down agent...');
       
-      // Save context
-      this.context.saveContext();
+      // Clear memory if persistence is disabled
+      if (!this.config.memory?.persistence) {
+        this.context.clearContext();
+        this.logger.info('Memory cleared (session-based)');
+      } else {
+        // Save context if persistence is enabled
+        this.context.saveContext();
+        this.logger.info('Context saved');
+      }
       
       // Cleanup
       await this.tools.cleanup();

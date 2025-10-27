@@ -5,16 +5,23 @@ import fs from 'fs-extra';
  * Manages session data, project data, user preferences, and action history
  */
 class ContextMemory {
-  constructor() {
+  constructor(config = {}) {
     this.sessionData = new Map();
     this.projectData = new Map();
     this.userPreferences = new Map();
     this.actionHistory = [];
     this.toolStates = new Map();
+    this.conversationHistory = []; // Store AI conversation history
     this.contextFile = '.comic-agent-context.json';
     
-    // Load existing context on initialization
-    this.loadContext();
+    // Configuration
+    this.persistence = config.persistence !== false; // Default to true for backward compatibility
+    this.autoSave = config.autoSave !== false; // Default to true for backward compatibility
+    
+    // Only load existing context if persistence is enabled
+    if (this.persistence) {
+      this.loadContext();
+    }
   }
 
   /**
@@ -26,7 +33,9 @@ class ContextMemory {
   setContext(key, value, scope = 'session') {
     const target = this.getScopeMap(scope);
     target.set(key, value);
-    this.saveContext();
+    if (this.autoSave) {
+      this.saveContext();
+    }
   }
 
   /**
@@ -65,7 +74,9 @@ class ContextMemory {
    */
   setProject(projectName, data) {
     this.projectData.set(projectName, data);
-    this.saveContext();
+    if (this.autoSave) {
+      this.saveContext();
+    }
   }
 
   /**
@@ -97,7 +108,9 @@ class ContextMemory {
       this.actionHistory = this.actionHistory.slice(-100);
     }
     
-    this.saveContext();
+    if (this.autoSave) {
+      this.saveContext();
+    }
   }
 
   /**
@@ -116,7 +129,9 @@ class ContextMemory {
    */
   setToolState(toolName, state) {
     this.toolStates.set(toolName, state);
-    this.saveContext();
+    if (this.autoSave) {
+      this.saveContext();
+    }
   }
 
   /**
@@ -137,7 +152,10 @@ class ContextMemory {
     this.userPreferences.clear();
     this.actionHistory = [];
     this.toolStates.clear();
-    this.saveContext();
+    this.conversationHistory = [];
+    if (this.autoSave) {
+      this.saveContext();
+    }
   }
 
   /**
@@ -146,7 +164,9 @@ class ContextMemory {
    */
   clearProject(projectName) {
     this.projectData.delete(projectName);
-    this.saveContext();
+    if (this.autoSave) {
+      this.saveContext();
+    }
   }
 
   /**
@@ -160,6 +180,7 @@ class ContextMemory {
         userPreferences: Object.fromEntries(this.userPreferences),
         actionHistory: this.actionHistory,
         toolStates: Object.fromEntries(this.toolStates),
+        conversationHistory: this.conversationHistory,
         lastUpdated: new Date().toISOString()
       };
       
@@ -182,6 +203,7 @@ class ContextMemory {
         this.userPreferences = new Map(Object.entries(contextData.userPreferences || {}));
         this.actionHistory = contextData.actionHistory || [];
         this.toolStates = new Map(Object.entries(contextData.toolStates || {}));
+        this.conversationHistory = contextData.conversationHistory || [];
       }
     } catch (error) {
       console.warn('Failed to load context:', error.message);
@@ -191,6 +213,7 @@ class ContextMemory {
       this.userPreferences = new Map();
       this.actionHistory = [];
       this.toolStates = new Map();
+      this.conversationHistory = [];
     }
   }
 
@@ -204,7 +227,8 @@ class ContextMemory {
       projectData: Object.fromEntries(this.projectData),
       userPreferences: Object.fromEntries(this.userPreferences),
       actionHistory: this.actionHistory,
-      toolStates: Object.fromEntries(this.toolStates)
+      toolStates: Object.fromEntries(this.toolStates),
+      conversationHistory: this.conversationHistory
     };
   }
 
@@ -218,7 +242,10 @@ class ContextMemory {
     this.userPreferences = new Map(Object.entries(contextData.userPreferences || {}));
     this.actionHistory = contextData.actionHistory || [];
     this.toolStates = new Map(Object.entries(contextData.toolStates || {}));
-    this.saveContext();
+    this.conversationHistory = contextData.conversationHistory || [];
+    if (this.autoSave) {
+      this.saveContext();
+    }
   }
 
   /**
@@ -243,6 +270,39 @@ class ContextMemory {
    */
   getActionHistory() {
     return this.actionHistory;
+  }
+
+  /**
+   * Add conversation message to history
+   * @param {string} role - 'user' or 'assistant'
+   * @param {string} content - Message content
+   */
+  addConversationMessage(role, content) {
+    this.conversationHistory.push({
+      timestamp: new Date(),
+      role,
+      content
+    });
+    
+    // Keep only last 20 messages to prevent memory bloat
+    if (this.conversationHistory.length > 20) {
+      this.conversationHistory = this.conversationHistory.slice(-20);
+    }
+  }
+
+  /**
+   * Get conversation history
+   * @returns {Array} Conversation history
+   */
+  getConversationHistory() {
+    return this.conversationHistory;
+  }
+
+  /**
+   * Clear conversation history
+   */
+  clearConversationHistory() {
+    this.conversationHistory = [];
   }
 
   /**

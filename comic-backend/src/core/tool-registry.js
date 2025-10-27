@@ -258,6 +258,7 @@ class ToolRegistry {
   async registerAll() {
     try {
       // Import and register all tools
+      const { StoryStructureGenerationTool } = await import('../tools/story-structure-generation.js');
       const { ComicGenerationTool } = await import('../tools/comic-generation.js');
       const { CharacterGenerationTool } = await import('../tools/character-generation.js');
       const { LayoutSelectionTool } = await import('../tools/layout-selection.js');
@@ -266,6 +267,7 @@ class ToolRegistry {
       const { ShowPagesTool } = await import('../tools/show-pages.js');
 
       // Register each tool
+      this.register('story-structure-generation', new StoryStructureGenerationTool());
       this.register('comic-generation', new ComicGenerationTool());
       this.register('character-generation', new CharacterGenerationTool());
       this.register('layout-selection', new LayoutSelectionTool());

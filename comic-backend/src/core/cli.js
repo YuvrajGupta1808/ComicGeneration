@@ -31,6 +31,16 @@ export class ComicCLI {
 
     // Main workflow commands
     this.program
+      .command('create')
+      .description('Create comic from user prompt - Complete workflow')
+      .option('-p, --prompt <prompt>', 'User prompt for the story')
+      .option('-g, --genre <genre>', 'Story genre')
+      .option('-s, --style <style>', 'Art style')
+      .option('-c, --pages <count>', 'Number of pages')
+      .option('-a, --audience <audience>', 'Target audience')
+      .action(this.handleCreate.bind(this));
+
+    this.program
       .command('generate <story-file>')
       .description('Generate comic from story file')
       .option('-l, --layout <type>', 'Layout template type')
@@ -106,6 +116,129 @@ export class ComicCLI {
     await this.program.parseAsync();
     // Exit after command execution
     process.exit(0);
+  }
+
+  /**
+   * Handle create command - Complete workflow from user prompt
+   */
+  async handleCreate(options) {
+    try {
+      // Step 1: Get user prompt if not provided
+      let userPrompt = options.prompt;
+      if (!userPrompt) {
+        const { prompt } = await inquirer.prompt([{
+          type: 'input',
+          name: 'prompt',
+          message: 'What story would you like to create?',
+          validate: (input) => input.trim().length > 0 || 'Please enter a story prompt'
+        }]);
+        userPrompt = prompt;
+      }
+
+      console.log(chalk.blue(`\n🎨 Creating comic from: "${userPrompt}"`));
+      
+      // Step 2: Generate story structure
+      const structureSpinner = ora('Generating story structure...').start();
+      const structureResult = await this.tools.execute('story-structure-generation', {
+        userPrompt,
+        genre: options.genre || 'adventure',
+        style: options.style || 'cinematic',
+        pageCount: parseInt(options.pages) || 3,
+        targetAudience: options.audience || 'general'
+      }, this.context);
+      
+      if (!structureResult.success) {
+        structureSpinner.fail(chalk.red(`Story structure generation failed: ${structureResult.error}`));
+        return;
+      }
+      
+      structureSpinner.succeed(chalk.green('Story structure generated'));
+      console.log(chalk.blue(`✓ Title: ${structureResult.story.title}`));
+      console.log(chalk.blue(`✓ Pages: ${structureResult.story.pages}`));
+      console.log(chalk.blue(`✓ Scenes: ${structureResult.story.scenes.length}`));
+
+      // Step 3: Generate characters
+      const characterSpinner = ora('Generating characters...').start();
+      const characterResult = await this.tools.execute('character-generation', {
+        story: structureResult.story,
+        characterCount: 2,
+        style: options.style || 'cinematic',
+        genre: options.genre || 'adventure'
+      }, this.context);
+      
+      if (!characterResult.success) {
+        characterSpinner.fail(chalk.red(`Character generation failed: ${characterResult.error}`));
+        return;
+      }
+      
+      characterSpinner.succeed(chalk.green(`Generated ${characterResult.characters.length} characters`));
+      characterResult.characters.forEach((character, index) => {
+        console.log(chalk.blue(`  ${index + 1}. ${character.name} - ${character.role}`));
+      });
+
+      // Step 4: Generate panels
+      const panelSpinner = ora('Generating panel descriptions...').start();
+      const panelResult = await this.tools.execute('comic-generation', {
+        story: structureResult.story,
+        characters: characterResult.characters,
+        style: options.style || 'cinematic'
+      }, this.context);
+      
+      if (!panelResult.success) {
+        panelSpinner.fail(chalk.red(`Panel generation failed: ${panelResult.error}`));
+        return;
+      }
+      
+      panelSpinner.succeed(chalk.green(`Generated ${panelResult.panels.length} panel descriptions`));
+
+      // Step 5: Generate dialogue
+      const dialogueSpinner = ora('Generating dialogue...').start();
+      const dialogueResult = await this.tools.execute('dialogue-generation', {
+        panels: panelResult.panels,
+        storyContext: structureResult.story,
+        characters: characterResult.characters,
+        mode: 'context-aware'
+      }, this.context);
+      
+      if (!dialogueResult.success) {
+        dialogueSpinner.fail(chalk.red(`Dialogue generation failed: ${dialogueResult.error}`));
+        return;
+      }
+      
+      dialogueSpinner.succeed(chalk.green(`Generated dialogue for ${dialogueResult.dialogues.length} panels`));
+
+      // Step 6: Select layout
+      const layoutSpinner = ora('Selecting layout...').start();
+      const layoutResult = await this.tools.execute('layout-selection', {
+        pageCount: structureResult.story.pages,
+        storyType: structureResult.story.genre || 'general'
+      }, this.context);
+      
+      if (!layoutResult.success) {
+        layoutSpinner.fail(chalk.red(`Layout selection failed: ${layoutResult.error}`));
+        return;
+      }
+      
+      layoutSpinner.succeed(chalk.green(`Selected layout: ${layoutResult.layout.name}`));
+
+      // Summary
+      console.log(chalk.green('\n🎉 Comic creation complete!'));
+      console.log(chalk.yellow('\nGenerated components:'));
+      console.log(chalk.white(`  ✓ Story: ${structureResult.story.title}`));
+      console.log(chalk.white(`  ✓ Characters: ${characterResult.characters.length}`));
+      console.log(chalk.white(`  ✓ Panels: ${panelResult.panels.length}`));
+      console.log(chalk.white(`  ✓ Dialogue: ${dialogueResult.dialogues.length} panels`));
+      console.log(chalk.white(`  ✓ Layout: ${layoutResult.layout.name}`));
+      
+      console.log(chalk.yellow('\nNext steps:'));
+      console.log(chalk.white('  comic-agent preview     # Preview generated pages'));
+      console.log(chalk.white('  comic-agent export pdf  # Export final comic'));
+      console.log(chalk.white('  comic-agent context show # View all generated content'));
+
+    } catch (error) {
+      console.error(chalk.red(`Creation failed: ${error.message}`));
+      console.error(chalk.red(error.stack));
+    }
   }
 
   /**
@@ -330,29 +463,8 @@ export class ComicCLI {
     } else if (options.clear) {
       await this.clearContext();
     } else {
-      // Interactive context management
-      const { action } = await inquirer.prompt([{
-        type: 'list',
-        name: 'action',
-        message: 'What would you like to do?',
-        choices: [
-          { name: 'Show current context', value: 'show' },
-          { name: 'Clear context', value: 'clear' },
-          { name: 'Export context', value: 'export' }
-        ]
-      }]);
-      
-      switch (action) {
-        case 'show':
-          this.showContext();
-          break;
-        case 'clear':
-          await this.clearContext();
-          break;
-        case 'export':
-          await this.exportContext();
-          break;
-      }
+      // In interactive mode, just show context by default
+      this.showContext();
     }
   }
 
@@ -403,13 +515,14 @@ export class ComicCLI {
         
         if (command.trim().toLowerCase() === 'help') {
           this.showInteractiveHelp();
+          console.log(''); // Add spacing
           continue;
         }
         
         // Check if it's a CLI command or AI conversation
         if (this.isCliCommand(command)) {
-          // Parse and execute CLI command
-          await this.program.parseAsync(['node', 'comic-agent', ...command.trim().split(' ')]);
+          // Execute CLI command directly instead of parsing
+          await this.executeInteractiveCommand(command);
         } else {
           // Handle as AI conversation
           await this.handleAIConversation(command);
@@ -427,9 +540,116 @@ export class ComicCLI {
    * @returns {boolean} Is CLI command
    */
   isCliCommand(input) {
-    const cliCommands = ['generate', 'layout', 'dialogue', 'preview', 'export', 'context', 'history'];
+    const cliCommands = ['create', 'generate', 'layout', 'dialogue', 'preview', 'export', 'context', 'history'];
     const firstWord = input.trim().split(' ')[0].toLowerCase();
     return cliCommands.includes(firstWord);
+  }
+
+  /**
+   * Execute CLI command in interactive mode
+   * @param {string} command - Command string
+   */
+  async executeInteractiveCommand(command) {
+    const parts = command.trim().split(' ');
+    const commandName = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    try {
+      switch (commandName) {
+        case 'create':
+          await this.handleCreate(this.parseOptions(args, ['prompt', 'genre', 'style', 'pages', 'audience']));
+          break;
+        case 'generate':
+          if (args.length === 0) {
+            console.log(chalk.red('Error: generate command requires a story file'));
+            return;
+          }
+          await this.handleGenerate(args[0], this.parseOptions(args.slice(1), ['layout', 'style', 'output']));
+          break;
+        case 'layout':
+          await this.handleLayout(this.parseOptions(args, ['pages', 'type']));
+          break;
+        case 'characters':
+          await this.handleCharacters(this.parseOptions(args, ['count', 'story', 'genre']));
+          break;
+        case 'dialogue':
+          await this.handleDialogue(this.parseOptions(args, ['mode', 'auto']));
+          break;
+        case 'preview':
+          await this.handlePreview(this.parseOptions(args, ['format']));
+          break;
+        case 'export':
+          if (args.length === 0) {
+            console.log(chalk.red('Error: export command requires a format'));
+            return;
+          }
+          await this.handleExport(args[0], this.parseOptions(args.slice(1), ['output']));
+          break;
+        case 'context':
+          await this.handleContext(this.parseOptions(args, ['show', 'clear']));
+          break;
+        case 'history':
+          await this.handleHistory(this.parseOptions(args, ['number']));
+          break;
+        default:
+          console.log(chalk.red(`Unknown command: ${commandName}`));
+      }
+    } catch (error) {
+      console.log(chalk.red(`Command execution failed: ${error.message}`));
+    }
+  }
+
+  /**
+   * Parse command line options from arguments
+   * @param {Array} args - Command arguments
+   * @param {Array} validOptions - Valid option names
+   * @returns {object} Parsed options
+   */
+  parseOptions(args, validOptions) {
+    const options = {};
+    
+    for (let i = 0; i < args.length; i++) {
+      const arg = args[i];
+      
+      if (arg.startsWith('--')) {
+        const optionName = arg.substring(2);
+        if (validOptions.includes(optionName)) {
+          if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+            options[optionName] = args[i + 1];
+            i++; // Skip next argument as it's the value
+          } else {
+            options[optionName] = true;
+          }
+        }
+      } else if (arg.startsWith('-') && arg.length === 2) {
+        const shortOption = arg.substring(1);
+        // Map short options to long options
+        const shortToLong = {
+          'p': 'prompt',
+          'g': 'genre', 
+          's': 'style',
+          'c': 'count',
+          'l': 'layout',
+          'o': 'output',
+          'a': 'audience',
+          'm': 'mode',
+          'f': 'format',
+          'n': 'number'
+        };
+        
+        const longOption = shortToLong[shortOption];
+        if (longOption && validOptions.includes(longOption)) {
+          if (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+            options[longOption] = args[i + 1];
+            i++; // Skip next argument as it's the value
+          } else {
+            options[longOption] = true;
+          }
+        }
+      }
+    }
+    
+    return options;
   }
 
   /**
@@ -445,15 +665,22 @@ export class ComicCLI {
     const spinner = ora('Thinking...').start();
     
     try {
-      // Get current context
+      // Add user message to conversation history
+      this.context.addConversationMessage('user', userInput);
+
+      // Get current context including conversation history
       const currentContext = {
         sessionData: this.context.getSessionData(),
         projectData: this.context.getProjectData(),
-        actionHistory: this.context.getActionHistory().slice(-5) // Last 5 actions
+        actionHistory: this.context.getActionHistory().slice(-5), // Last 5 actions
+        conversationHistory: this.context.getConversationHistory().slice(-10) // Last 10 messages
       };
 
-      // Generate AI response
+      // Generate AI response with conversation context
       const response = await this.anthropic.generateInteractiveResponse(userInput, currentContext);
+      
+      // Add AI response to conversation history
+      this.context.addConversationMessage('assistant', response);
       
       spinner.stop();
       console.log(chalk.blue('\n🤖 AI Assistant:'));
@@ -472,7 +699,8 @@ export class ComicCLI {
     console.log(chalk.blue('\n🎨 Comic Generation CLI Agent Help\n'));
     
     console.log(chalk.yellow('WORKFLOW COMMANDS:'));
-    console.log(chalk.white('  generate <story-file>  Generate comic from story file'));
+    console.log(chalk.white('  create                Create comic from user prompt (Complete workflow)'));
+    console.log(chalk.white('  generate <story-file> Generate comic from story file'));
     console.log(chalk.white('  characters            Generate characters using AI'));
     console.log(chalk.white('  layout                 Select layout template'));
     console.log(chalk.white('  dialogue              Generate dialogue for panels'));
@@ -485,8 +713,9 @@ export class ComicCLI {
     console.log(chalk.white('  interactive           Start interactive mode\n'));
     
     console.log(chalk.yellow('EXAMPLES:'));
+    console.log(chalk.gray('  comic-agent create --prompt "A superhero saves the city"'));
+    console.log(chalk.gray('  comic-agent create -p "Space adventure" -g sci-fi -s anime'));
     console.log(chalk.gray('  comic-agent generate story.json'));
-    console.log(chalk.gray('  comic-agent layout --pages 3'));
     console.log(chalk.gray('  comic-agent dialogue --auto'));
     console.log(chalk.gray('  comic-agent export pdf --output my-comic.pdf\n'));
   }
@@ -588,6 +817,7 @@ export class ComicCLI {
   showInteractiveHelp() {
     console.log(chalk.blue('\n🎨 Interactive Mode Commands:\n'));
     console.log(chalk.yellow('CLI COMMANDS:'));
+    console.log(chalk.white('create                 - Create comic from user prompt (Complete workflow)'));
     console.log(chalk.white('generate <story-file>  - Generate comic from story'));
     console.log(chalk.white('characters             - Generate characters with AI'));
     console.log(chalk.white('layout                 - Select layout template'));

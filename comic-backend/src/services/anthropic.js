@@ -35,6 +35,139 @@ class AnthropicService {
   }
 
   /**
+   * Generate story structure from user prompt using Claude
+   * @param {string} userPrompt - User's initial prompt
+   * @param {string} genre - Story genre
+   * @param {string} style - Art style
+   * @param {number} pageCount - Number of pages
+   * @param {string} targetAudience - Target audience
+   * @returns {Promise<object>} Generated story structure
+   */
+  async generateStoryStructure(userPrompt, genre = 'adventure', style = 'cinematic', pageCount = 3, targetAudience = 'general') {
+    if (!this.client) {
+      throw new Error('Anthropic client not initialized. Please set ANTHROPIC_API_KEY environment variable.');
+    }
+
+    try {
+      const prompt = `You are a professional comic book writer and storyboard artist. Create a detailed story structure based on the user's prompt.
+
+USER PROMPT: "${userPrompt}"
+
+REQUIREMENTS:
+- Genre: ${genre}
+- Art Style: ${style}
+- Pages: ${pageCount}
+- Target Audience: ${targetAudience}
+
+Create a complete story structure that includes:
+1. A compelling title
+2. Brief synopsis
+3. Main theme/message
+4. Detailed scene breakdown (${pageCount} pages)
+5. Character introductions
+6. Plot progression
+7. Visual style notes
+
+For each scene, provide:
+- Scene description
+- Panel count
+- Key visual elements
+- Character actions
+- Mood/atmosphere
+- Dialogue opportunities
+
+Return as JSON with this structure:
+{
+  "title": "Story Title",
+  "synopsis": "Brief story summary",
+  "theme": "Main theme or message",
+  "genre": "${genre}",
+  "style": "${style}",
+  "pages": ${pageCount},
+  "targetAudience": "${targetAudience}",
+  "scenes": [
+    {
+      "page": 1,
+      "panel": 1,
+      "description": "Detailed scene description",
+      "mood": "tense/action/comedy/etc",
+      "characters": ["Character names"],
+      "visualElements": ["Key visual elements"],
+      "dialogueOpportunity": true/false
+    }
+  ],
+  "characterNotes": "Notes about characters to be developed",
+  "visualStyle": "Detailed visual style description"
+}`;
+
+      const response = await this.client.messages.create({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 3000,
+        temperature: 0.7,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
+      });
+
+      const content = response.content[0].text;
+      
+      try {
+        const storyStructure = JSON.parse(content);
+        return storyStructure;
+      } catch (parseError) {
+        // If JSON parsing fails, create fallback structure
+        return this.createFallbackStoryStructure(userPrompt, genre, style, pageCount, targetAudience);
+      }
+
+    } catch (error) {
+      this.logger.error('Failed to generate story structure:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Create fallback story structure when JSON parsing fails
+   * @param {string} userPrompt - User's initial prompt
+   * @param {string} genre - Story genre
+   * @param {string} style - Art style
+   * @param {number} pageCount - Number of pages
+   * @param {string} targetAudience - Target audience
+   * @returns {object} Fallback story structure
+   */
+  createFallbackStoryStructure(userPrompt, genre, style, pageCount, targetAudience) {
+    const scenes = [];
+    const panelsPerPage = Math.ceil(6 / pageCount); // Distribute panels across pages
+    
+    for (let page = 1; page <= pageCount; page++) {
+      for (let panel = 1; panel <= panelsPerPage; panel++) {
+        scenes.push({
+          page,
+          panel,
+          description: `Scene based on: ${userPrompt}`,
+          mood: 'neutral',
+          characters: ['Main Character'],
+          visualElements: ['Setting', 'Action'],
+          dialogueOpportunity: panel % 2 === 0
+        });
+      }
+    }
+
+    return {
+      title: 'Generated Story',
+      synopsis: `A story based on: ${userPrompt}`,
+      theme: 'Adventure and discovery',
+      genre,
+      style,
+      pages: pageCount,
+      targetAudience,
+      scenes,
+      characterNotes: 'Characters will be developed based on the story needs',
+      visualStyle: `${style} comic art style`
+    };
+  }
+
+  /**
    * Generate panel descriptions using Claude
    * @param {object} story - Story object with scenes
    * @param {Array} characters - Character array
@@ -269,10 +402,20 @@ Return as JSON array:
     }
 
     try {
+      // Build conversation context
+      let conversationContext = '';
+      if (context.conversationHistory && context.conversationHistory.length > 0) {
+        conversationContext = '\n\nCONVERSATION HISTORY:\n';
+        context.conversationHistory.forEach(msg => {
+          const role = msg.role === 'user' ? 'User' : 'Assistant';
+          conversationContext += `${role}: ${msg.content}\n`;
+        });
+      }
+
       const prompt = `You are a helpful AI assistant for a comic generation tool. The user is working on creating comics and needs assistance.
 
 CURRENT CONTEXT:
-${JSON.stringify(context, null, 2)}
+${JSON.stringify(context, null, 2)}${conversationContext}
 
 USER INPUT: ${userInput}
 
@@ -283,7 +426,7 @@ Provide a helpful, creative response that assists with comic creation. You can:
 4. Give artistic advice
 5. Help with plot structure
 
-Keep responses concise but helpful.`;
+Keep responses concise but helpful. If the user is referring to something from our conversation history, acknowledge it and build upon it.`;
 
       const response = await this.client.messages.create({
         model: 'claude-3-5-sonnet-20241022',
