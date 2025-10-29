@@ -5,6 +5,7 @@
  * Professional CLI agent with context memory for comic generation workflows
  */
 
+import 'dotenv/config';
 import fs from 'fs-extra';
 import path from 'path';
 import yaml from 'yaml';

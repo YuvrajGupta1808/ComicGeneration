@@ -1,16 +1,16 @@
-import { AnthropicService } from '../services/anthropic.js';
+import { OllamaService } from '../services/ollama.js';
 
 /**
  * Character Generation Tool
- * Generates characters using Anthropic Claude AI
+ * Generates characters using Ollama AI
  */
 class CharacterGenerationTool {
   constructor() {
     this.name = 'character-generation';
-    this.description = 'Generate characters using Anthropic Claude AI';
+    this.description = 'Generate characters using Ollama AI';
     this.requiredParams = ['story'];
     this.optionalParams = ['characterCount', 'style', 'genre'];
-    this.anthropic = new AnthropicService();
+    this.ollama = new OllamaService();
   }
 
   /**
@@ -28,9 +28,9 @@ class CharacterGenerationTool {
     } = params;
     
     try {
-      // Check if Anthropic service is available
-      if (!this.anthropic.isAvailable()) {
-        throw new Error('Anthropic API not available. Please set ANTHROPIC_API_KEY environment variable.');
+      // Check if Ollama service is available
+      if (!this.ollama.isAvailable()) {
+        throw new Error('Ollama not available. Please ensure Ollama is running locally.');
       }
 
       // Enhance story with additional context
@@ -40,8 +40,8 @@ class CharacterGenerationTool {
         style
       };
 
-      // Generate characters using Anthropic
-      const characters = await this.anthropic.generateCharacters(enhancedStory, characterCount);
+      // Generate characters using Ollama
+      const characters = await this.ollama.generateCharacters(enhancedStory, characterCount);
       
       // Enhance characters with additional metadata
       const enhancedCharacters = characters.map((char, index) => ({
@@ -80,8 +80,8 @@ class CharacterGenerationTool {
    * @returns {Promise<object>} Generated character
    */
   async generateSpecificCharacter(requirements, story) {
-    if (!this.anthropic.isAvailable()) {
-      throw new Error('Anthropic API not available. Please set ANTHROPIC_API_KEY environment variable.');
+    if (!this.ollama.isAvailable()) {
+      throw new Error('Ollama not available. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -106,17 +106,16 @@ Create a detailed character that meets the requirements. Return as JSON:
   "motivations": "What drives this character"
 }`;
 
-      const response = await this.anthropic.client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 1000,
-        temperature: 0.8,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
+      const response = await this.ollama.client.generate({
+        model: this.ollama.model,
+        stream: false,
+        options: {
+          temperature: 0.8,
+          num_predict: 1000
+        }
       });
 
-      const content = response.content[0].text;
+      const content = response.response;
       
       try {
         const character = JSON.parse(content);
@@ -152,8 +151,8 @@ Create a detailed character that meets the requirements. Return as JSON:
    * @returns {Promise<Array>} Enhanced characters
    */
   async enhanceCharacters(characters, story) {
-    if (!this.anthropic.isAvailable()) {
-      throw new Error('Anthropic API not available. Please set ANTHROPIC_API_KEY environment variable.');
+    if (!this.ollama.isAvailable()) {
+      throw new Error('Ollama not available. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -180,7 +179,7 @@ Add:
 
 Return as JSON with enhanced details.`;
 
-        const response = await this.anthropic.client.messages.create({
+        const response = await this.ollama.client.messages.create({
           model: 'claude-3-5-sonnet-20241022',
           max_tokens: 800,
           temperature: 0.7,

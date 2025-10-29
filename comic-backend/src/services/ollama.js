@@ -1,41 +1,36 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { Ollama } from 'ollama';
 import { Logger } from '../utils/logger.js';
 
 /**
- * Anthropic API Service
- * Wrapper for Anthropic Claude API with specialized methods for comic generation
+ * Ollama Service
+ * Wrapper for local Ollama API with specialized methods for comic generation
  */
-class AnthropicService {
+class OllamaService {
   constructor() {
     this.logger = new Logger();
     this.client = null;
+    this.model = 'llama3.2:latest'; // Default model, can be configured
     this.initialize();
   }
 
   /**
-   * Initialize Anthropic client
+   * Initialize Ollama client
    */
   initialize() {
     try {
-      const apiKey = process.env.ANTHROPIC_API_KEY;
-      
-      if (!apiKey) {
-        this.logger.warn('ANTHROPIC_API_KEY not found in environment variables');
-        return;
-      }
-
-      this.client = new Anthropic({
-        apiKey: apiKey,
+      this.client = new Ollama({
+        host: process.env.OLLAMA_HOST || 'http://localhost:11434'
       });
 
-      this.logger.info('Anthropic API client initialized successfully');
+      this.logger.info('Ollama client initialized successfully');
+      this.logger.info(`Using model: ${this.model}`);
     } catch (error) {
-      this.logger.error('Failed to initialize Anthropic client:', error.message);
+      this.logger.error('Failed to initialize Ollama client:', error.message);
     }
   }
 
   /**
-   * Generate story structure from user prompt using Claude
+   * Generate story structure from user prompt using Ollama
    * @param {string} userPrompt - User's initial prompt
    * @param {string} genre - Story genre
    * @param {string} style - Art style
@@ -45,7 +40,7 @@ class AnthropicService {
    */
   async generateStoryStructure(userPrompt, genre = 'adventure', style = 'cinematic', pageCount = 3, targetAudience = 'general') {
     if (!this.client) {
-      throw new Error('Anthropic client not initialized. Please set ANTHROPIC_API_KEY environment variable.');
+      throw new Error('Ollama client not initialized. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -100,17 +95,17 @@ Return as JSON with this structure:
   "visualStyle": "Detailed visual style description"
 }`;
 
-      const response = await this.client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 3000,
-        temperature: 0.7,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
+      const response = await this.client.generate({
+        model: this.model,
+        prompt: prompt,
+        stream: false,
+        options: {
+          temperature: 0.7,
+          num_predict: 3000
+        }
       });
 
-      const content = response.content[0].text;
+      const content = response.response;
       
       try {
         const storyStructure = JSON.parse(content);
@@ -168,7 +163,7 @@ Return as JSON with this structure:
   }
 
   /**
-   * Generate panel descriptions using Claude
+   * Generate panel descriptions using Ollama
    * @param {object} story - Story object with scenes
    * @param {Array} characters - Character array
    * @param {string} style - Art style
@@ -176,7 +171,7 @@ Return as JSON with this structure:
    */
   async generatePanelDescriptions(story, characters, style = 'cinematic') {
     if (!this.client) {
-      throw new Error('Anthropic client not initialized. Please set ANTHROPIC_API_KEY environment variable.');
+      throw new Error('Ollama client not initialized. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -219,17 +214,17 @@ Return the descriptions as a JSON array with this structure:
   }
 ]`;
 
-      const response = await this.client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 2000,
-        temperature: 0.7,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
+      const response = await this.client.generate({
+        model: this.model,
+        prompt: prompt,
+        stream: false,
+        options: {
+          temperature: 0.7,
+          num_predict: 2000
+        }
       });
 
-      const content = response.content[0].text;
+      const content = response.response;
       
       // Try to parse JSON response
       try {
@@ -247,14 +242,14 @@ Return the descriptions as a JSON array with this structure:
   }
 
   /**
-   * Generate character descriptions using Claude
+   * Generate character descriptions using Ollama
    * @param {object} story - Story object
    * @param {number} characterCount - Number of characters to generate
    * @returns {Promise<Array>} Generated characters
    */
   async generateCharacters(story, characterCount = 2) {
     if (!this.client) {
-      throw new Error('Anthropic client not initialized. Please set ANTHROPIC_API_KEY environment variable.');
+      throw new Error('Ollama client not initialized. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -283,17 +278,17 @@ Return as JSON array:
   }
 ]`;
 
-      const response = await this.client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 1500,
-        temperature: 0.8,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
+      const response = await this.client.generate({
+        model: this.model,
+        prompt: prompt,
+        stream: false,
+        options: {
+          temperature: 0.8,
+          num_predict: 1500
+        }
       });
 
-      const content = response.content[0].text;
+      const content = response.response;
       
       try {
         const characters = JSON.parse(content);
@@ -310,7 +305,7 @@ Return as JSON array:
   }
 
   /**
-   * Generate dialogue using Claude
+   * Generate dialogue using Ollama
    * @param {Array} panels - Panel array
    * @param {object} storyContext - Story context
    * @param {Array} characters - Character array
@@ -319,7 +314,7 @@ Return as JSON array:
    */
   async generateDialogue(panels, storyContext, characters, mode = 'context-aware') {
     if (!this.client) {
-      throw new Error('Anthropic client not initialized. Please set ANTHROPIC_API_KEY environment variable.');
+      throw new Error('Ollama client not initialized. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -365,17 +360,17 @@ Return as JSON array:
   }
 ]`;
 
-      const response = await this.client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 2000,
-        temperature: 0.7,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
+      const response = await this.client.generate({
+        model: this.model,
+        prompt: prompt,
+        stream: false,
+        options: {
+          temperature: 0.7,
+          num_predict: 2000
+        }
       });
 
-      const content = response.content[0].text;
+      const content = response.response;
       
       try {
         const dialogues = JSON.parse(content);
@@ -391,14 +386,14 @@ Return as JSON array:
   }
 
   /**
-   * Generate interactive responses using Claude
+   * Generate interactive responses using Ollama
    * @param {string} userInput - User input
    * @param {object} context - Current context
    * @returns {Promise<string>} AI response
    */
   async generateInteractiveResponse(userInput, context = {}) {
     if (!this.client) {
-      throw new Error('Anthropic client not initialized. Please set ANTHROPIC_API_KEY environment variable.');
+      throw new Error('Ollama client not initialized. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -428,17 +423,17 @@ Provide a helpful, creative response that assists with comic creation. You can:
 
 Keep responses concise but helpful. If the user is referring to something from our conversation history, acknowledge it and build upon it.`;
 
-      const response = await this.client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 500,
-        temperature: 0.8,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
+      const response = await this.client.generate({
+        model: this.model,
+        prompt: prompt,
+        stream: false,
+        options: {
+          temperature: 0.8,
+          num_predict: 500
+        }
       });
 
-      return response.content[0].text;
+      return response.response;
 
     } catch (error) {
       this.logger.error('Failed to generate interactive response:', error.message);
@@ -515,12 +510,21 @@ Keep responses concise but helpful. If the user is referring to something from o
   }
 
   /**
-   * Check if Anthropic service is available
+   * Check if Ollama service is available
    * @returns {boolean} Service availability
    */
   isAvailable() {
     return this.client !== null;
   }
+
+  /**
+   * Set the model to use
+   * @param {string} model - Model name
+   */
+  setModel(model) {
+    this.model = model;
+    this.logger.info(`Model changed to: ${model}`);
+  }
 }
 
-export { AnthropicService };
+export { OllamaService };

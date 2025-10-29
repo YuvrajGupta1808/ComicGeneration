@@ -10,6 +10,9 @@ Automatically generate comic panels using Leonardo AI and combine them with dial
 - 💬 Automatically add speech bubbles with dialogue
 - 📐 Two layout options: vertical or grid
 - 🎯 Customizable characters, scenes, and dialogue
+- 🤖 **AI Story Generation** with Claude API or FREE local Ollama mode
+- 📝 Interactive CLI for comic creation workflows
+- 🎨 Character and dialogue generation
 
 ## 🚀 Quick Start
 
@@ -19,17 +22,49 @@ Automatically generate comic panels using Leonardo AI and combine them with dial
 npm install
 ```
 
-### 2. Set Up Environment
+### 2. Choose AI Mode
 
-Create a `.env` file with your Leonardo AI API key:
-
+**Option A: Use Claude API (requires API key)**
 ```bash
-LEONARDO_API_KEY=your_api_key_here
+# Create .env file
+echo "ANTHROPIC_API_KEY=your_api_key_here" > .env
 ```
 
-### 3. Generate Comic Page
+**Option B: Use Ollama (FREE local mode)**
+```bash
+# Run the setup script
+npm run setup-ollama
+```
 
-**Option A: Generate panels AND combine automatically (recommended)**
+This will:
+- Check if Ollama is installed
+- Install the recommended model (llama3.2)
+- Configure the environment for local mode
+
+### 3. Set Up Environment
+
+**For Claude API mode:**
+Create a `.env` file with your API key:
+```bash
+ANTHROPIC_API_KEY=your_api_key_here
+```
+
+**For Ollama mode:**
+The setup script automatically configures `USE_OLLAMA=true` in your `.env` file.
+
+### 4. Generate Comic Page
+
+**Option A: Use the CLI Agent (AI-powered workflow)**
+
+```bash
+# Start interactive mode
+comic-agent interactive
+
+# Or create a comic directly
+comic-agent create --prompt "A superhero saves the city"
+```
+
+**Option B: Generate panels AND combine automatically (original method)**
 
 ```bash
 npm run generate
@@ -40,11 +75,37 @@ This will:
 2. Automatically combine them with dialogue
 3. Save as `comic_page_complete.png`
 
-**Option B: Manually combine existing panels**
+**Option C: Manually combine existing panels**
 
 ```bash
 npm run combine          # Vertical layout
 npm run combine:grid     # Grid layout (horizontal)
+```
+
+## 🤖 AI Modes
+
+### Claude API Mode (Default)
+- Requires `ANTHROPIC_API_KEY` environment variable
+- High-quality story and character generation
+- Fast response times
+- Requires internet connection
+
+### Ollama Mode (FREE Local)
+- Set `USE_OLLAMA=true` in your `.env` file
+- Completely free to use
+- Runs locally on your machine
+- No internet required after setup
+- Uses Llama 3.2 model by default
+
+**To switch to Ollama mode:**
+```bash
+npm run setup-ollama
+```
+
+**To switch back to Claude:**
+```bash
+# Remove or comment out USE_OLLAMA from .env
+# Set ANTHROPIC_API_KEY=your_key_here
 ```
 
 ## 🎭 Character Consistency

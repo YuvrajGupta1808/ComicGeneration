@@ -1,16 +1,16 @@
-import { AnthropicService } from '../services/anthropic.js';
+import { OllamaService } from '../services/ollama.js';
 
 /**
  * Dialogue Generation Tool
- * Generates contextual dialogue for panels using Anthropic Claude AI
+ * Generates contextual dialogue for panels using Ollama AI
  */
 class DialogueGenerationTool {
   constructor() {
     this.name = 'dialogue-generation';
-    this.description = 'Generate contextual dialogue for panels using Anthropic Claude AI';
+    this.description = 'Generate contextual dialogue for panels using Ollama AI';
     this.requiredParams = ['panels'];
     this.optionalParams = ['storyContext', 'characters', 'mode'];
-    this.anthropic = new AnthropicService();
+    this.ollama = new OllamaService();
   }
 
   /**
@@ -23,13 +23,13 @@ class DialogueGenerationTool {
     const { panels, storyContext = {}, characters = [], mode = 'context-aware' } = params;
     
     try {
-      // Check if Anthropic service is available
-      if (!this.anthropic.isAvailable()) {
-        throw new Error('Anthropic API not available. Please set ANTHROPIC_API_KEY environment variable.');
+      // Check if Ollama service is available
+      if (!this.ollama.isAvailable()) {
+        throw new Error('Ollama not available. Please ensure Ollama is running locally.');
       }
 
-      // Generate dialogue using Anthropic
-      const dialogues = await this.anthropic.generateDialogue(panels, storyContext, characters, mode);
+      // Generate dialogue using Ollama
+      const dialogues = await this.ollama.generateDialogue(panels, storyContext, characters, mode);
       
       // Enhance dialogues with positioning and styling
       const enhancedDialogues = dialogues.map(dialogue => {

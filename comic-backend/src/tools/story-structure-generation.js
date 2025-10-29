@@ -1,16 +1,16 @@
-import { AnthropicService } from '../services/anthropic.js';
+import { OllamaService } from '../services/ollama.js';
 
 /**
  * Story Structure Generation Tool
- * Generates detailed story structure from user prompt using Anthropic Claude AI
+ * Generates detailed story structure from user prompt using Ollama AI
  */
 class StoryStructureGenerationTool {
   constructor() {
     this.name = 'story-structure-generation';
-    this.description = 'Generate detailed story structure from user prompt using Anthropic Claude AI';
+    this.description = 'Generate detailed story structure from user prompt using Ollama AI';
     this.requiredParams = ['userPrompt'];
     this.optionalParams = ['genre', 'style', 'pageCount', 'targetAudience'];
-    this.anthropic = new AnthropicService();
+    this.ollama = new OllamaService();
   }
 
   /**
@@ -29,13 +29,13 @@ class StoryStructureGenerationTool {
     } = params;
     
     try {
-      // Check if Anthropic service is available
-      if (!this.anthropic.isAvailable()) {
-        throw new Error('Anthropic API not available. Please set ANTHROPIC_API_KEY environment variable.');
+      // Check if Ollama service is available
+      if (!this.ollama.isAvailable()) {
+        throw new Error('Ollama not available. Please ensure Ollama is running locally.');
       }
 
-      // Generate detailed story structure using Anthropic
-      const storyStructure = await this.anthropic.generateStoryStructure(
+      // Generate detailed story structure using Ollama
+      const storyStructure = await this.ollama.generateStoryStructure(
         userPrompt, 
         genre, 
         style, 
@@ -88,8 +88,8 @@ class StoryStructureGenerationTool {
    * @returns {Promise<object>} Generated story structure
    */
   async generateSpecificStructure(userPrompt, genre, style, pageCount, targetAudience) {
-    if (!this.anthropic.isAvailable()) {
-      throw new Error('Anthropic API not available. Please set ANTHROPIC_API_KEY environment variable.');
+    if (!this.ollama.isAvailable()) {
+      throw new Error('Ollama not available. Please ensure Ollama is running locally.');
     }
 
     try {
@@ -144,17 +144,16 @@ Return as JSON with this structure:
   "visualStyle": "Detailed visual style description"
 }`;
 
-      const response = await this.anthropic.client.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
-        max_tokens: 3000,
-        temperature: 0.7,
-        messages: [{
-          role: 'user',
-          content: prompt
-        }]
+      const response = await this.ollama.client.generate({
+        model: this.ollama.model,
+        stream: false,
+        options: {
+          temperature: 0.7,
+          num_predict: 3000
+        }
       });
 
-      const content = response.content[0].text;
+      const content = response.response;
       
       try {
         const storyStructure = JSON.parse(content);

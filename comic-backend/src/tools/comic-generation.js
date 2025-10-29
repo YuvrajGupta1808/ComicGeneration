@@ -1,17 +1,17 @@
 import fs from 'fs-extra';
-import { AnthropicService } from '../services/anthropic.js';
+import { OllamaService } from '../services/ollama.js';
 
 /**
  * Comic Generation Tool
- * Generates comic panels using Anthropic Claude AI
+ * Generates comic panels using Ollama AI
  */
 class ComicGenerationTool {
   constructor() {
     this.name = 'comic-generation';
-    this.description = 'Generate comic panels using Anthropic Claude AI';
+    this.description = 'Generate comic panels using Ollama AI';
     this.requiredParams = ['story'];
     this.optionalParams = ['characters', 'style', 'referenceImages'];
-    this.anthropic = new AnthropicService();
+    this.ollama = new OllamaService();
   }
 
   /**
@@ -24,13 +24,13 @@ class ComicGenerationTool {
     const { story, characters = [], style = 'cinematic', referenceImages = [] } = params;
     
     try {
-      // Check if Anthropic service is available
-      if (!this.anthropic.isAvailable()) {
-        throw new Error('Anthropic API not available. Please set ANTHROPIC_API_KEY environment variable.');
+      // Check if Ollama service is available
+      if (!this.ollama.isAvailable()) {
+        throw new Error('Ollama not available. Please ensure Ollama is running locally.');
       }
 
-      // Generate enhanced panel descriptions using Anthropic
-      const enhancedPanels = await this.anthropic.generatePanelDescriptions(story, characters, style);
+      // Generate enhanced panel descriptions using Ollama
+      const enhancedPanels = await this.ollama.generatePanelDescriptions(story, characters, style);
       
       // Create panel objects with enhanced descriptions
       const panels = enhancedPanels.map((enhancedPanel, index) => {

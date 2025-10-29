@@ -9,14 +9,14 @@ import fs from 'fs-extra';
 import inquirer from 'inquirer';
 import ora from 'ora';
 import path from 'path';
-import { AnthropicService } from '../services/anthropic.js';
+import { OllamaService } from '../services/ollama.js';
 
 export class ComicCLI {
   constructor(context, tools) {
     this.context = context;
     this.tools = tools;
     this.program = new Command();
-    this.anthropic = new AnthropicService();
+    this.ollama = new OllamaService();
     this.setupCommands();
   }
 
@@ -492,10 +492,18 @@ export class ComicCLI {
     console.log(chalk.blue('🎨 Comic Agent Interactive Mode'));
     console.log(chalk.gray('Type "help" for available commands, "exit" to quit'));
     
-    if (this.anthropic.isAvailable()) {
-      console.log(chalk.green('✓ AI Assistant enabled - ask me anything about comic creation!'));
+    if (this.ollama.isAvailable()) {
+      if (process.env.USE_OLLAMA === 'true') {
+        console.log(chalk.green('✓ AI Assistant enabled (Ollama local mode) - ask me anything about comic creation!'));
+      } else {
+        console.log(chalk.green('✓ AI Assistant enabled - ask me anything about comic creation!'));
+      }
     } else {
-      console.log(chalk.yellow('⚠ AI Assistant disabled - set ANTHROPIC_API_KEY to enable AI features'));
+      if (process.env.USE_OLLAMA === 'true') {
+        console.log(chalk.yellow('⚠ AI Assistant disabled - ensure Ollama is running locally'));
+      } else {
+        console.log(chalk.yellow('⚠ AI Assistant disabled - ensure Ollama is running locally'));
+      }
     }
     console.log('');
     
@@ -657,8 +665,8 @@ export class ComicCLI {
    * @param {string} userInput - User input
    */
   async handleAIConversation(userInput) {
-    if (!this.anthropic.isAvailable()) {
-      console.log(chalk.yellow('AI Assistant is not available. Please set ANTHROPIC_API_KEY environment variable.'));
+    if (!this.ollama.isAvailable()) {
+      console.log(chalk.yellow('AI Assistant is not available. Please ensure Ollama is running locally.'));
       return;
     }
 
@@ -677,7 +685,7 @@ export class ComicCLI {
       };
 
       // Generate AI response with conversation context
-      const response = await this.anthropic.generateInteractiveResponse(userInput, currentContext);
+      const response = await this.ollama.generateInteractiveResponse(userInput, currentContext);
       
       // Add AI response to conversation history
       this.context.addConversationMessage('assistant', response);
@@ -827,7 +835,7 @@ export class ComicCLI {
     console.log(chalk.white('context show           - Show context'));
     console.log(chalk.white('history                - Show history'));
     
-    if (this.anthropic.isAvailable()) {
+    if (this.ollama.isAvailable()) {
       console.log(chalk.yellow('\nAI CONVERSATION:'));
       console.log(chalk.white('Ask me anything about comic creation!'));
       console.log(chalk.gray('Examples:'));
