@@ -5,16 +5,22 @@
   "type": "module",
   "main": "src/core/agent.js",
   "bin": {
-    "comic-agent": "./bin/comic-agent.js"
+    "comic-agent": "bin/comic-agent.js"
   },
   "scripts": {
     "start": "node src/core/agent.js",
     "dev": "nodemon src/core/agent.js",
     "test": "jest",
     "build": "pkg . --out-path dist",
-    "setup-ollama": "node setup-ollama.js"
+    "setup-ollama": "node setup-ollama.js",
+    "langchain": "node bin/langchain-agent.js",
+    "langchain-agent": "node src/core/langchain-agent.js"
   },
   "dependencies": {
+    "@langchain/community": "^1.0.0",
+    "@langchain/core": "^1.0.2",
+    "@langchain/google-genai": "^1.0.0",
+    "@langchain/ollama": "^1.0.0",
     "axios": "^1.6.0",
     "canvas": "^2.11.2",
     "chalk": "^5.3.0",
@@ -22,15 +28,20 @@
     "dotenv": "^17.2.3",
     "fs-extra": "^11.2.0",
     "inquirer": "^9.2.12",
+    "langchain": "^1.0.2",
     "ollama": "^0.6.0",
     "ora": "^7.0.1",
     "pdf-lib": "^1.17.1",
     "sharp": "^0.33.0",
-    "yaml": "^2.3.4"
+    "yaml": "^2.3.4",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.0.0",
     "pkg": "^5.8.0"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

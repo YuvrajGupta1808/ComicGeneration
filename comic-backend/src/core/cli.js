@@ -9,6 +9,7 @@ import fs from 'fs-extra';
 import inquirer from 'inquirer';
 import ora from 'ora';
 import path from 'path';
+import readline from 'readline';
 import { OllamaService } from '../services/ollama.js';
 
 export class ComicCLI {
@@ -17,6 +18,8 @@ export class ComicCLI {
     this.tools = tools;
     this.program = new Command();
     this.ollama = new OllamaService();
+    this.isInteractive = false;
+    this.rl = null; // Store readline interface reference
     this.setupCommands();
   }
 
@@ -27,7 +30,8 @@ export class ComicCLI {
     this.program
       .name('comic-agent')
       .description('Professional CLI agent for comic generation workflows')
-      .version('1.0.0');
+      .version('1.0.0')
+      .exitOverride(); // Prevent automatic exit, we'll handle it ourselves
 
     // Main workflow commands
     this.program
@@ -113,9 +117,34 @@ export class ComicCLI {
    * Start the CLI
    */
   async start() {
-    await this.program.parseAsync();
-    // Exit after command execution
-    process.exit(0);
+    try {
+      await this.program.parseAsync();
+      // Exit after command execution, unless in interactive mode
+      if (!this.isInteractive) {
+        process.exit(0);
+      }
+      // For interactive mode, ensure the process stays alive
+      // Keep stdin open to prevent exit
+      if (this.isInteractive && process.stdin.isTTY) {
+        process.stdin.resume();
+        // Keep process alive - readline interface will handle the rest
+      }
+    } catch (error) {
+      // Commander.js throws when exitOverride() is used and no command matches
+      // This is expected behavior - just handle it gracefully
+      if (error.code !== 'commander.unknownCommand' && error.code !== 'commander.missingArgument') {
+        throw error;
+      }
+      // If no command provided and not interactive, show help and exit
+      if (!this.isInteractive) {
+        this.program.outputHelp();
+        process.exit(1);
+      }
+      // For interactive mode, ensure stdin stays open
+      if (this.isInteractive && process.stdin.isTTY) {
+        process.stdin.resume();
+      }
+    }
   }
 
   /**
@@ -489,6 +518,16 @@ export class ComicCLI {
    * Handle interactive mode
    */
   async handleInteractive() {
+    this.isInteractive = true;
+    
+    // Immediately ensure stdin is open and ready
+    if (process.stdin.isTTY) {
+      process.stdin.setRawMode(false);
+      process.stdin.resume();
+      process.stdin.setEncoding('utf8');
+    }
+    
+    // Display welcome message immediately
     console.log(chalk.blue('🎨 Comic Agent Interactive Mode'));
     console.log(chalk.gray('Type "help" for available commands, "exit" to quit'));
     
@@ -507,37 +546,121 @@ export class ComicCLI {
     }
     console.log('');
     
-    while (true) {
-      try {
-        const { command } = await inquirer.prompt([{
-          type: 'input',
-          name: 'command',
-          message: chalk.cyan('comic-agent>'),
-          validate: (input) => input.trim().length > 0 || 'Please enter a command'
-        }]);
-        
-        if (command.trim().toLowerCase() === 'exit') {
-          console.log(chalk.yellow('Goodbye!'));
-          break;
+    // Start the interactive loop immediately - this will keep the process alive
+    // The readline interface keeps the event loop running
+    try {
+      await this.runInteractiveLoop();
+    } catch (error) {
+      console.error(chalk.red(`Failed to start interactive mode: ${error.message}`));
+      this.isInteractive = false;
+      process.exit(1);
+    }
+  }
+
+  /**
+   * Run the interactive command loop - Simplified version
+   */
+  async runInteractiveLoop() {
+    // Create readline interface - simple and robust
+    this.rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+      terminal: true
+    });
+
+    // Prevent the process from exiting - keep stdin open
+    process.stdin.resume();
+
+    // Simple prompt function
+    const askQuestion = (question) => {
+      return new Promise((resolve) => {
+        if (!this.rl || this.rl.closed) {
+          // Recreate if closed
+          this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+            terminal: true
+          });
         }
+        this.rl.question(question, (answer) => {
+          resolve(answer);
+        });
+      });
+    };
+
+    // Main loop - keep it simple
+    while (this.isInteractive) {
+      try {
+        // Ensure stdin stays open
+        if (process.stdin.isPaused()) {
+          process.stdin.resume();
+        }
+
+        const input = await askQuestion(chalk.cyan('comic-agent> '));
+        const command = input.trim();
         
-        if (command.trim().toLowerCase() === 'help') {
-          this.showInteractiveHelp();
-          console.log(''); // Add spacing
+        // Handle empty input
+        if (!command) {
           continue;
         }
         
-        // Check if it's a CLI command or AI conversation
-        if (this.isCliCommand(command)) {
-          // Execute CLI command directly instead of parsing
-          await this.executeInteractiveCommand(command);
-        } else {
-          // Handle as AI conversation
-          await this.handleAIConversation(command);
+        // Handle exit
+        if (command.toLowerCase() === 'exit') {
+          console.log(chalk.yellow('\nGoodbye!'));
+          this.isInteractive = false;
+          if (this.rl) {
+            this.rl.close();
+          }
+          process.exit(0);
+          return;
         }
         
+        // Handle help
+        if (command.toLowerCase() === 'help') {
+          this.showInteractiveHelp();
+          console.log('');
+          continue;
+        }
+        
+        // Execute command or AI conversation
+        try {
+          if (this.isCliCommand(command)) {
+            await this.executeInteractiveCommand(command);
+          } else {
+            await this.handleAIConversation(command);
+          }
+        } catch (cmdError) {
+          console.log(chalk.red(`Command error: ${cmdError.message}`));
+          // Continue loop even if command fails
+        }
+        
+        // Ensure we continue the loop - add a small delay
+        await new Promise(resolve => setImmediate(resolve));
+        
       } catch (error) {
-        console.log(chalk.red(`Error: ${error.message}`));
+        // Check if readline interface was closed
+        if (error.code === 'ERR_USE_AFTER_CLOSE' || 
+            (error.message && error.message.includes('closed'))) {
+          // Try to recreate the interface
+          try {
+            this.rl = readline.createInterface({
+              input: process.stdin,
+              output: process.stdout,
+              terminal: true
+            });
+            process.stdin.resume();
+            console.log(chalk.yellow('Interface recreated. Please try again.\n'));
+            continue;
+          } catch (recreateError) {
+            console.log(chalk.red('Failed to recreate interface. Exiting...'));
+            this.isInteractive = false;
+            process.exit(1);
+          }
+        } else {
+          console.log(chalk.red(`\nError: ${error.message || error}`));
+          console.log(chalk.gray('Continue with another command...\n'));
+          // Continue the loop
+        }
       }
     }
   }
@@ -604,6 +727,8 @@ export class ComicCLI {
       }
     } catch (error) {
       console.log(chalk.red(`Command execution failed: ${error.message}`));
+      console.log(chalk.gray('You can try another command or ask a question.\n'));
+      // Don't rethrow - let the loop continue
     }
   }
 
@@ -697,6 +822,8 @@ export class ComicCLI {
       
     } catch (error) {
       spinner.fail(chalk.red(`AI response failed: ${error.message}`));
+      console.log(chalk.gray('You can try asking another question or use a command.\n'));
+      // Don't rethrow - let the loop continue
     }
   }
 
