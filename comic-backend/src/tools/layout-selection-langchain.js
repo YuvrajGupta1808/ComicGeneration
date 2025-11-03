@@ -94,48 +94,12 @@ export class LayoutSelectionLangChainTool {
         });
       }
 
-      // Build detailed page information
-      const pageDetails = [];
-      if (selectedLayout.layouts) {
-        Object.keys(selectedLayout.layouts).forEach(pageKey => {
-          const pagePanels = selectedLayout.layouts[pageKey];
-          pageDetails.push({
-            pageNumber: pageKey.replace('page', ''),
-            panelCount: pagePanels.length,
-            panels: pagePanels.map((panel, idx) => ({
-              id: panel.id,
-              size: panel.size,
-              width: panel.width,
-              height: panel.height,
-              y: panel.y,
-              h: panel.h
-            }))
-          });
-        });
-      }
-
-      // Build description
-      let pageDescription = `${pages}-page comic:\n`;
-      if (selectedLayout.panels_per_page && Array.isArray(selectedLayout.panels_per_page)) {
-        selectedLayout.panels_per_page.forEach((panelCount, idx) => {
-          const pageNum = idx + 1;
-          if (pageNum === 1) {
-            pageDescription += `Page 1 (Cover): ${panelCount} panel\n`;
-          } else {
-            pageDescription += `Page ${pageNum}: ${panelCount} panels\n`;
-          }
-        });
-      }
-
-      // Return successful result
+      // Return simplified result
       const result = {
         success: true,
         pageCount: pages,
         layoutName: selectedLayout.name,
-        dimensions: selectedLayout.dimensions || null,
-        panelsPerPage: selectedLayout.panels_per_page,
-        pageDetails: pageDetails,
-        message: `Selected ${pages}-page comic layout:\n${pageDescription}`
+        message: `Selected ${pages}-page comic layout successfully`
       };
 
       return JSON.stringify(result);

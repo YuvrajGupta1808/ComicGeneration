@@ -1,0 +1,30 @@
+character_config:
+  default_count: 2
+  image_specs:
+    size: 832x1248
+    width: 832
+    height: 1248
+  fixed_prompt_elements:
+    - full body pose, center, white background, comic book style
+  template:
+    fields:
+      - id
+      - name
+      - description
+characters:
+  - id: char_1
+    name: Commander Eva Rostova
+    description: Commander Rostova is a seasoned astronaut in her late 30s, with a lean, athletic build honed by years of
+      rigorous training. Her utilitarian spacesuit is clearly well-worn, bearing scuffs and signs of environmental wear,
+      hinting at a long and arduous journey. Despite the fatigue evident in her posture and the faint internal glow
+      suggesting low power, her helmet's visor reflects a resolute determination. Rostova's face, glimpsed through the
+      visor, conveys a mixture of awe and dawning hope as she interacts with the alien flora, her gloved hands
+      exhibiting gentle curiosity.
+  - id: char_2
+    name: Lumena
+    description: Lumena is a small, spherical drone, approximately the size of a basketball, with a polished metallic shell
+      that gleams with reflected light. Its form is sleek and functional, designed for observation and assistance, with
+      no discernible appendages beyond a discreet array of optical sensors. Lumena hovers attentively, its multifaceted
+      sensors intently focused on the bioluminescent plants, its entire being radiating an air of quiet, analytical
+      competence. The drone's metallic surface captures the vibrant emerald and azure hues of the grove, making it a
+      dynamic part of the glowing sanctuary.

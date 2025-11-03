@@ -1,0 +1,164 @@
+characters:
+  - id: char_1
+    width: 832
+    height: 1248
+    description: Commander Rostova is a seasoned astronaut in her late 30s, with a lean, athletic build honed by years of
+      rigorous training. Her utilitarian spacesuit is clearly well-worn, bearing scuffs and signs of environmental wear,
+      hinting at a long and arduous journey. Despite the fatigue evident in her posture and the faint internal glow
+      suggesting low power, her helmet's visor reflects a resolute determination. Rostova's face, glimpsed through the
+      visor, conveys a mixture of awe and dawning hope as she interacts with the alien flora, her gloved hands
+      exhibiting gentle curiosity.
+    contextImages: []
+    prompt: Commander Rostova is a seasoned astronaut in her late 30s, with a lean, athletic build honed by years of
+      rigorous training. Her utilitarian spacesuit is clearly well-worn, bearing scuffs and signs of environmental wear,
+      hinting at a long and arduous journey. Despite the fatigue evident in her posture and the faint internal glow
+      suggesting low power, her helmet's visor reflects a resolute determination. Rostova's face, glimpsed through the
+      visor, conveys a mixture of awe and dawning hope as she interacts with the alien flora, her gloved hands
+      exhibiting gentle curiosity., full body pose, center, white background, comic book style
+  - id: char_2
+    width: 832
+    height: 1248
+    description: Lumena is a small, spherical drone, approximately the size of a basketball, with a polished metallic shell
+      that gleams with reflected light. Its form is sleek and functional, designed for observation and assistance, with
+      no discernible appendages beyond a discreet array of optical sensors. Lumena hovers attentively, its multifaceted
+      sensors intently focused on the bioluminescent plants, its entire being radiating an air of quiet, analytical
+      competence. The drone's metallic surface captures the vibrant emerald and azure hues of the grove, making it a
+      dynamic part of the glowing sanctuary.
+    contextImages: []
+    prompt: Lumena is a small, spherical drone, approximately the size of a basketball, with a polished metallic shell that
+      gleams with reflected light. Its form is sleek and functional, designed for observation and assistance, with no
+      discernible appendages beyond a discreet array of optical sensors. Lumena hovers attentively, its multifaceted
+      sensors intently focused on the bioluminescent plants, its entire being radiating an air of quiet, analytical
+      competence. The drone's metallic surface captures the vibrant emerald and azure hues of the grove, making it a
+      dynamic part of the glowing sanctuary., full body pose, center, white background, comic book style
+panels:
+  - id: panel1
+    width: 832
+    height: 1248
+    description: An establishing shot reveals a vast, ochre-toned alien desert under a twin-sunned sky, the harsh sunlight
+      casting long, stark shadows. In the foreground, a battered, lone astronaut, 'char_1', clad in a scuffed,
+      utilitarian spacesuit, stands silhouetted against the desolate expanse. The background features jagged, monolithic
+      rock formations that pierce the hazy, alien atmosphere, conveying a profound sense of isolation and the
+      unforgiving nature of this world.
+    contextImages:
+      - char_1
+      - char_2
+    prompt: An establishing shot reveals a vast, ochre-toned alien desert under a twin-sunned sky, the harsh sunlight
+      casting long, stark shadows. In the foreground, a battered, lone astronaut, 'char_1', clad in a scuffed,
+      utilitarian spacesuit, stands silhouetted against the desolate expanse. The background features jagged, monolithic
+      rock formations that pierce the hazy, alien atmosphere, conveying a profound sense of isolation and the
+      unforgiving nature of this world., establishing-shot camera angle, comic book style, high quality, detailed
+  - id: panel2
+    width: 832
+    height: 1248
+    description: A medium shot focuses on 'char_1' as they cautiously approach a cluster of strange, crystalline flora.
+      Their helmet's visor reflects the dull, red glow of the distant suns, but a faint, internal light within the suit
+      suggests dwindling power. The astronaut's posture is weary but determined, their gloved hand hovering near a
+      small, metallic scanner, as the alien plants emit an almost imperceptible hum, hinting at latent energy.
+    contextImages:
+      - panel_1
+      - char_1
+    prompt: A medium shot focuses on 'char_1' as they cautiously approach a cluster of strange, crystalline flora. Their
+      helmet's visor reflects the dull, red glow of the distant suns, but a faint, internal light within the suit
+      suggests dwindling power. The astronaut's posture is weary but determined, their gloved hand hovering near a
+      small, metallic scanner, as the alien plants emit an almost imperceptible hum, hinting at latent energy.,
+      medium-shot camera angle, comic book style, high quality, detailed
+  - id: panel3
+    width: 944
+    height: 1104
+    description: A close-up on one of the bioluminescent plants, revealing intricate, vein-like structures that pulse with a
+      soft, ethereal azure light. Tiny, phosphorescent spores drift from its delicate, petal-like appendages, catching
+      the faint illumination like microscopic stars. The texture of the plant is smooth and slightly gelatinous,
+      contrasting sharply with the rough, mineral dust clinging to its base, suggesting a fragile ecosystem within this
+      harsh environment.
+    contextImages:
+      - panel_2
+    prompt: A close-up on one of the bioluminescent plants, revealing intricate, vein-like structures that pulse with a
+      soft, ethereal azure light. Tiny, phosphorescent spores drift from its delicate, petal-like appendages, catching
+      the faint illumination like microscopic stars. The texture of the plant is smooth and slightly gelatinous,
+      contrasting sharply with the rough, mineral dust clinging to its base, suggesting a fragile ecosystem within this
+      harsh environment., close-up camera angle, comic book style, high quality, detailed
+  - id: panel4
+    width: 944
+    height: 1104
+    description: A two-shot shows 'char_1' kneeling beside a much larger, more vibrant specimen of the bioluminescent flora,
+      'char_2', a small, drone-like companion, hovering nearby. The plants now emit a steady, warm emerald glow,
+      illuminating 'char_1's' face through the visor with awe and a dawning hope, while the drone's optical sensors are
+      focused intently on the plants. The surrounding desert is pushed into shadow, emphasizing the intimate sanctuary
+      created by this unexpected discovery.
+    contextImages:
+      - panel_3
+      - char_1
+      - char_2
+    prompt: A two-shot shows 'char_1' kneeling beside a much larger, more vibrant specimen of the bioluminescent flora,
+      'char_2', a small, drone-like companion, hovering nearby. The plants now emit a steady, warm emerald glow,
+      illuminating 'char_1's' face through the visor with awe and a dawning hope, while the drone's optical sensors are
+      focused intently on the plants. The surrounding desert is pushed into shadow, emphasizing the intimate sanctuary
+      created by this unexpected discovery., two-shot camera angle, comic book style, high quality, detailed
+  - id: panel5
+    width: 832
+    height: 1248
+    description: An over-the-shoulder shot from behind 'char_1' looking towards the grove, with the drone 'char_2' captured
+      in the foreground, its metallic shell reflecting the plants' vibrant light. The astronaut's head is tilted back
+      slightly, their expression one of wonder as they gaze at the cascading luminescence. The dense cluster of glowing
+      flora forms a canopy overhead, creating a mesmerizing, otherworldly atmosphere that feels both ancient and
+      profoundly alive.
+    contextImages:
+      - panel_4
+      - char_1
+      - char_2
+    prompt: An over-the-shoulder shot from behind 'char_1' looking towards the grove, with the drone 'char_2' captured in
+      the foreground, its metallic shell reflecting the plants' vibrant light. The astronaut's head is tilted back
+      slightly, their expression one of wonder as they gaze at the cascading luminescence. The dense cluster of glowing
+      flora forms a canopy overhead, creating a mesmerizing, otherworldly atmosphere that feels both ancient and
+      profoundly alive., over-shoulder camera angle, comic book style, high quality, detailed
+  - id: panel6
+    width: 1456
+    height: 720
+    description: A low-angle shot looking up at 'char_1' and 'char_2' amidst the towering bioluminescent plants, emphasizing
+      their monumental scale and the astronaut's newfound significance. The alien sky, a swirling tapestry of indigo and
+      violet, is partially obscured by the radiant flora, which seem to reach towards it. The perspective makes the
+      plants feel like ancient sentinels, their glow a beacon of forgotten power, and the astronaut a tiny but vital
+      observer.
+    contextImages:
+      - panel_5
+      - char_1
+    prompt: A low-angle shot looking up at 'char_1' and 'char_2' amidst the towering bioluminescent plants, emphasizing
+      their monumental scale and the astronaut's newfound significance. The alien sky, a swirling tapestry of indigo and
+      violet, is partially obscured by the radiant flora, which seem to reach towards it. The perspective makes the
+      plants feel like ancient sentinels, their glow a beacon of forgotten power, and the astronaut a tiny but vital
+      observer., low-angle camera angle, comic book style, high quality, detailed
+  - id: panel7
+    width: 1456
+    height: 720
+    description: A high-angle shot peers down at 'char_1' interacting with the plants, their gloved hand gently touching a
+      luminous stem, while 'char_2' hovers attentively. The grove appears as a vibrant, glowing jewel embedded within
+      the muted tones of the desolate planet, its light spilling outwards and revealing intricate patterns on the desert
+      floor. This perspective highlights the isolated nature of the discovery and the concentrated source of life and
+      energy found here.
+    contextImages:
+      - panel_6
+      - char_1
+      - char_2
+    prompt: A high-angle shot peers down at 'char_1' interacting with the plants, their gloved hand gently touching a
+      luminous stem, while 'char_2' hovers attentively. The grove appears as a vibrant, glowing jewel embedded within
+      the muted tones of the desolate planet, its light spilling outwards and revealing intricate patterns on the desert
+      floor. This perspective highlights the isolated nature of the discovery and the concentrated source of life and
+      energy found here., high-angle camera angle, comic book style, high quality, detailed
+  - id: panel8
+    width: 1456
+    height: 720
+    description: A wide-shot concludes the sequence, showing the entire hidden grove now fully illuminated, a vibrant,
+      glowing oasis against the vast, darkening desert landscape. 'char_1' and 'char_2' are small figures within this
+      radiant expanse, their silhouettes bathed in the plants' intense, multi-colored luminescence, which seems to pulse
+      with a celestial rhythm. The twin suns are setting, casting long, dramatic shadows, and the grove's glow is the
+      sole source of warmth and light, suggesting a profound shift from despair to a potent, life-affirming discovery.
+    contextImages:
+      - panel_7
+      - char_1
+    prompt: A wide-shot concludes the sequence, showing the entire hidden grove now fully illuminated, a vibrant, glowing
+      oasis against the vast, darkening desert landscape. 'char_1' and 'char_2' are small figures within this radiant
+      expanse, their silhouettes bathed in the plants' intense, multi-colored luminescence, which seems to pulse with a
+      celestial rhythm. The twin suns are setting, casting long, dramatic shadows, and the grove's glow is the sole
+      source of warmth and light, suggesting a profound shift from despair to a potent, life-affirming discovery.,
+      wide-shot camera angle, comic book style, high quality, detailed

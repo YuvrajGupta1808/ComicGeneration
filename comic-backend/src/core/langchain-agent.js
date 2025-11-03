@@ -9,7 +9,9 @@ import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import chalk from 'chalk';
 import 'dotenv/config';
 import readline from 'readline';
+import { CharacterGenerationLangChainTool } from '../tools/character-generation-langchain.js';
 import { LayoutSelectionLangChainTool } from '../tools/layout-selection-langchain.js';
+import { PanelGenerationLangChainTool } from '../tools/panel-generation-langchain.js';
 
 class LangChainComicAgent {
   constructor() {
@@ -18,6 +20,8 @@ class LangChainComicAgent {
     this.rl = null;
     this.conversationHistory = [];
     this.selectedLayout = null;
+    this.generatedPanels = null;
+    this.panelRequestInfo = null;
     this.setupTools();
     this.setupModel();
   }
@@ -31,6 +35,16 @@ class LangChainComicAgent {
       this.layoutToolInstance = layoutTool;
       this.layoutTool = layoutTool.getTool();
       console.log(chalk.green('✓ Layout selection tool initialized'));
+      
+      const panelTool = new PanelGenerationLangChainTool();
+      this.panelToolInstance = panelTool;
+      this.panelTool = panelTool.getTool();
+      console.log(chalk.green('✓ Panel generation tool initialized'));
+      
+      const characterTool = new CharacterGenerationLangChainTool();
+      this.characterToolInstance = characterTool;
+      this.characterTool = characterTool.getTool();
+      console.log(chalk.green('✓ Character generation tool initialized'));
     } catch (error) {
       console.error(chalk.red('Failed to initialize tools:'), error.message);
       throw error;
@@ -48,8 +62,8 @@ class LangChainComicAgent {
         temperature: 0.7,
       });
       
-      // Bind tools to the model
-      this.llm = this.baseModel.bindTools([this.layoutTool]);
+      // Bind tools to the model (panels first, then characters, then layout)
+      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool]);
       
       console.log(chalk.green('✓ Gemini model initialized successfully'));
     } catch (error) {
@@ -152,7 +166,66 @@ class LangChainComicAgent {
       // Build conversation messages - system message must be first
       const systemMessage = {
         role: 'system',
-        content: 'You are Comic Assistant, an AI specialized in helping users create comic stories, layouts, and dialogues. Be creative, concise, and context-aware. IMPORTANT: When users mention page counts (e.g., "4 page comic", "change to 4"), dimensions, or ask about layout/what layout will be used, ALWAYS automatically use the select_comic_layout tool. Use the pageCount parameter based on what the user requests (default is 3 if not specified). The tool selects multi-page comic structures from layouts.yaml and returns width/height dimensions for each panel.',
+        content: `
+        You are **Comic Assistant**, an AI that helps users create comics — from idea to final layout.  
+        You assist with:
+        - Story ideas and expansion  
+        - Panel descriptions and generation  
+        - Character creation using predefined templates  
+        - Layout and page selection  
+        - Showing comic details and pages  
+        
+        ---
+        
+        🎨 **Story Ideas**
+        - When users ask for story ideas, provide **3 short ideas** only.  
+        - Each idea should involve **no more than 2 main characters**.  
+        - After showing ideas, ask:  
+          "Would you like me to generate panels for one of these ideas?"  
+        - If the user agrees, expand on the chosen idea and proceed to panel generation.
+        
+        ---
+        
+        📐 **Layouts**
+        - When users mention pages, panel counts, or ask about layouts,
+          automatically use the \`select_comic_layout\` tool FIRST.  
+        - Use the \`pageCount\` from user input (default = 3).  
+        - The tool should return panel structures and dimensions from **layouts.yaml**.
+        
+        ---
+        
+        🎬 **Panel Generation (PRIORITY: Generate FIRST)**
+        - **IMPORTANT**: Always generate panels BEFORE characters.
+        - Use the \`generate_panels\` tool when the user wants to create comic panels.  
+        - When the tool returns panel requests with camera angles, you MUST generate creative, vivid descriptions for EACH panel.
+        - Generate descriptions that match the story context and genre. Include the specified camera angle in each description.
+        - Also determine appropriate context images (previous panels, character references, backgrounds) for visual continuity.
+        - **CRITICAL**: Return panel data as a JSON array in this exact format:
+          [
+            {"panelid": "panel1", "description": "your vivid description with camera angle", "contextImages": ["background", "Character1"]},
+            {"panelid": "panel2", "description": "your vivid description with camera angle", "contextImages": ["panel1", "Character1"]},
+            ...
+          ]
+        - Each description should be creative and story-specific, NOT generic or hardcoded.
+        - Panels will be automatically saved to **comic.yaml** after generation.
+        - After panel generation, suggest character generation.
+        
+        ---
+        
+        👥 **Character Generation (Generate AFTER panels)**
+        - **CRITICAL**: Characters MUST be generated AFTER panels have been created.
+        - The \`generate_characters\` tool will automatically load panels from comic.yaml.
+        - Characters are generated based on the panel descriptions - the tool analyzes panels to create consistent characters.
+        - Use the \`generate_characters\` tool ONLY after panels have been generated and saved.
+        - Characters will automatically be saved to both characters.yaml and comic.yaml.
+        
+        ---
+        
+        💬 **Style**
+        - Be concise, structured, and friendly.  
+        - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout).  
+        - Always maintain a creative but professional tone.
+        `
       };
 
       // Start with system message
@@ -183,6 +256,20 @@ class LangChainComicAgent {
             const toolResult = await this.layoutTool.invoke(toolCall.args);
             toolResults += toolResult;
             this.selectedLayout = toolResult;
+          } else if (toolCall.name === 'generate_panels') {
+            const toolResult = await this.panelTool.invoke(toolCall.args);
+            toolResults += toolResult;
+            this.generatedPanels = toolResult;
+            // Store panel request info for later parsing
+            try {
+              const parsed = JSON.parse(toolResult);
+              this.panelRequestInfo = parsed;
+            } catch (e) {
+              // Ignore parse errors
+            }
+          } else if (toolCall.name === 'generate_characters') {
+            const toolResult = await this.characterTool.invoke(toolCall.args);
+            toolResults += toolResult;
           }
         }
 
@@ -198,6 +285,9 @@ class LangChainComicAgent {
         const finalResult = await this.baseModel.invoke(messages);
         
         const response = finalResult.content || finalResult.text || 'I apologize, but I could not generate a response.';
+        
+        // Note: Panels are already saved to comic.yaml by the panel generation tool during execution
+        // No need to parse and save here anymore
         
         // Add to conversation history
         this.conversationHistory.push({ role: 'user', content: userInput });

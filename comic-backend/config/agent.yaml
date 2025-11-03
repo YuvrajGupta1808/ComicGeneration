@@ -35,6 +35,12 @@ tools:
     retries: 3
     defaultCount: 2
 
+  character-generation-langchain:
+    enabled: true
+    timeout: 300000
+    retries: 3
+    defaultCount: 2
+
   layout-selection:
     enabled: true
     templatesFile: "./config/layouts.yaml"
