@@ -45,6 +45,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel3",
@@ -54,6 +55,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
           {
             id: "panel4",
@@ -63,6 +65,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel5",
@@ -72,6 +75,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
         ]
 
@@ -102,6 +106,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel3",
@@ -111,6 +116,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
           {
             id: "panel4",
@@ -120,6 +126,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel5",
@@ -129,6 +136,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
         ]
       page3:
@@ -186,6 +194,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel3",
@@ -195,6 +204,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
           {
             id: "panel4",
@@ -204,6 +214,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel5",
@@ -213,6 +224,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
         ]
       page3:
@@ -309,6 +321,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel3",
@@ -318,6 +331,7 @@ layouts:
             y: 0.05,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
           {
             id: "panel4",
@@ -327,6 +341,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "left",
+            offsetX: 0.042,
           },
           {
             id: "panel5",
@@ -336,6 +351,7 @@ layouts:
             y: 0.50,
             h: 0.41,
             align: "right",
+            offsetX: -0.042,
           },
         ]
       page3:

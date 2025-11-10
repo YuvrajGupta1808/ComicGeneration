@@ -48,10 +48,6 @@ panels:
       towards a nondescript cargo shuttle. The background is dominated by the twin, dull orange suns of the planet
       setting, casting long, distorted shadows and bathing the scene in a muted, dusty light., establishing-shot camera
       angle, comic book style, high quality, detailed
-    title: LOST SUNS
-    dialogue: []
-    narration: null
-    soundEffects: []
   - id: panel2
     width: 832
     height: 1248
@@ -69,14 +65,6 @@ panels:
       a mix of suspicion and grim determination, his eyes narrowed. CHAR_2, sweating profusely, clutches a datapad, his
       gaze darting nervously from CHAR_1 to the darkened alleys. The atmosphere is tense, thick with unspoken threats
       and the scent of stale synth-ale., medium-shot camera angle, comic book style, high quality, detailed
-    title: null
-    dialogue:
-      - speaker: char_1
-        text: You said it was just... salvage. Not this.
-      - speaker: char_2
-        text: They promised clean coin. Just get it out.
-    narration: null
-    soundEffects: []
   - id: panel3
     width: 944
     height: 1104
@@ -92,10 +80,6 @@ panels:
       awareness. Delicate, tendril-like appendages twitch, expressing a subtle vulnerability. The texture of its skin is
       like polished obsidian, reflecting the faint light of the smuggling bay, creating a mood of fragile beauty amidst
       the encroaching darkness., close-up camera angle, comic book style, high quality, detailed
-    title: null
-    dialogue: []
-    narration: A fragile life, caught in the void.
-    soundEffects: []
   - id: panel4
     width: 944
     height: 1104
@@ -115,14 +99,6 @@ panels:
       his blaster, his posture tense and ready. The pirate captain laughs menacingly, his gaze predatory as he eyes
       CHAR_1. The lighting is stark and utilitarian, highlighting the metallic surfaces and the palpable tension.,
       two-shot camera angle, comic book style, high quality, detailed
-    title: null
-    dialogue:
-      - speaker: char_1
-        text: It's not for sale. Not to you.
-      - speaker: char_2
-        text: You think you can just walk away from this?
-    narration: null
-    soundEffects: []
   - id: panel5
     width: 832
     height: 1248
@@ -140,13 +116,6 @@ panels:
       determined profile. The pirate captain and his crew are visible in the background, a chaotic blur of motion and
       raised weapons. The mood is one of urgent action, with a dramatic shaft of light cutting through the dust and
       grime of the cargo hold., over-shoulder camera angle, comic book style, high quality, detailed
-    title: null
-    dialogue:
-      - speaker: char_1
-        text: Hold on. I'm not leaving you here.
-    narration: null
-    soundEffects:
-      - WHUMPH
   - id: panel6
     width: 1456
     height: 720
@@ -164,12 +133,6 @@ panels:
       dramatic, with the creature's bioluminescence providing a soft, angelic glow against the dark, metallic textures
       of the ship, creating a sense of wonder and nascent hope., low-angle camera angle, comic book style, high quality,
       detailed
-    title: null
-    dialogue:
-      - speaker: char_1
-        text: Go. Now. Fly.
-    narration: null
-    soundEffects: []
   - id: panel7
     width: 1456
     height: 720
@@ -187,12 +150,6 @@ panels:
       defeated pirates. The mood is one of quiet resolution and the dawning of an unexpected connection, bathed in the
       soft, fading light of the setting suns filtering through a cracked viewport., high-angle camera angle, comic book
       style, high quality, detailed
-    title: null
-    dialogue:
-      - speaker: char_1
-        text: You're safe now. No need to worry
-    narration: null
-    soundEffects: []
   - id: panel8
     width: 1456
     height: 720
@@ -209,8 +166,3 @@ panels:
       expanse of space stretches out before them, a canvas of deep blues and purples punctuated by distant nebulae. The
       overall mood is one of escape and a new beginning, the muted colors of the planet giving way to the vibrant,
       infinite possibilities of the cosmos., wide-shot camera angle, comic book style, high quality, detailed
-    title: null
-    dialogue: []
-    narration: Beyond the shadows, a new dawn breaks.
-    soundEffects:
-      - VROOOOM

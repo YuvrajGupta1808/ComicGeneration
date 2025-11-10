@@ -13,18 +13,17 @@ character_config:
       - description
 characters:
   - id: char_1
-    name: Commander Eva Rostova
-    description: Commander Rostova is a seasoned astronaut in her late 30s, with a lean, athletic build honed by years of
-      rigorous training. Her utilitarian spacesuit is clearly well-worn, bearing scuffs and signs of environmental wear,
-      hinting at a long and arduous journey. Despite the fatigue evident in her posture and the faint internal glow
-      suggesting low power, her helmet's visor reflects a resolute determination. Rostova's face, glimpsed through the
-      visor, conveys a mixture of awe and dawning hope as she interacts with the alien flora, her gloved hands
-      exhibiting gentle curiosity.
+    name: Jax 'Dust Devil' Sterling
+    description: Jax is a rugged space cowboy in his late 30s to early 40s, with a weathered face etched by hardship and a
+      steely gaze that speaks of unwavering resolve. He's clad in a worn, dark leather duster that trails behind him
+      like a shadow, its texture hinting at countless journeys through unforgiving environments. His build is lean but
+      muscular, honed by a life of action and survival, and a perpetual glint of defiance shines in his narrowed eyes.
+      His style is utilitarian and practical, reflecting his no-nonsense approach to life and his readiness for any
+      confrontation.
   - id: char_2
-    name: Lumena
-    description: Lumena is a small, spherical drone, approximately the size of a basketball, with a polished metallic shell
-      that gleams with reflected light. Its form is sleek and functional, designed for observation and assistance, with
-      no discernible appendages beyond a discreet array of optical sensors. Lumena hovers attentively, its multifaceted
-      sensors intently focused on the bioluminescent plants, its entire being radiating an air of quiet, analytical
-      competence. The drone's metallic surface captures the vibrant emerald and azure hues of the grove, making it a
-      dynamic part of the glowing sanctuary.
+    name: Flicker
+    description: Flicker is a small, wiry informant with a perpetually anxious demeanor, his features sharp and his eyes
+      constantly darting. He's often seen sweating profusely, his clothing nondescript and ill-fitting, suggesting he's
+      more accustomed to the shadows than the spotlight. His nervous gestures and clutching of a datapad betray his
+      volatile nature and his involvement in clandestine dealings. Flicker embodies a sense of vulnerability and unease,
+      his appearance a testament to a life lived on the edge of discovery and danger.
