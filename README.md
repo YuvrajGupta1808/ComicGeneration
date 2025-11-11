@@ -1,0 +1,64 @@
+# 🎨 Comic Generation Platform
+
+An AI-powered comic generation platform that combines Leonardo AI image generation with intelligent layout composition and dialogue management.
+
+## 📁 Project Structure
+
+This monorepo contains three main components:
+
+- **comic-backend** - LangChain-based CLI agent for comic generation workflows
+- **comic-backend_v2** - Leonardo AI comic generator with advanced rendering
+- **comic-frontend** - React-based web interface for comic creation
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 16+ 
+- npm or yarn
+- Leonardo AI API key
+- Cloudinary account (for image storage)
+- Google Gemini API key (for comic-backend)
+
+### Installation
+
+```bash
+# Install all dependencies
+npm install --prefix comic-backend
+npm install --prefix comic-backend_v2
+npm install --prefix comic-frontend
+```
+
+### Environment Setup
+
+Each project requires its own `.env` file. See individual project READMEs for details.
+
+## 🎯 Features
+
+- **AI-Powered Panel Generation** - Generate comic panels with Leonardo AI
+- **Character Consistency** - Maintain character appearance across panels
+- **Smart Layouts** - Automatic page composition with multiple layout options
+- **Dialogue Management** - Add speech bubbles, narration, and sound effects
+- **Interactive CLI** - Conversational agent for comic creation
+- **Web Interface** - User-friendly frontend for comic generation
+
+## 📚 Documentation
+
+- [comic-backend README](./comic-backend/README.md) - LangChain agent documentation
+- [comic-backend_v2 README](./comic-backend_v2/README.md) - Leonardo generator documentation
+- [comic-frontend README](./comic-frontend/README.md) - Frontend documentation
+
+## 🛠️ Tech Stack
+
+- **Backend**: Node.js, LangChain, Leonardo AI, Cloudinary
+- **Frontend**: React, TypeScript, Tailwind CSS, Framer Motion
+- **AI Models**: Google Gemini, Leonardo Phoenix 1.0
+- **Image Processing**: Sharp, Canvas
+
+## 📝 License
+
+ISC
+
+## 🤝 Contributing
+
+Contributions are welcome! Please check individual project READMEs for specific guidelines.
