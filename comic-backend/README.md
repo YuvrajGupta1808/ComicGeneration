@@ -145,7 +145,7 @@ The agent provides an interactive CLI where you can:
 ```bash
 npm start              # Run basic agent
 npm run dev            # Run with nodemon (auto-reload)
-npm run langchain-agent # Run LangChain agent (recommended)
+npm run langchain      # Run LangChain agent (recommended)
 npm test               # Run tests
 ```
 
