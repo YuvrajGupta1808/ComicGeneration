@@ -536,7 +536,7 @@ CRITICAL REQUIREMENTS:
       });
       
       await fs.writeFile(comicPath, yamlContent, 'utf8');
-      console.log(`✓ Saved ${formattedCharacters.length} characters and ${formattedPanels.length} panels to comic.yaml`);
+      console.log(`✓ Saved ${formattedPanels.length} panels to comic.yaml`);
     } catch (error) {
       console.error('Failed to save comic.yaml:', error.message);
       throw error;

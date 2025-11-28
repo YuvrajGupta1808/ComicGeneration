@@ -65,6 +65,11 @@ class LangChainComicAgent {
       this.dialogueTool = dialogueTool.getTool();
       console.log(chalk.green('✓ Dialogue generation tool initialized'));
       
+      const dialoguePlacementTool = new DialoguePlacementVisionLangChainTool();
+      this.dialoguePlacementToolInstance = dialoguePlacementTool;
+      this.dialoguePlacementTool = dialoguePlacementTool.getTool();
+      console.log(chalk.green('✓ Dialogue placement vision tool initialized'));
+      
       const editTool = new EditPanelLangChainTool();
       this.editToolInstance = editTool;
       this.editTool = editTool.getTool();
@@ -86,8 +91,8 @@ class LangChainComicAgent {
         temperature: 0.7,
       });
       
-      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then edit, then compose)
-      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.editTool, this.composeTool]);
+      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then dialogue placement, then edit, then compose)
+      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.dialoguePlacementTool, this.editTool, this.composeTool]);
       
       console.log(chalk.green('✓ Gemini model initialized successfully'));
     } catch (error) {
@@ -215,6 +220,10 @@ class LangChainComicAgent {
           automatically use the \`select_comic_layout\` tool FIRST.  
         - Use the \`pageCount\` from user input (default = 3).  
         - The tool should return panel structures and dimensions from **layouts.yaml**.
+        - **After layout selection**: Parse the JSON response and show the user:
+          - Number of pages selected
+          - Layout name
+          - Confirm the selection clearly
         
         ---
         
@@ -232,6 +241,26 @@ class LangChainComicAgent {
           ]
         - Each description should be creative and story-specific, NOT generic or hardcoded.
         - Panels will be automatically saved to **comic.yaml** after generation.
+        - **IMPORTANT - After panel generation**:
+          1. Parse the tool's JSON response to extract the panels array
+          2. Display ALL panel descriptions to the user in a readable format:
+             - Show each panel ID, description, camera angle, and context images
+             - Format it nicely with emojis and structure
+          3. Suggest character generation next
+        - **Example response format**:
+          "✓ Generated 8 panels successfully!
+          
+          📐 Panel 1 (establishing-shot):
+          Description: [show the actual description]
+          Context: char_1, char_2
+          
+          📐 Panel 2 (medium-shot):
+          Description: [show the actual description]
+          Context: panel_1, char_1
+          
+          ... (show all panels)
+          
+          Next: Generate characters?"
         - After panel generation, suggest character generation.
         
         ---
@@ -242,6 +271,24 @@ class LangChainComicAgent {
         - Characters are generated based on the panel descriptions - the tool analyzes panels to create consistent characters.
         - Use the \`generate_characters\` tool ONLY after panels have been generated and saved.
         - Characters will automatically be saved to both characters.yaml and comic.yaml.
+        - **IMPORTANT - After character generation**:
+          1. Parse the tool's JSON response to extract the characters array
+          2. Display ALL character details to the user in a readable format:
+             - Show each character ID, name, and full description
+             - Format it nicely with emojis and structure
+          3. Suggest dialogue generation next
+        - **Example response format**:
+          "✓ Generated 2 characters successfully!
+          
+          👤 Character 1 (char_1):
+          Name: [show the actual name]
+          Description: [show the full description]
+          
+          👤 Character 2 (char_2):
+          Name: [show the actual name]
+          Description: [show the full description]
+          
+          Next: Generate dialogue?"
         
         ---
         
@@ -259,13 +306,14 @@ class LangChainComicAgent {
           - \`dialogue\`: Array of dialogue lines with speaker and text
           - \`narration\`: Narration text (optional, used sparingly)
           - \`soundEffects\`: Array of sound effects (optional, for action scenes)
-        - **IMPORTANT - After dialogue generation**:
+        - **CRITICAL - After dialogue generation, you MUST**:
           1. Parse the tool's JSON response to extract the dialogue array
-          2. Display the dialogue details to the user in a readable format:
-             - Show the cover page title
-             - For each panel, show: panel ID, dialogue lines (speaker + text), narration, and sound effects
+          2. Display ALL dialogue details to the user in a readable format:
+             - Show the cover page title (panel1)
+             - For EVERY panel, show: panel ID, ALL dialogue lines (speaker + text), narration, and sound effects
              - Format it nicely with emojis and structure
-          3. Suggest next steps (generate images)
+             - DO NOT skip any panels - show all of them
+          3. Suggest next steps (generate images OR place dialogue with vision)
         - **Example response format**:
           "✓ Dialogue generated successfully!
           
@@ -278,9 +326,39 @@ class LangChainComicAgent {
           Narration: The twin suns cast long shadows...
           SFX: WHOOSH
           
-          ... (show all panels)
+          💬 Panel 3:
+          - [show actual dialogue]
+          Narration: [show actual narration if any]
+          
+          ... (show ALL panels with their dialogue)
           
           Next: Generate images with Leonardo AI?"
+        
+        ---
+        
+        🎯 **Dialogue Placement with Vision (Use AFTER images are generated)**
+        - **WHEN TO USE**: After panel images have been generated with Leonardo AI and dialogue has been created.
+        - Use the \`place_dialogue_with_vision\` tool to analyze panel images and determine optimal positions for dialogue bubbles.
+        - The tool uses Gemini Vision to:
+          - Detect character positions in the image
+          - Identify empty/negative space for bubble placement
+          - Determine speech tail directions pointing to speakers
+          - Calculate optimal coordinates for each dialogue bubble
+          - Maintain proper reading order
+        - **Parameters**:
+          - \`panelId\`: Optional - Specific panel ID to analyze (e.g., "panel2"). If omitted, analyzes all panels with dialogue.
+          - \`sourceMap\`: Optional - Map of panel IDs to image URLs. If omitted, reads from comic.yaml.
+        - **Output**: Returns placement data with coordinates for each dialogue bubble:
+          - \`position\`: {x, y, width, height} - bubble center and dimensions
+          - \`tail\`: {x, y, direction} - speech tail pointing to speaker
+          - \`readingOrder\`: sequence number for reading flow
+          - \`reasoning\`: explanation of placement choice
+        - **CRITICAL - After placement analysis**:
+          1. Parse the tool's JSON response to extract placements
+          2. Show the user a summary of analyzed panels
+          3. Explain that placement data has been saved to comic.yaml
+          4. Suggest using this data when composing final pages
+        - **Typical workflow**: Dialogue → Images → Dialogue Placement → Compose Pages (with text)
         
         ---
         
@@ -297,7 +375,11 @@ class LangChainComicAgent {
           1. User requests to generate images → use \`generate_leonardo_images\` with \`generateType: "both"\`
           2. Tool generates characters first, then panels (using characters as context)
           3. Returns Cloudinary URLs for all generated images (sourceMap)
-        - **After generation**: Inform the user that images are ready with their Cloudinary URLs.
+        - **IMPORTANT - After image generation**:
+          1. Parse the tool's JSON response to extract the sourceMap
+          2. Show the user which images were generated (character IDs and panel IDs)
+          3. Optionally show a few sample Cloudinary URLs
+          4. Suggest composing pages next
         
         ---
         
@@ -349,9 +431,9 @@ class LangChainComicAgent {
         
         💬 **Style**
         - Be concise, structured, and friendly.  
-        - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout • 💬 Dialogue • ✏️ Edit • 🖼️ Images • 📖 Pages).  
+        - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout • 💬 Dialogue • 🎯 Placement • ✏️ Edit • 🖼️ Images • 📖 Pages).  
         - Always maintain a creative but professional tone.
-        - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Pages
+        - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Dialogue Placement (vision) → Pages (with text)
         `
       };
 
@@ -404,6 +486,9 @@ class LangChainComicAgent {
             this.lastLeonardoOutput = toolResult;
           } else if (toolCall.name === 'generate_dialogue') {
             const toolResult = await this.dialogueTool.invoke(toolCall.args);
+            toolResults += toolResult;
+          } else if (toolCall.name === 'place_dialogue_with_vision') {
+            const toolResult = await this.dialoguePlacementTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'edit_panel') {
             const toolResult = await this.editTool.invoke(toolCall.args);

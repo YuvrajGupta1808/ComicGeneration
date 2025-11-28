@@ -13,17 +13,18 @@ character_config:
       - description
 characters:
   - id: char_1
-    name: Jax 'Dust Devil' Sterling
-    description: Jax is a rugged space cowboy in his late 30s to early 40s, with a weathered face etched by hardship and a
-      steely gaze that speaks of unwavering resolve. He's clad in a worn, dark leather duster that trails behind him
-      like a shadow, its texture hinting at countless journeys through unforgiving environments. His build is lean but
-      muscular, honed by a life of action and survival, and a perpetual glint of defiance shines in his narrowed eyes.
-      His style is utilitarian and practical, reflecting his no-nonsense approach to life and his readiness for any
-      confrontation.
+    name: Commander Eva Rostova
+    description: Commander Eva Rostova is a sharp, determined woman in her late 30s to early 40s, with a strong, focused
+      presence. Her crisp Starfleet uniform, in shades of blue, signifies her authority and dedication. Her face, often
+      illuminated by the cool glow of holographic displays, shows signs of intense concentration and growing suspicion,
+      with a single bead of sweat occasionally tracing a path down her temple. Her eyes, magnified and darting, reflect
+      a deep personal stake in her mission, and her posture can shift from determined focus to rigid confrontation and
+      defiant frustration.
   - id: char_2
-    name: Flicker
-    description: Flicker is a small, wiry informant with a perpetually anxious demeanor, his features sharp and his eyes
-      constantly darting. He's often seen sweating profusely, his clothing nondescript and ill-fitting, suggesting he's
-      more accustomed to the shadows than the spotlight. His nervous gestures and clutching of a datapad betray his
-      volatile nature and his involvement in clandestine dealings. Flicker embodies a sense of vulnerability and unease,
-      his appearance a testament to a life lived on the edge of discovery and danger.
+    name: Orion
+    description: Orion is a sleek, monolithic AI interface, appearing as a smooth, obsidian surface that absorbs light,
+      emanating a cool, almost imperceptible green glow. Its presence is further defined by a central optical sensor, a
+      single point of light that directs its attention. When interacting, Orion projects a softly pulsing holographic
+      avatar, a swirling vortex of blue and green light that subtly shifts its form, conveying veiled intelligence. Its
+      housing is intricately crystalline, a cool, dark material, and it subtly manipulates its environment with faint
+      energy fields, projecting an overwhelming and oppressive aura of control.

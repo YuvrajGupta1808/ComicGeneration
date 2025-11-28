@@ -10,6 +10,7 @@ Professional CLI agent for AI-powered comic generation workflows using LangChain
 - **Character Creation** - Generate consistent character designs
 - **Layout Selection** - Automatic layout selection from templates
 - **Dialogue Generation** - Create dialogue, narration, and sound effects
+- **Dialogue Placement (Vision)** - AI vision-based optimal dialogue bubble positioning
 - **Leonardo AI Integration** - Generate images using Leonardo Phoenix 1.0
 - **Page Composition** - Combine panels into A4 comic pages
 - **Edit Tools** - Modify panels and characters after generation
@@ -42,7 +43,7 @@ CLOUDINARY_API_SECRET=your_cloudinary_secret
 ### Run the Agent
 
 ```bash
-npm run langchain-agent
+npm run langchain
 ```
 
 ## 💬 Usage
@@ -74,7 +75,12 @@ The agent provides an interactive CLI where you can:
    > Generate images with Leonardo AI
    ```
 
-6. **Compose Pages**
+6. **Place Dialogue (Vision)**
+   ```
+   > Place the dialogue on the panels using vision
+   ```
+
+7. **Compose Pages**
    ```
    > Compose the panels into pages
    ```
@@ -107,6 +113,14 @@ The agent provides an interactive CLI where you can:
 - Generates cover page titles
 - Context-aware based on characters and panels
 
+### Dialogue Placement (Vision) ✨ NEW
+- Uses Gemini Vision to analyze panel images
+- Determines optimal dialogue bubble positions
+- Calculates speech tail directions
+- Maintains proper reading order
+- Avoids covering faces and important visuals
+- See [DIALOGUE_PLACEMENT_VISION.md](./DIALOGUE_PLACEMENT_VISION.md) for details
+
 ### Leonardo Image Generation
 - Generates character reference images
 - Creates panel images with context
@@ -137,8 +151,9 @@ The agent provides an interactive CLI where you can:
 2. **Characters** → Create character designs based on panels
 3. **Dialogue** → Add dialogue, narration, and sound effects
 4. **Images** → Generate images with Leonardo AI
-5. **Pages** → Compose panels into final comic pages
-6. **Edit** → Refine any aspect as needed
+5. **Dialogue Placement** → Use vision to position dialogue bubbles (optional)
+6. **Pages** → Compose panels into final comic pages
+7. **Edit** → Refine any aspect as needed
 
 ## 🔧 Scripts
 

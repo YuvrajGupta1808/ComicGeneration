@@ -30,7 +30,7 @@ export class EditPanelLangChainTool {
         targetType: z.enum(['panel', 'character']).describe('Type of target to edit: "panel" or "character"'),
         targetId: z.string().describe('ID of the panel or character to edit (e.g., "panel1", "char_1")'),
         field: z.string().describe('Field to edit (e.g., "description", "dialogue", "narration", "title", "soundEffects")'),
-        value: z.union([z.string(), z.array(z.any()), z.null()]).describe('New value for the field. Can be string, array, or null'),
+        value: z.union([z.string(), z.array(z.record(z.string(), z.string())), z.null()]).describe('New value for the field. Can be string, array of objects, or null'),
       }),
       func: async ({ targetType, targetId, field, value }) =>
         await this.execute(targetType, targetId, field, value),
