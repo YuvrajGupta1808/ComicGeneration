@@ -1,11 +1,15 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import axios from "axios";
+import canvas from "canvas";
 import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import yaml from "yaml";
 import { z } from "zod";
+import { drawBubbleFromPlacement } from "../utils/simpleTextRenderer.js";
+
+const { createCanvas, loadImage } = canvas;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -49,8 +53,10 @@ export class DialoguePlacementVisionLangChainTool {
     });
 
     return {
-      mimeType: res.headers["content-type"] || "image/jpeg",
-      data: Buffer.from(res.data).toString("base64")
+      inlineData: {
+        mimeType: res.headers["content-type"] || "image/jpeg",
+        data: Buffer.from(res.data).toString("base64")
+      }
     };
   }
 
@@ -90,7 +96,7 @@ export class DialoguePlacementVisionLangChainTool {
         process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY
       );
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash"
+        model: "gemini-2.0-flash"
       });
 
       const outputs = [];
@@ -110,45 +116,47 @@ export class DialoguePlacementVisionLangChainTool {
           .join("\n");
 
         const prompt = `
-Analyze the image and return JSON specifying optimal speech bubble locations.
+You are a professional comic book letterer. Analyze this comic panel image and determine the BEST positions for speech bubbles.
 
 Panel ID: ${panel.id}
 Panel Size: ${panel.width}x${panel.height}
 Description: ${panel.description}
 
-DIALOGUE:
+DIALOGUE TO PLACE:
 ${dialogueList}
 
-Return ONLY JSON:
+CRITICAL RULES:
+1. Place bubbles in EMPTY/CLEAR areas - avoid covering faces, important details, or action
+2. Position bubbles NEAR the speaker's head/mouth area
+3. Follow natural reading order: top-to-bottom, left-to-right
+4. Leave adequate spacing between bubbles (minimum 20px)
+5. Bubble dimensions should fit the text comfortably (width: 150-300px, height: 80-150px)
+6. Tail should point directly at the speaker's mouth/head
+7. Analyze the image carefully - identify where characters are positioned
+
+Return ONLY valid JSON (no markdown, no explanation):
 {
-  "panelId": "...",
-  "panelWidth": ...,
-  "panelHeight": ...,
+  "panelId": "${panel.id}",
+  "panelWidth": ${panel.width},
+  "panelHeight": ${panel.height},
   "placements": [
     {
       "type": "speech",
-      "speaker": "...",
-      "text": "...",
-      "position": { "x": ..., "y": ..., "width": ..., "height": ... },
-      "tail": { "x": ..., "y": ..., "direction": "..." },
-      "readingOrder": number,
-      "reasoning": "..."
+      "speaker": "character name",
+      "text": "exact dialogue text",
+      "position": { "x": number, "y": number, "width": number, "height": number },
+      "tail": { "x": number, "y": number, "direction": "down|up|left|right" },
+      "readingOrder": 1,
+      "reasoning": "brief explanation of placement choice"
     }
   ]
 }
         `;
 
-        const result = await model.generateContent({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                { text: prompt },
-                { inlineData }
-              ]
-            }
-          ]
-        });
+        const result = await model.generateContent([
+          { text: prompt },
+          inlineData
+        ]);
 
         const text = result.response.text();
 
@@ -163,11 +171,15 @@ Return ONLY JSON:
 
       await this.savePlacements(outputs);
 
+      // Render images with text
+      const renderedImages = await this.renderDialogueImages(analyze, outputs);
+
       return JSON.stringify(
         {
           success: true,
           analyzedPanels: outputs.length,
-          placements: outputs
+          placements: outputs,
+          renderedImages
         },
         null,
         2
@@ -194,4 +206,64 @@ Return ONLY JSON:
 
     await fs.writeFile(comicPath, yaml.stringify(comic, { indent: 2 }));
   }
+
+  /**
+   * Render dialogue on images and save to outputs folder
+   */
+  async renderDialogueImages(panels, placements) {
+    const outputDir = path.join(__dirname, "../../outputs");
+    await fs.ensureDir(outputDir);
+
+    const results = [];
+
+    for (const panel of panels) {
+      try {
+        const placement = placements.find(p => p.panelId === panel.id);
+        if (!placement) continue;
+
+        // Get image URL
+        const imageUrl = panel.imageUrl || panel.cloudinaryUrl;
+        if (!imageUrl) continue;
+
+        // Load image
+        const response = await axios.get(imageUrl, { responseType: "arraybuffer" });
+        const img = await loadImage(Buffer.from(response.data));
+
+        // Create canvas
+        const canvas = createCanvas(img.width, img.height);
+        const ctx = canvas.getContext("2d");
+
+        // Draw original image
+        ctx.drawImage(img, 0, 0);
+                
+        // Draw each dialogue bubble
+        for (const bubble of placement.placements) {
+          drawBubbleFromPlacement(ctx, bubble);
+        }
+
+        // Save to outputs folder
+        const outputPath = path.join(outputDir, `${panel.id}_with_text.png`);
+        const buffer = canvas.toBuffer("image/png");
+        await fs.writeFile(outputPath, buffer);
+
+        results.push({
+          panelId: panel.id,
+          outputPath,
+          bubbleCount: placement.placements.length
+        });
+
+        console.log(`✓ Rendered ${panel.id} → ${outputPath}`);
+      } catch (err) {
+        console.error(`✗ Failed to render ${panel.id}:`, err.message);
+        results.push({
+          panelId: panel.id,
+          error: err.message
+        });
+      }
+    }
+
+    return results;
+  }
+
+
 }

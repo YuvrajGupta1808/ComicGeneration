@@ -10,7 +10,8 @@ Professional CLI agent for AI-powered comic generation workflows using LangChain
 - **Character Creation** - Generate consistent character designs
 - **Layout Selection** - Automatic layout selection from templates
 - **Dialogue Generation** - Create dialogue, narration, and sound effects
-- **Dialogue Placement (Vision)** - AI vision-based optimal dialogue bubble positioning
+- **Dialogue Placement (Vision)** - AI vision-based optimal dialogue bubble positioning with normalized coordinates
+- **Dialogue Rendering** - Draw speech bubbles with text on panel images (white bubbles, black text)
 - **Leonardo AI Integration** - Generate images using Leonardo Phoenix 1.0
 - **Page Composition** - Combine panels into A4 comic pages
 - **Edit Tools** - Modify panels and characters after generation
@@ -116,10 +117,18 @@ The agent provides an interactive CLI where you can:
 ### Dialogue Placement (Vision) ✨ NEW
 - Uses Gemini Vision to analyze panel images
 - Determines optimal dialogue bubble positions
+- Normalized coordinates (0-1 range) for any panel size
 - Calculates speech tail directions
 - Maintains proper reading order
 - Avoids covering faces and important visuals
-- See [DIALOGUE_PLACEMENT_VISION.md](./DIALOGUE_PLACEMENT_VISION.md) for details
+
+### Dialogue Rendering ✨ NEW
+- Renders dialogue bubbles with text on panel images
+- Multiple bubble types: speech, narration, title, thought
+- White bubbles with black text for readability
+- Automatic word wrapping
+- Uploads to Cloudinary (`comic/panels_with_text/`)
+- See [DIALOGUE_RENDERING_SUMMARY.md](./DIALOGUE_RENDERING_SUMMARY.md) for details
 
 ### Leonardo Image Generation
 - Generates character reference images
@@ -151,9 +160,10 @@ The agent provides an interactive CLI where you can:
 2. **Characters** → Create character designs based on panels
 3. **Dialogue** → Add dialogue, narration, and sound effects
 4. **Images** → Generate images with Leonardo AI
-5. **Dialogue Placement** → Use vision to position dialogue bubbles (optional)
-6. **Pages** → Compose panels into final comic pages
-7. **Edit** → Refine any aspect as needed
+5. **Dialogue Placement** → Use vision to position dialogue bubbles
+6. **Render Dialogue** → Draw text bubbles on panel images
+7. **Pages** → Compose panels into final comic pages
+8. **Edit** → Refine any aspect as needed
 
 ## 🔧 Scripts
 

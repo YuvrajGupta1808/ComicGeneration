@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import fs from 'fs-extra';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -9,6 +9,9 @@ import { DialoguePlacementVisionLangChainTool } from './src/tools/dialogue-place
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load .env from comic-backend directory
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 async function testVisionPlacement() {
   console.log('🎯 Testing Dialogue Placement\n');
@@ -51,6 +54,11 @@ async function testVisionPlacement() {
   try {
     const tool = new DialoguePlacementVisionLangChainTool();
     const result = await tool.getTool().invoke({});
+    
+    console.log('📄 Full JSON Response:\n');
+    console.log(result);
+    console.log('\n' + '='.repeat(80) + '\n');
+    
     const parsed = JSON.parse(result);
 
     if (parsed.success) {

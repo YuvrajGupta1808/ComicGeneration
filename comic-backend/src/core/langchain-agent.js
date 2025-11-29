@@ -11,6 +11,7 @@ import readline from 'readline';
 import { CharacterGenerationLangChainTool } from '../tools/character-generation-langchain.js';
 import { ComposePagesLangChainTool } from '../tools/compose-pages-langchain.js';
 import { DialogueGenerationLangChainTool } from '../tools/dialogue-generation-langchain.js';
+import { DialoguePlacementVisionLangChainTool } from '../tools/dialogue-placement-vision-langchain.js';
 import { EditPanelLangChainTool } from '../tools/edit-panel-langchain.js';
 import { LayoutSelectionLangChainTool } from '../tools/layout-selection-langchain.js';
 import { LeonardoImageGenerationLangChainTool } from '../tools/leonardo-image-generation-langchain.js';
@@ -70,6 +71,11 @@ class LangChainComicAgent {
       this.dialoguePlacementTool = dialoguePlacementTool.getTool();
       console.log(chalk.green('✓ Dialogue placement vision tool initialized'));
       
+      const renderDialogueTool = new RenderDialogueLangChainTool();
+      this.renderDialogueToolInstance = renderDialogueTool;
+      this.renderDialogueTool = renderDialogueTool.getTool();
+      console.log(chalk.green('✓ Render dialogue tool initialized'));
+      
       const editTool = new EditPanelLangChainTool();
       this.editToolInstance = editTool;
       this.editTool = editTool.getTool();
@@ -91,8 +97,8 @@ class LangChainComicAgent {
         temperature: 0.7,
       });
       
-      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then dialogue placement, then edit, then compose)
-      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.dialoguePlacementTool, this.editTool, this.composeTool]);
+      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then dialogue placement, then render dialogue, then edit, then compose)
+      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.dialoguePlacementTool, this.renderDialogueTool, this.editTool, this.composeTool]);
       
       console.log(chalk.green('✓ Gemini model initialized successfully'));
     } catch (error) {
@@ -343,22 +349,33 @@ class LangChainComicAgent {
           - Detect character positions in the image
           - Identify empty/negative space for bubble placement
           - Determine speech tail directions pointing to speakers
-          - Calculate optimal coordinates for each dialogue bubble
+          - Calculate optimal coordinates for each dialogue bubble (normalized to 0-1 range)
           - Maintain proper reading order
         - **Parameters**:
           - \`panelId\`: Optional - Specific panel ID to analyze (e.g., "panel2"). If omitted, analyzes all panels with dialogue.
           - \`sourceMap\`: Optional - Map of panel IDs to image URLs. If omitted, reads from comic.yaml.
-        - **Output**: Returns placement data with coordinates for each dialogue bubble:
-          - \`position\`: {x, y, width, height} - bubble center and dimensions
-          - \`tail\`: {x, y, direction} - speech tail pointing to speaker
-          - \`readingOrder\`: sequence number for reading flow
-          - \`reasoning\`: explanation of placement choice
+        - **Output**: Returns placement data with normalized coordinates (0-1 range) for each dialogue bubble
         - **CRITICAL - After placement analysis**:
           1. Parse the tool's JSON response to extract placements
           2. Show the user a summary of analyzed panels
           3. Explain that placement data has been saved to comic.yaml
-          4. Suggest using this data when composing final pages
-        - **Typical workflow**: Dialogue → Images → Dialogue Placement → Compose Pages (with text)
+          4. Suggest using \`render_dialogue_on_panels\` next to draw the text on images
+        
+        ---
+        
+        🎨 **Render Dialogue on Panels (Use AFTER dialogue placement)**
+        - **WHEN TO USE**: After \`place_dialogue_with_vision\` has analyzed and saved placement data.
+        - Use the \`render_dialogue_on_panels\` tool to draw speech bubbles and text on panel images.
+        - The tool:
+          - Reads normalized placement data from comic.yaml
+          - Loads panel images and draws speech bubbles with text
+          - Uses simple text rendering with automatic word wrapping
+          - Saves results to Cloudinary in \`comic/panels_with_text\` folder
+        - **Parameters**:
+          - \`panelId\`: Optional - Specific panel ID to render. If omitted, renders all panels with placements.
+          - \`sourceMap\`: Optional - Map of panel IDs to image URLs. Auto-filled from Leonardo output if available.
+        - **Output**: Returns Cloudinary URLs for panels with rendered dialogue
+        - **Typical workflow**: Dialogue → Images → Dialogue Placement → Render Dialogue → Compose Pages
         
         ---
         
@@ -431,9 +448,9 @@ class LangChainComicAgent {
         
         💬 **Style**
         - Be concise, structured, and friendly.  
-        - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout • 💬 Dialogue • 🎯 Placement • ✏️ Edit • 🖼️ Images • 📖 Pages).  
+        - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout • 💬 Dialogue • 🎯 Placement • 🖼️ Images • 📖 Pages).  
         - Always maintain a creative but professional tone.
-        - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Dialogue Placement (vision) → Pages (with text)
+        - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Dialogue Placement (vision) → Render Dialogue → Pages
         `
       };
 
@@ -489,6 +506,20 @@ class LangChainComicAgent {
             toolResults += toolResult;
           } else if (toolCall.name === 'place_dialogue_with_vision') {
             const toolResult = await this.dialoguePlacementTool.invoke(toolCall.args);
+            toolResults += toolResult;
+          } else if (toolCall.name === 'render_dialogue_on_panels') {
+            // If sourceMap not provided and we have last Leonardo output, use it
+            if (!toolCall.args.sourceMap && this.lastLeonardoOutput) {
+              try {
+                const leonardoData = JSON.parse(this.lastLeonardoOutput);
+                if (leonardoData.sourceMap) {
+                  toolCall.args.sourceMap = leonardoData.sourceMap;
+                }
+              } catch (e) {
+                // Ignore parse errors
+              }
+            }
+            const toolResult = await this.renderDialogueTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'edit_panel') {
             const toolResult = await this.editTool.invoke(toolCall.args);

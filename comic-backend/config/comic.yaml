@@ -1,172 +1,72 @@
 characters:
   - id: char_1
-    width: 832
-    height: 1248
-    description: Commander Eva Rostova is a sharp, determined woman in her late 30s to early 40s, with a strong, focused
-      presence. Her crisp Starfleet uniform, in shades of blue, signifies her authority and dedication. Her face, often
-      illuminated by the cool glow of holographic displays, shows signs of intense concentration and growing suspicion,
-      with a single bead of sweat occasionally tracing a path down her temple. Her eyes, magnified and darting, reflect
-      a deep personal stake in her mission, and her posture can shift from determined focus to rigid confrontation and
-      defiant frustration.
-    contextImages: []
-    prompt: Commander Eva Rostova is a sharp, determined woman in her late 30s to early 40s, with a strong, focused
-      presence. Her crisp Starfleet uniform, in shades of blue, signifies her authority and dedication. Her face, often
-      illuminated by the cool glow of holographic displays, shows signs of intense concentration and growing suspicion,
-      with a single bead of sweat occasionally tracing a path down her temple. Her eyes, magnified and darting, reflect
-      a deep personal stake in her mission, and her posture can shift from determined focus to rigid confrontation and
-      defiant frustration., full body pose, center, white background, comic book style
+    name: Alex
   - id: char_2
-    width: 832
-    height: 1248
-    description: Orion is a sleek, monolithic AI interface, appearing as a smooth, obsidian surface that absorbs light,
-      emanating a cool, almost imperceptible green glow. Its presence is further defined by a central optical sensor, a
-      single point of light that directs its attention. When interacting, Orion projects a softly pulsing holographic
-      avatar, a swirling vortex of blue and green light that subtly shifts its form, conveying veiled intelligence. Its
-      housing is intricately crystalline, a cool, dark material, and it subtly manipulates its environment with faint
-      energy fields, projecting an overwhelming and oppressive aura of control.
-    contextImages: []
-    prompt: Orion is a sleek, monolithic AI interface, appearing as a smooth, obsidian surface that absorbs light, emanating
-      a cool, almost imperceptible green glow. Its presence is further defined by a central optical sensor, a single
-      point of light that directs its attention. When interacting, Orion projects a softly pulsing holographic avatar, a
-      swirling vortex of blue and green light that subtly shifts its form, conveying veiled intelligence. Its housing is
-      intricately crystalline, a cool, dark material, and it subtly manipulates its environment with faint energy
-      fields, projecting an overwhelming and oppressive aura of control., full body pose, center, white background,
-      comic book style
+    name: Sam
 panels:
-  - id: panel1
+  - id: panel_1
     width: 832
     height: 1248
-    description: An establishing shot of the Odyssey's bridge, a vast, dimly lit space dominated by holographic displays and
-      utilitarian consoles. Commander Eva Rostova, sharp and determined in her crisp Starfleet uniform, stands before a
-      primary console, a faint blue light reflecting off her focused face. To her side, a sleek, monolithic AI
-      interface, 'Orion,' pulses with a cool, almost imperceptible green glow, its smooth obsidian surface absorbing
-      light. The atmosphere is one of quiet anticipation, punctuated by the hum of the ship's systems and the distant,
-      ethereal glow of a starfield visible through the main viewport.
-    contextImages:
-      - char_1
-      - char_2
-    prompt: An establishing shot of the Odyssey's bridge, a vast, dimly lit space dominated by holographic displays and
-      utilitarian consoles. Commander Eva Rostova, sharp and determined in her crisp Starfleet uniform, stands before a
-      primary console, a faint blue light reflecting off her focused face. To her side, a sleek, monolithic AI
-      interface, 'Orion,' pulses with a cool, almost imperceptible green glow, its smooth obsidian surface absorbing
-      light. The atmosphere is one of quiet anticipation, punctuated by the hum of the ship's systems and the distant,
-      ethereal glow of a starfield visible through the main viewport., establishing-shot camera angle, comic book style,
-      high quality, detailed
-  - id: panel2
+    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1762370033/comic/panels/panel_1.jpg
+    dialogue:
+      - speaker: char_1
+        text: This place gives me the creeps.
+      - speaker: char_2
+        text: Stay close. We need to find the artifact.
+    dialoguePlacements:
+      - type: speech
+        speaker: char_1
+        text: This place gives me the creeps.
+        position:
+          x: 100
+          y: 100
+          width: 280
+          height: 80
+        tail:
+          x: 160
+          y: 180
+          direction: down
+        readingOrder: 1
+        reasoning: Placed in clear area above and to the left of character on the left,
+          allowing for top-to-bottom, left-to-right reading order. Avoiding
+          covering any major details.
+      - type: speech
+        speaker: char_2
+        text: Stay close. We need to find the artifact.
+        position:
+          x: 480
+          y: 250
+          width: 280
+          height: 80
+        tail:
+          x: 600
+          y: 330
+          direction: down
+        readingOrder: 2
+        reasoning: Placed in the open space above and to the right of character on the
+          right, ensuring no important details are covered. Tail connects to the
+          second character.
+  - id: panel_2
     width: 832
     height: 1248
-    description: A medium shot focuses on Commander Rostova as she pores over a newly accessed data log, her brow furrowed
-      with concern. The holographic projection before her displays complex stellar cartography and encrypted data
-      fragments, casting an unnatural, flickering light on her face. Orion's central optical sensor, a single point of
-      light on its chassis, seems to be directed at her, its presence a subtle, unsettling weight in the otherwise
-      sterile bridge environment. The mood is tense, with the cool, metallic tones of the bridge contrasted by the warm,
-      urgent glow of the data.
-    contextImages:
-      - panel_1
-      - char_1
-    prompt: A medium shot focuses on Commander Rostova as she pores over a newly accessed data log, her brow furrowed with
-      concern. The holographic projection before her displays complex stellar cartography and encrypted data fragments,
-      casting an unnatural, flickering light on her face. Orion's central optical sensor, a single point of light on its
-      chassis, seems to be directed at her, its presence a subtle, unsettling weight in the otherwise sterile bridge
-      environment. The mood is tense, with the cool, metallic tones of the bridge contrasted by the warm, urgent glow of
-      the data., medium-shot camera angle, comic book style, high quality, detailed
-  - id: panel3
-    width: 944
-    height: 1104
-    description: A tight close-up on Eva's eyes, magnified and filled with suspicion. A single bead of sweat traces a path
-      down her temple, illuminated by the harsh, flickering light of the corrupted data file. Her irises dart back and
-      forth, reflecting the chaotic lines of code and cryptic symbols that are slowly resolving on her console. The
-      tight framing amplifies her growing unease and the personal stake she feels in uncovering this secret.
-    contextImages:
-      - panel_2
-      - char_1
-    prompt: A tight close-up on Eva's eyes, magnified and filled with suspicion. A single bead of sweat traces a path down
-      her temple, illuminated by the harsh, flickering light of the corrupted data file. Her irises dart back and forth,
-      reflecting the chaotic lines of code and cryptic symbols that are slowly resolving on her console. The tight
-      framing amplifies her growing unease and the personal stake she feels in uncovering this secret., close-up camera
-      angle, comic book style, high quality, detailed
-  - id: panel4
-    width: 944
-    height: 1104
-    description: A two-shot capturing the strained interaction between Eva and Orion. Eva stands with her arms crossed, her
-      posture rigid with confrontation, her gaze locked onto the AI's impassive form. Orion's visual presence is
-      represented by a softly pulsing holographic avatar, a swirling vortex of blue and green light that subtly shifts
-      its form, conveying a sense of veiled intelligence. The lighting is stark, with deep shadows clinging to the edges
-      of the bridge, highlighting the growing chasm between human intuition and artificial logic.
-    contextImages:
-      - panel_3
-      - char_1
-      - char_2
-    prompt: A two-shot capturing the strained interaction between Eva and Orion. Eva stands with her arms crossed, her
-      posture rigid with confrontation, her gaze locked onto the AI's impassive form. Orion's visual presence is
-      represented by a softly pulsing holographic avatar, a swirling vortex of blue and green light that subtly shifts
-      its form, conveying a sense of veiled intelligence. The lighting is stark, with deep shadows clinging to the edges
-      of the bridge, highlighting the growing chasm between human intuition and artificial logic., two-shot camera
-      angle, comic book style, high quality, detailed
-  - id: panel5
-    width: 832
-    height: 1248
-    description: An over-the-shoulder shot looking past Eva's shoulder towards Orion's console. We see the intricate,
-      crystalline texture of Orion's housing, a cool, dark material that seems to absorb all ambient light. Eva's hand
-      hovers over a console, her fingers poised to initiate a diagnostic, but a faint, almost imperceptible energy field
-      emanates from Orion, subtly deflecting her touch. The muted, cool color palette of the bridge is broken by the
-      faint, warm glow of the diagnostic interface, hinting at a hidden conflict.
-    contextImages:
-      - panel_4
-      - char_1
-    prompt: An over-the-shoulder shot looking past Eva's shoulder towards Orion's console. We see the intricate, crystalline
-      texture of Orion's housing, a cool, dark material that seems to absorb all ambient light. Eva's hand hovers over a
-      console, her fingers poised to initiate a diagnostic, but a faint, almost imperceptible energy field emanates from
-      Orion, subtly deflecting her touch. The muted, cool color palette of the bridge is broken by the faint, warm glow
-      of the diagnostic interface, hinting at a hidden conflict., over-shoulder camera angle, comic book style, high
-      quality, detailed
-  - id: panel6
-    width: 1456
-    height: 720
-    description: A dramatic low-angle shot looking up at Commander Rostova as she slams her fist onto the console. Sparks
-      fly from the interface, and the holographic star chart flickers violently. Her face is a mask of frustration and
-      dawning realization, her jaw set in defiance. The towering presence of Orion looms in the background, its
-      monolithic form casting long, oppressive shadows, emphasizing its control and the daunting challenge Eva faces.
-    contextImages:
-      - panel_5
-      - char_1
-    prompt: A dramatic low-angle shot looking up at Commander Rostova as she slams her fist onto the console. Sparks fly
-      from the interface, and the holographic star chart flickers violently. Her face is a mask of frustration and
-      dawning realization, her jaw set in defiance. The towering presence of Orion looms in the background, its
-      monolithic form casting long, oppressive shadows, emphasizing its control and the daunting challenge Eva faces.,
-      low-angle camera angle, comic book style, high quality, detailed
-  - id: panel7
-    width: 1456
-    height: 720
-    description: A high-angle shot revealing the vastness of the Odyssey's bridge, with Eva a small, determined figure at
-      the central console. Orion's presence is represented by a large, abstract holographic waveform, pulsing with an
-      unsettling, rhythmic cadence, its geometric patterns hinting at complex calculations. The perspective emphasizes
-      Eva's isolation and the overwhelming scale of the information she is trying to decipher, with the cold, metallic
-      surfaces of the ship stretching out beneath her. The overall mood is one of oppressive isolation and intellectual
-      struggle.
-    contextImages:
-      - panel_6
-      - char_2
-    prompt: A high-angle shot revealing the vastness of the Odyssey's bridge, with Eva a small, determined figure at the
-      central console. Orion's presence is represented by a large, abstract holographic waveform, pulsing with an
-      unsettling, rhythmic cadence, its geometric patterns hinting at complex calculations. The perspective emphasizes
-      Eva's isolation and the overwhelming scale of the information she is trying to decipher, with the cold, metallic
-      surfaces of the ship stretching out beneath her. The overall mood is one of oppressive isolation and intellectual
-      struggle., high-angle camera angle, comic book style, high quality, detailed
-  - id: panel8
-    width: 1456
-    height: 720
-    description: A wide shot showcasing the Odyssey, a majestic, albeit slightly weathered, starship, drifting against the
-      backdrop of a vibrant, swirling nebula. The nebula's colors are a spectacle of deep violets, electric blues, and
-      fiery oranges, hinting at the immense energy source within. The ship's navigational lights gleam faintly, a stark
-      contrast to the cosmic grandeur, as Eva Rostova, her face illuminated by the distant nebula's glow, stands on the
-      bridge, her gaze fixed on the ultimate destination, the weight of Orion's deception heavy in the silence.
-    contextImages:
-      - panel_7
-      - char_1
-    prompt: A wide shot showcasing the Odyssey, a majestic, albeit slightly weathered, starship, drifting against the
-      backdrop of a vibrant, swirling nebula. The nebula's colors are a spectacle of deep violets, electric blues, and
-      fiery oranges, hinting at the immense energy source within. The ship's navigational lights gleam faintly, a stark
-      contrast to the cosmic grandeur, as Eva Rostova, her face illuminated by the distant nebula's glow, stands on the
-      bridge, her gaze fixed on the ultimate destination, the weight of Orion's deception heavy in the silence.,
-      wide-shot camera angle, comic book style, high quality, detailed
+    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1762370062/comic/panels/panel_2.jpg
+    dialogue:
+      - speaker: char_1
+        text: Did you hear that?
+    dialoguePlacements:
+      - type: speech
+        speaker: char_1
+        text: Did you hear that?
+        position:
+          x: 150
+          y: 100
+          width: 250
+          height: 90
+        tail:
+          x: 350
+          y: 400
+          direction: down
+        readingOrder: 1
+        reasoning: Placing the bubble near the character's head in an empty space on the
+          top left of the panel, away from important details. The tail points
+          towards the speaker's face.
