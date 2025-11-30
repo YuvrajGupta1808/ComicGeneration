@@ -426,10 +426,25 @@ CRITICAL REQUIREMENTS:
 
   /** ───────────────────────────────────────────────
    *  Save to comic.yaml (characters + panels with full data)
+   *  PRESERVES existing dialogue, narration, title, and soundEffects
    *  ─────────────────────────────────────────────── */
   async saveComicYaml(panels, pageCount) {
     try {
       const comicPath = path.join(__dirname, '../../config/comic.yaml');
+      
+      // Load existing comic.yaml to preserve dialogue data
+      let existingPanels = [];
+      try {
+        if (fs.existsSync(comicPath)) {
+          const comicFile = fs.readFileSync(comicPath, 'utf8');
+          const parsed = yaml.parse(comicFile);
+          if (parsed.panels && Array.isArray(parsed.panels)) {
+            existingPanels = parsed.panels;
+          }
+        }
+      } catch (e) {
+        console.warn('Could not load existing comic.yaml:', e.message);
+      }
       
       // Load characters from characters.yaml or existing comic.yaml
       let characters = [];
@@ -504,6 +519,7 @@ CRITICAL REQUIREMENTS:
       });
 
       // Format panels with: id, width, height, description, contextImages, prompt
+      // PRESERVE dialogue, narration, title, soundEffects from existing panels
       const formattedPanels = panels.map((panel) => {
         const dimensions = this.getPanelDimensions(panel.panelid, pageCount);
         const prompt = this.generatePanelPrompt(panel.description, panel.cameraAngle);
@@ -514,7 +530,10 @@ CRITICAL REQUIREMENTS:
           contextImages = contextImages.slice(0, 4);
         }
         
-        return {
+        // Find existing panel data to preserve dialogue
+        const existingPanel = existingPanels.find(p => p.id === panel.panelid);
+        
+        const formattedPanel = {
           id: panel.panelid,
           width: dimensions.width,
           height: dimensions.height,
@@ -522,6 +541,20 @@ CRITICAL REQUIREMENTS:
           contextImages: contextImages,
           prompt: prompt
         };
+        
+        // Preserve dialogue data if it exists
+        if (existingPanel) {
+          if (existingPanel.title) formattedPanel.title = existingPanel.title;
+          if (existingPanel.dialogue && existingPanel.dialogue.length > 0) {
+            formattedPanel.dialogue = existingPanel.dialogue;
+          }
+          if (existingPanel.narration) formattedPanel.narration = existingPanel.narration;
+          if (existingPanel.soundEffects && existingPanel.soundEffects.length > 0) {
+            formattedPanel.soundEffects = existingPanel.soundEffects;
+          }
+        }
+        
+        return formattedPanel;
       });
 
       const comicData = {

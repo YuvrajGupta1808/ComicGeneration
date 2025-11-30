@@ -1,133 +1,71 @@
 // src/utils/simpleTextRenderer.js
 /**
- * Simple Text Renderer - No AI, Just Clean Text
+ * Skia Canvas Text Renderer - Professional Comic Speech Bubbles, Titles, and Narration
  */
+
+import path from "path";
+import { FontLibrary } from "skia-canvas";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load comic fonts
+const fontPath = path.join(__dirname, "../../config/font/ACMESecretAgentBB_Reg.otf");
+const fontBoldPath = path.join(__dirname, "../../config/font/ACMESecretAgentBB_BoldItal.otf");
+const fontItalicPath = path.join(__dirname, "../../config/font/ACMESecretAgentBB_Ital.otf");
+
+try {
+  FontLibrary.use("ACME Secret Agent", [fontPath, fontBoldPath, fontItalicPath]);
+} catch (err) {
+  console.warn("⚠️ Could not load comic fonts:", err.message);
+}
 
 /**
- * Draw speech bubble from placement data - WHITE background with BLACK text
+ * Draw text element from placement data with professional comic styling
+ * Handles: speech bubbles, titles, and narration boxes
  */
-export function drawBubbleFromPlacement(ctx, bubble) {
+export function drawBubbleFromPlacement(ctx, element) {
+  // Route to appropriate renderer based on type
+  if (element.type === "title") {
+    return drawTitleFromPlacement(ctx, element);
+  } else if (element.type === "narration") {
+    return drawNarrationFromPlacement(ctx, element);
+  } else {
+    return drawSpeechBubbleFromPlacement(ctx, element);
+  }
+}
+
+/**
+ * Draw speech bubble from placement data
+ */
+function drawSpeechBubbleFromPlacement(ctx, bubble) {
   const { position, text, tail } = bubble;
-  const { x, y, width, height } = position;
+  const { x, y } = position;
 
   ctx.save();
-  ctx.globalCompositeOperation = "source-over";
+
+  // Professional comic bubble styling
   const radius = 15;
+  const strokeWidth = 4.5;
+  const paddingX = 24;
+  const paddingY = 18;
+  const fontSize = 26;
 
-  // We'll draw the tail after getting imageData below
+  // Set font for measuring
+  ctx.font = `${fontSize}px "ACME Secret Agent", "Comic Sans MS", cursive`;
 
-  // Get current canvas image data
-  const canvasWidth = ctx.canvas.width;
-  const canvasHeight = ctx.canvas.height;
-  const imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
-  const data = imageData.data;
-
-  // Helper to set pixel
-  const setPixel = (px, py, r, g, b, a = 255) => {
-    if (px < 0 || px >= canvasWidth || py < 0 || py >= canvasHeight) return;
-    const index = (py * canvasWidth + px) * 4;
-    data[index] = r;
-    data[index + 1] = g;
-    data[index + 2] = b;
-    data[index + 3] = a;
-  };
-
-  // Helper to check if point is inside rounded rectangle
-  const isInsideRoundedRect = (px, py) => {
-    if (px >= x + radius && px <= x + width - radius && py >= y && py <= y + height) return true;
-    if (px >= x && px <= x + width && py >= y + radius && py <= y + height - radius) return true;
-    
-    const corners = [
-      { cx: x + radius, cy: y + radius },
-      { cx: x + width - radius, cy: y + radius },
-      { cx: x + radius, cy: y + height - radius },
-      { cx: x + width - radius, cy: y + height - radius }
-    ];
-    
-    for (const corner of corners) {
-      const dx = px - corner.cx;
-      const dy = py - corner.cy;
-      if (dx * dx + dy * dy <= radius * radius) return true;
-    }
-    return false;
-  };
-
-  // Draw white bubble fill using putImageData
-  for (let py = Math.floor(y); py < Math.ceil(y + height); py++) {
-    for (let px = Math.floor(x); px < Math.ceil(x + width); px++) {
-      if (isInsideRoundedRect(px, py)) {
-        setPixel(px, py, 255, 255, 255, 255);
-      }
-    }
-  }
-
-  // Draw black border (3px thick)
-  for (let py = Math.floor(y - 2); py < Math.ceil(y + height + 2); py++) {
-    for (let px = Math.floor(x - 2); px < Math.ceil(x + width + 2); px++) {
-      const isInside = isInsideRoundedRect(px, py);
-      const isNearEdge = 
-        isInsideRoundedRect(px - 1, py) || isInsideRoundedRect(px + 1, py) ||
-        isInsideRoundedRect(px, py - 1) || isInsideRoundedRect(px, py + 1) ||
-        isInsideRoundedRect(px - 2, py) || isInsideRoundedRect(px + 2, py) ||
-        isInsideRoundedRect(px, py - 2) || isInsideRoundedRect(px, py + 2);
-      
-      if (!isInside && isNearEdge) {
-        setPixel(px, py, 0, 0, 0, 255);
-      }
-    }
-  }
-
-  // Draw tail if present
-  if (tail) {
-    const tailBaseX = x + width / 2;
-    const tailBaseY = y + height;
-    
-    // Draw filled triangle for tail using barycentric coordinates
-    const drawTriangle = (x1, y1, x2, y2, x3, y3, r, g, b) => {
-      const minY = Math.floor(Math.min(y1, y2, y3));
-      const maxY = Math.ceil(Math.max(y1, y2, y3));
-      const minX = Math.floor(Math.min(x1, x2, x3));
-      const maxX = Math.ceil(Math.max(x1, x2, x3));
-      
-      for (let py = minY; py <= maxY; py++) {
-        for (let px = minX; px <= maxX; px++) {
-          const denom = ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
-          if (denom === 0) continue;
-          
-          const a = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) / denom;
-          const b = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) / denom;
-          const c = 1 - a - b;
-          
-          if (a >= 0 && b >= 0 && c >= 0) {
-            setPixel(px, py, r, g, b, 255);
-          }
-        }
-      }
-    };
-    
-    drawTriangle(tailBaseX - 15, tailBaseY, tail.x, tail.y, tailBaseX + 15, tailBaseY, 255, 255, 255);
-  }
-
-  // Put the modified image data back
-  ctx.putImageData(imageData, 0, 0);
-
-  // Draw BLACK text on white
-  ctx.fillStyle = "black";
-  ctx.font = "bold 22px Arial, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  // Word wrapping
+  // Smart word wrapping - auto-calculate optimal width
   const words = text.split(" ");
   const lines = [];
   let currentLine = "";
-  const maxWidth = width - 40;
+  const maxLineWidth = 280; // Max width for readability
 
   for (const word of words) {
     const testLine = currentLine ? `${currentLine} ${word}` : word;
     const metrics = ctx.measureText(testLine);
 
-    if (metrics.width > maxWidth && currentLine) {
+    if (metrics.width > maxLineWidth && currentLine) {
       lines.push(currentLine);
       currentLine = word;
     } else {
@@ -136,86 +74,258 @@ export function drawBubbleFromPlacement(ctx, bubble) {
   }
   if (currentLine) lines.push(currentLine);
 
-  // Draw text lines
-  const lineHeight = 28;
-  const totalHeight = lines.length * lineHeight;
-  const startY = y + height / 2 - totalHeight / 2 + lineHeight / 2;
+  // Calculate actual bubble dimensions based on text
+  let maxTextWidth = 0;
+  lines.forEach((line) => {
+    const metrics = ctx.measureText(line);
+    if (metrics.width > maxTextWidth) maxTextWidth = metrics.width;
+  });
+
+  const bubbleWidth = maxTextWidth + paddingX * 2;
+  const lineHeight = fontSize * 1.3;
+  const bubbleHeight = lines.length * lineHeight + paddingY * 2 + 5;
+
+  // Calculate tail attachment point based on actual tail position
+  let tailBaseX = x + bubbleWidth / 2;
+  let tailBaseY = y + bubbleHeight;
+  let tailDirection = "down";
+
+  if (tail) {
+    // Determine which side of bubble is closest to tail target
+    const dx = tail.x - (x + bubbleWidth / 2);
+    const dy = tail.y - (y + bubbleHeight / 2);
+
+    // Find closest edge
+    if (Math.abs(dy) > Math.abs(dx)) {
+      // Top or bottom
+      if (dy > 0) {
+        tailDirection = "down";
+        tailBaseX = x + bubbleWidth / 2 + Math.max(-40, Math.min(40, dx * 0.3));
+        tailBaseY = y + bubbleHeight;
+      } else {
+        tailDirection = "up";
+        tailBaseX = x + bubbleWidth / 2 + Math.max(-40, Math.min(40, dx * 0.3));
+        tailBaseY = y;
+      }
+    } else {
+      // Left or right
+      if (dx > 0) {
+        tailDirection = "right";
+        tailBaseX = x + bubbleWidth;
+        tailBaseY = y + bubbleHeight / 2 + Math.max(-30, Math.min(30, dy * 0.3));
+      } else {
+        tailDirection = "left";
+        tailBaseX = x;
+        tailBaseY = y + bubbleHeight / 2 + Math.max(-30, Math.min(30, dy * 0.3));
+      }
+    }
+  }
+
+  // Draw tail first (behind bubble) with better shape
+  if (tail) {
+    ctx.beginPath();
+
+    const tailWidth = 20;
+
+    if (tailDirection === "down") {
+      ctx.moveTo(tailBaseX - tailWidth, tailBaseY - 2);
+      ctx.lineTo(tail.x, tail.y);
+      ctx.lineTo(tailBaseX + tailWidth, tailBaseY - 2);
+      ctx.lineTo(tailBaseX, tailBaseY - 2);
+    } else if (tailDirection === "up") {
+      ctx.moveTo(tailBaseX - tailWidth, tailBaseY + 2);
+      ctx.lineTo(tail.x, tail.y);
+      ctx.lineTo(tailBaseX + tailWidth, tailBaseY + 2);
+      ctx.lineTo(tailBaseX, tailBaseY + 2);
+    } else if (tailDirection === "left") {
+      ctx.moveTo(tailBaseX + 2, tailBaseY - tailWidth);
+      ctx.lineTo(tail.x, tail.y);
+      ctx.lineTo(tailBaseX + 2, tailBaseY + tailWidth);
+      ctx.lineTo(tailBaseX + 2, tailBaseY);
+    } else if (tailDirection === "right") {
+      ctx.moveTo(tailBaseX - 2, tailBaseY - tailWidth);
+      ctx.lineTo(tail.x, tail.y);
+      ctx.lineTo(tailBaseX - 2, tailBaseY + tailWidth);
+      ctx.lineTo(tailBaseX - 2, tailBaseY);
+    }
+
+    ctx.closePath();
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fill();
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = strokeWidth;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke();
+  }
+
+  // Draw rounded rectangle bubble
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + bubbleWidth - radius, y);
+  ctx.arcTo(x + bubbleWidth, y, x + bubbleWidth, y + radius, radius);
+  ctx.lineTo(x + bubbleWidth, y + bubbleHeight - radius);
+  ctx.arcTo(
+    x + bubbleWidth,
+    y + bubbleHeight,
+    x + bubbleWidth - radius,
+    y + bubbleHeight,
+    radius
+  );
+  ctx.lineTo(x + radius, y + bubbleHeight);
+  ctx.arcTo(x, y + bubbleHeight, x, y + bubbleHeight - radius, radius);
+  ctx.lineTo(x, y + radius);
+  ctx.arcTo(x, y, x + radius, y, radius);
+  ctx.closePath();
+
+  // Fill and stroke bubble
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fill();
+  ctx.strokeStyle = "#000000";
+  ctx.lineWidth = strokeWidth;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  ctx.stroke();
+
+  // Draw text
+  ctx.fillStyle = "#000000";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.letterSpacing = "0.5px";
+
+  const startY = y + paddingY;
 
   lines.forEach((line, i) => {
-    ctx.fillText(line, x + width / 2, startY + i * lineHeight);
+    const yPos = startY + i * lineHeight;
+    ctx.fillText(line, x + bubbleWidth / 2, yPos);
   });
 
   ctx.restore();
 }
 
 /**
- * Draw simple speech bubble - WHITE background with BLACK text
+ * Draw title from placement data - Large, centered, no box
  */
-export function drawSimpleBubble(ctx, panelX, panelY, panelW, panelH, text, x, y) {
-  const bubbleX = panelX + (x * panelW);
-  const bubbleY = panelY + (y * panelH);
-  const bubbleW = Math.min(panelW * 0.4, 200);
-  const bubbleH = 60;
-  
-  // Draw WHITE bubble with BLACK border
-  ctx.fillStyle = "white";
-  ctx.strokeStyle = "black";
-  ctx.lineWidth = 3;
-  
-  // Rounded rectangle
+function drawTitleFromPlacement(ctx, titleElement) {
+  const { position, text } = titleElement;
+  const { x, y } = position;
+
+  ctx.save();
+
+  const fontSize = 48;
+  const strokeWidth = 6;
+
+  // Set font - bold for titles
+  ctx.font = `bold ${fontSize}px "ACME Secret Agent", "Impact", "Arial Black", sans-serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.letterSpacing = "2px";
+
+  // X position is already the center point from VLM
+  const centerX = x;
+
+  // Draw text with white outline for readability
+  ctx.strokeStyle = "#FFFFFF";
+  ctx.lineWidth = strokeWidth;
+  ctx.lineJoin = "round";
+  ctx.strokeText(text, centerX, y);
+
+  // Draw black text on top
+  ctx.fillStyle = "#000000";
+  ctx.fillText(text, centerX, y);
+
+  ctx.restore();
+}
+
+/**
+ * Draw narration box from placement data - Parchment style with serif font
+ */
+function drawNarrationFromPlacement(ctx, narrationElement) {
+  const { position, text } = narrationElement;
+  const { x, y } = position;
+
+  ctx.save();
+
+  const fontSize = 22;
+  const strokeWidth = 3;
+  const paddingX = 20;
+  const paddingY = 15;
+  const maxLineWidth = 600;
+  const cornerRadius = 8; // Less rounded than speech bubbles
+
+  // Set font - italic serif for narration
+  ctx.font = `italic ${fontSize}px Georgia, "Times New Roman", serif`;
+
+  // Word wrapping
+  const words = text.split(" ");
+  const lines = [];
+  let currentLine = "";
+
+  for (const word of words) {
+    const testLine = currentLine ? `${currentLine} ${word}` : word;
+    const metrics = ctx.measureText(testLine);
+
+    if (metrics.width > maxLineWidth && currentLine) {
+      lines.push(currentLine);
+      currentLine = word;
+    } else {
+      currentLine = testLine;
+    }
+  }
+  if (currentLine) lines.push(currentLine);
+
+  // Calculate box dimensions
+  let maxTextWidth = 0;
+  lines.forEach((line) => {
+    const metrics = ctx.measureText(line);
+    if (metrics.width > maxTextWidth) maxTextWidth = metrics.width;
+  });
+
+  const boxWidth = maxTextWidth + paddingX * 2;
+  const lineHeight = fontSize * 1.35;
+  const boxHeight = lines.length * lineHeight + paddingY * 2;
+
+  // Draw rounded rectangle with less rounded corners
   ctx.beginPath();
-  ctx.roundRect(bubbleX - bubbleW/2, bubbleY - bubbleH/2, bubbleW, bubbleH, 10);
+  ctx.moveTo(x + cornerRadius, y);
+  ctx.lineTo(x + boxWidth - cornerRadius, y);
+  ctx.arcTo(x + boxWidth, y, x + boxWidth, y + cornerRadius, cornerRadius);
+  ctx.lineTo(x + boxWidth, y + boxHeight - cornerRadius);
+  ctx.arcTo(
+    x + boxWidth,
+    y + boxHeight,
+    x + boxWidth - cornerRadius,
+    y + boxHeight,
+    cornerRadius
+  );
+  ctx.lineTo(x + cornerRadius, y + boxHeight);
+  ctx.arcTo(x, y + boxHeight, x, y + boxHeight - cornerRadius, cornerRadius);
+  ctx.lineTo(x, y + cornerRadius);
+  ctx.arcTo(x, y, x + cornerRadius, y, cornerRadius);
+  ctx.closePath();
+
+  // Fill with warm parchment tone
+  ctx.fillStyle = "#F3ECCB";
   ctx.fill();
+
+  // Draw 3px black border
+  ctx.strokeStyle = "#000000";
+  ctx.lineWidth = strokeWidth;
+  ctx.lineJoin = "miter"; // Sharp corners for rectangular feel
   ctx.stroke();
-  
-  // Draw BLACK text
-  ctx.fillStyle = "black";
-  ctx.font = "bold 16px Arial, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, bubbleX, bubbleY);
-}
 
-/**
- * Draw simple title
- */
-export function drawSimpleTitle(ctx, panelX, panelY, panelW, panelH, title) {
-  const titleX = panelX + panelW/2;
-  const titleY = panelY + 30;
-  
-  // Draw title background
-  ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-  ctx.fillRect(panelX, panelY, panelW, 50);
-  
-  // Draw title text
-  ctx.fillStyle = "#fff";
-  ctx.font = "bold 24px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(title, titleX, titleY);
-}
+  // Draw text in serif italic
+  ctx.fillStyle = "#000000";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.letterSpacing = "0.3px";
 
-/**
- * Render all text for a panel
- */
-export function renderPanelText(ctx, panelX, panelY, panelW, panelH, textData) {
-  if (!textData) return;
-  
-  // Draw title
-  if (textData.title) {
-    drawSimpleTitle(ctx, panelX, panelY, panelW, panelH, textData.title);
-  }
-  
-  // Draw dialogues
-  if (textData.dialogues) {
-    textData.dialogues.forEach(dialogue => {
-      drawSimpleBubble(
-        ctx, panelX, panelY, panelW, panelH,
-        dialogue.text,
-        dialogue.x,
-        dialogue.y
-      );
-    });
-  }
-}
+  const startY = y + paddingY;
 
+  lines.forEach((line, i) => {
+    const yPos = startY + i * lineHeight;
+    ctx.fillText(line, x + paddingX, yPos);
+  });
+
+  ctx.restore();
+}

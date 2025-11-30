@@ -26,7 +26,7 @@ export class LeonardoImageGenerationLangChainTool {
   constructor() {
     this.name = 'generate_leonardo_images';
     this.description =
-      'Generates images for characters and/or panels from comic.yaml using Leonardo AI and uploads them to Cloudinary. Can generate characters, panels, or both. Returns Cloudinary URLs for all generated images.';
+      'Generates images for characters and/or panels from comic.yaml using Leonardo AI and uploads them to Cloudinary. Can generate characters, panels, both, or a specific panel. Automatically uses context images for visual consistency. Returns Cloudinary URLs and generation summary.';
   }
 
   /**
@@ -44,9 +44,13 @@ export class LeonardoImageGenerationLangChainTool {
           .describe(
             'What to generate: "characters" (only characters), "panels" (only panels), or "both" (characters then panels)'
           ),
+        specificPanel: z
+          .string()
+          .optional()
+          .describe('Optional: Generate only a specific panel by ID (e.g., "panel4", "panel5")'),
       }),
-      func: async ({ generateType }) => {
-        return await this.execute(generateType);
+      func: async ({ generateType, specificPanel }) => {
+        return await this.execute(generateType, specificPanel);
       },
     });
   }
@@ -85,19 +89,22 @@ export class LeonardoImageGenerationLangChainTool {
       ...(contextImages && contextImages.length > 0 && { contextImages }),
     };
 
+    console.log(`🎨 [${prefix} ${imageNum}] Starting generation with ${contextImages?.length || 0} context images...`);
+    
     const res = await axios.post(`${LEONARDO.API_URL}/generations`, body, { headers: HEADERS });
     const genId = res.data.sdGenerationJob.generationId;
 
-    console.log(`🕓 [${prefix} ${imageNum}] Generating → ${genId}`);
+    console.log(`🕓 [${prefix} ${imageNum}] Generation ID: ${genId}`);
     
-    // Wait for generation to complete (polling)
+    // Wait for generation to complete (polling) - reduced time per poll
     let imageUrl = null;
     let leonardoImageId = null;
     let attempts = 0;
-    const maxAttempts = 30;
+    const maxAttempts = 40; // 40 attempts * 3 seconds = 2 minutes max
+    const pollInterval = 3000; // Reduced from 5000 to 3000ms
 
     while (attempts < maxAttempts) {
-      await new Promise((r) => setTimeout(r, 5000)); // Wait 5 seconds between polls
+      await new Promise((r) => setTimeout(r, pollInterval));
       attempts++;
 
       try {
@@ -111,19 +118,24 @@ export class LeonardoImageGenerationLangChainTool {
           const img = generatedImages[0];
           imageUrl = img.url;
           leonardoImageId = img.id;
+          console.log(`✓ [${prefix} ${imageNum}] Generation complete (${attempts * pollInterval / 1000}s)`);
           break;
         } else if (status === 'FAILED') {
           throw new Error(`Generation failed for ${prefix} ${imageNum}`);
+        } else if (attempts % 5 === 0) {
+          // Progress update every 15 seconds
+          console.log(`⏳ [${prefix} ${imageNum}] Still generating... (${attempts * pollInterval / 1000}s elapsed)`);
         }
       } catch (error) {
         if (attempts >= maxAttempts) {
-          throw new Error(`Timeout waiting for generation: ${error.message}`);
+          throw new Error(`Timeout after ${maxAttempts * pollInterval / 1000}s: ${error.message}`);
         }
+        // Continue polling on transient errors
       }
     }
 
     if (!imageUrl || !leonardoImageId) {
-      throw new Error(`No image returned for ${prefix} ${imageNum}`);
+      throw new Error(`No image returned for ${prefix} ${imageNum} after ${maxAttempts * pollInterval / 1000}s`);
     }
 
     // Download image and upload to Cloudinary
@@ -131,7 +143,7 @@ export class LeonardoImageGenerationLangChainTool {
     const buffer = Buffer.from(imageData.data);
     const publicId = `${prefix}_${imageNum}`;
     const uploaded = await uploadBuffer(buffer, publicId, folder);
-    console.log(`☁️ Uploaded ${prefix} ${imageNum} → ${uploaded.secure_url}`);
+    console.log(`☁️ [${prefix} ${imageNum}] Uploaded → ${uploaded.secure_url}`);
 
     return {
       number: imageNum,
@@ -143,7 +155,7 @@ export class LeonardoImageGenerationLangChainTool {
   /**
    * Execute image generation
    */
-  async execute(generateType = 'both') {
+  async execute(generateType = 'both', specificPanel = null) {
     try {
       const comicData = this.loadComicYaml();
       const { characters = [], panels = [] } = comicData;
@@ -164,6 +176,77 @@ export class LeonardoImageGenerationLangChainTool {
       // Context map to track generated images for use in panels
       const contextMap = {};
       const sourceMap = {}; // Maps character/panel IDs to Cloudinary URLs
+
+      // If specific panel requested, load existing context from previous generations
+      if (specificPanel && generateType === 'panels') {
+        console.log(`🎯 Generating specific panel: ${specificPanel}`);
+        
+        // Load existing character context
+        for (let i = 0; i < characters.length; i++) {
+          const char = characters[i];
+          const charId = char.id || `char_${i + 1}`;
+          // Note: We don't have leonardoId stored, so context won't include previous characters
+          // This is a limitation - ideally we'd store leonardoId in comic.yaml
+        }
+        
+        // Find the specific panel
+        const panelIndex = panels.findIndex(p => p.id === specificPanel);
+        if (panelIndex === -1) {
+          return JSON.stringify({
+            success: false,
+            error: `Panel ${specificPanel} not found in comic.yaml`,
+            results: {},
+          });
+        }
+        
+        const panel = panels[panelIndex];
+        
+        try {
+          // Build context images - for specific panel, we can't reference previous panels
+          // since we don't have their leonardoIds stored
+          let contextImages = [];
+          
+          const generated = await this.generateImage({
+            prompt: panel.prompt || panel.description,
+            imageNum: panelIndex + 1,
+            seed: 18000 + panelIndex * 23 + Math.floor(Math.random() * 100), // Add randomness for regeneration
+            width: panel.width || 832,
+            height: panel.height || 1248,
+            contextImages,
+            folder: 'comic/panels',
+            prefix: 'panel',
+          });
+
+          results.panels.push({
+            id: panel.id,
+            leonardoId: generated.leonardoId,
+            url: generated.cloudinaryUrl,
+          });
+          
+          sourceMap[panel.id] = generated.cloudinaryUrl;
+          
+          console.log(`✅ Panel ${specificPanel} generated successfully!`);
+          
+          return JSON.stringify(
+            {
+              success: true,
+              generateType: 'specific_panel',
+              specificPanel,
+              results,
+              sourceMap,
+            },
+            null,
+            2
+          );
+        } catch (error) {
+          console.error(`❌ Failed to generate panel ${specificPanel}:`, error.message);
+          return JSON.stringify({
+            success: false,
+            error: `Failed to generate panel ${specificPanel}: ${error.message}`,
+            results: {},
+          });
+        }
+      }
 
       // Generate characters if requested
       if (generateType === 'characters' || generateType === 'both') {
@@ -246,22 +329,26 @@ export class LeonardoImageGenerationLangChainTool {
                         }
                       }
                     }
-                    // Try direct lookup in contextMap
-                    if (contextMap[key]) {
-                      return contextMap[key];
-                    }
                     return null;
                   })
                   .filter(Boolean);
               }
 
-              // Optional: if no context images specified and not first panel, use previous panel
-              if (contextImages.length === 0 && i > 0) {
+              // CRITICAL: Always use previous panel as context for consistency
+              if (i > 0) {
                 const prevPanel = results.panels[i - 1];
                 if (prevPanel && prevPanel.leonardoId) {
-                  contextImages = [{ type: 'GENERATED', id: prevPanel.leonardoId }];
+                  // Add previous panel at the beginning for priority
+                  contextImages.unshift({ type: 'GENERATED', id: prevPanel.leonardoId });
                 }
               }
+              
+              // Limit to 4 context images max
+              if (contextImages.length > 4) {
+                contextImages = contextImages.slice(0, 4);
+              }
+
+              console.log(`📸 [panel ${i + 1}] Using ${contextImages.length} context images for consistency`);
 
               const generated = await this.generateImage({
                 prompt: panel.prompt || panel.description,
@@ -285,25 +372,83 @@ export class LeonardoImageGenerationLangChainTool {
                 url: generated.cloudinaryUrl,
               });
 
-              // Small delay between generations
+              // Reduced delay between generations (from 15s to 8s)
               if (i < panels.length - 1) {
-                await new Promise((r) => setTimeout(r, 10000));
+                console.log(`⏳ Waiting 8s before next panel...`);
+                await new Promise((r) => setTimeout(r, 8000));
               }
             } catch (error) {
               console.error(`❌ Failed to generate panel ${panelId}:`, error.message);
-              results.panels.push({
-                id: panelId,
-                error: error.message,
-              });
+              
+              // Retry once on any error
+              console.log(`🔄 Retrying panel ${panelId} (attempt 2/2)...`);
+              try {
+                await new Promise((r) => setTimeout(r, 5000)); // Wait 5s before retry
+                
+                // Rebuild context images for retry
+                let retryContextImages = [];
+                if (i > 0) {
+                  const prevPanel = results.panels[i - 1];
+                  if (prevPanel && prevPanel.leonardoId) {
+                    retryContextImages = [{ type: 'GENERATED', id: prevPanel.leonardoId }];
+                  }
+                }
+                
+                const generated = await this.generateImage({
+                  prompt: panel.prompt || panel.description,
+                  imageNum: i + 1,
+                  seed: 18000 + i * 23 + 1000, // Different seed for retry
+                  width: panel.width || 832,
+                  height: panel.height || 1248,
+                  contextImages: retryContextImages,
+                  folder: 'comic/panels',
+                  prefix: 'panel',
+                });
+
+                contextMap[`panel_${i + 1}`] = { type: 'GENERATED', id: generated.leonardoId };
+                contextMap[panelId] = { type: 'GENERATED', id: generated.leonardoId };
+                sourceMap[panelId] = generated.cloudinaryUrl;
+
+                results.panels.push({
+                  id: panelId,
+                  leonardoId: generated.leonardoId,
+                  url: generated.cloudinaryUrl,
+                  retried: true,
+                });
+                
+                console.log(`✓ Retry successful for panel ${panelId}`);
+                
+                // Continue with delay
+                if (i < panels.length - 1) {
+                  console.log(`⏳ Waiting 8s before next panel...`);
+                  await new Promise((r) => setTimeout(r, 8000));
+                }
+              } catch (retryError) {
+                console.error(`❌ Retry failed for panel ${panelId}:`, retryError.message);
+                results.panels.push({
+                  id: panelId,
+                  error: retryError.message,
+                  skipped: true,
+                });
+                
+                // Continue to next panel even after failure
+                console.log(`⏭️  Continuing to next panel...`);
+              }
             }
           }
         }
       }
 
-      console.log('✅ All image generation completed!');
+      console.log('✅ Image generation completed!');
+      
+      const successfulPanels = results.panels.filter(p => !p.error).length;
+      const failedPanels = results.panels.filter(p => p.error).length;
+      
+      console.log(`📊 Summary: ${successfulPanels} panels succeeded, ${failedPanels} panels failed`);
+      
       console.table([
-        ...results.characters.map((r) => ({ type: 'Character', id: r.id, url: r.url || r.error })),
-        ...results.panels.map((r) => ({ type: 'Panel', id: r.id, url: r.url || r.error })),
+        ...results.characters.map((r) => ({ type: 'Character', id: r.id, status: r.error ? '❌ Failed' : '✓ Success' })),
+        ...results.panels.map((r) => ({ type: 'Panel', id: r.id, status: r.error ? '❌ Failed' : (r.retried ? '✓ Retried' : '✓ Success') })),
       ]);
 
       return JSON.stringify(
@@ -312,6 +457,11 @@ export class LeonardoImageGenerationLangChainTool {
           generateType,
           results,
           sourceMap, // Map of all IDs to Cloudinary URLs
+          summary: {
+            totalPanels: panels.length,
+            successfulPanels,
+            failedPanels,
+          }
         },
         null,
         2

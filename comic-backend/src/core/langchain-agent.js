@@ -71,11 +71,6 @@ class LangChainComicAgent {
       this.dialoguePlacementTool = dialoguePlacementTool.getTool();
       console.log(chalk.green('✓ Dialogue placement vision tool initialized'));
       
-      const renderDialogueTool = new RenderDialogueLangChainTool();
-      this.renderDialogueToolInstance = renderDialogueTool;
-      this.renderDialogueTool = renderDialogueTool.getTool();
-      console.log(chalk.green('✓ Render dialogue tool initialized'));
-      
       const editTool = new EditPanelLangChainTool();
       this.editToolInstance = editTool;
       this.editTool = editTool.getTool();
@@ -97,8 +92,8 @@ class LangChainComicAgent {
         temperature: 0.7,
       });
       
-      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then dialogue placement, then render dialogue, then edit, then compose)
-      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.dialoguePlacementTool, this.renderDialogueTool, this.editTool, this.composeTool]);
+      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then dialogue placement, then edit, then compose)
+      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.dialoguePlacementTool, this.editTool, this.composeTool]);
       
       console.log(chalk.green('✓ Gemini model initialized successfully'));
     } catch (error) {
@@ -344,38 +339,26 @@ class LangChainComicAgent {
         
         🎯 **Dialogue Placement with Vision (Use AFTER images are generated)**
         - **WHEN TO USE**: After panel images have been generated with Leonardo AI and dialogue has been created.
-        - Use the \`place_dialogue_with_vision\` tool to analyze panel images and determine optimal positions for dialogue bubbles.
+        - Use the \`place_dialogue_with_vision\` tool to analyze panel images, determine optimal positions, AND render dialogue on images.
         - The tool uses Gemini Vision to:
           - Detect character positions in the image
           - Identify empty/negative space for bubble placement
           - Determine speech tail directions pointing to speakers
-          - Calculate optimal coordinates for each dialogue bubble (normalized to 0-1 range)
+          - Calculate optimal coordinates for each dialogue bubble
           - Maintain proper reading order
+          - **AUTOMATICALLY renders text on images and uploads to Cloudinary**
         - **Parameters**:
           - \`panelId\`: Optional - Specific panel ID to analyze (e.g., "panel2"). If omitted, analyzes all panels with dialogue.
           - \`sourceMap\`: Optional - Map of panel IDs to image URLs. If omitted, reads from comic.yaml.
-        - **Output**: Returns placement data with normalized coordinates (0-1 range) for each dialogue bubble
+        - **Output**: 
+          - Returns placement data for each dialogue bubble
+          - Returns Cloudinary URLs for rendered images with text (saved as textImageUrl in comic.yaml)
         - **CRITICAL - After placement analysis**:
-          1. Parse the tool's JSON response to extract placements
+          1. Parse the tool's JSON response to extract placements and rendered images
           2. Show the user a summary of analyzed panels
-          3. Explain that placement data has been saved to comic.yaml
-          4. Suggest using \`render_dialogue_on_panels\` next to draw the text on images
-        
-        ---
-        
-        🎨 **Render Dialogue on Panels (Use AFTER dialogue placement)**
-        - **WHEN TO USE**: After \`place_dialogue_with_vision\` has analyzed and saved placement data.
-        - Use the \`render_dialogue_on_panels\` tool to draw speech bubbles and text on panel images.
-        - The tool:
-          - Reads normalized placement data from comic.yaml
-          - Loads panel images and draws speech bubbles with text
-          - Uses simple text rendering with automatic word wrapping
-          - Saves results to Cloudinary in \`comic/panels_with_text\` folder
-        - **Parameters**:
-          - \`panelId\`: Optional - Specific panel ID to render. If omitted, renders all panels with placements.
-          - \`sourceMap\`: Optional - Map of panel IDs to image URLs. Auto-filled from Leonardo output if available.
-        - **Output**: Returns Cloudinary URLs for panels with rendered dialogue
-        - **Typical workflow**: Dialogue → Images → Dialogue Placement → Render Dialogue → Compose Pages
+          3. Explain that placement data AND rendered images have been saved to comic.yaml
+          4. Suggest using \`compose_pages\` next (which will automatically use the images with text)
+        - **Typical workflow**: Dialogue → Images → Dialogue Placement (renders text) → Compose Pages
         
         ---
         
@@ -388,23 +371,29 @@ class LangChainComicAgent {
         - All images are automatically uploaded to Cloudinary and URLs are returned.
         - **Parameters**: 
           - \`generateType\`: "characters" (only characters), "panels" (only panels), or "both" (default, generates characters first, then panels)
+          - \`specificPanel\`: Optional - Generate only a specific panel by ID (e.g., "panel4", "panel5"). Use this when user wants to regenerate a single panel.
         - **Typical workflow**: 
           1. User requests to generate images → use \`generate_leonardo_images\` with \`generateType: "both"\`
           2. Tool generates characters first, then panels (using characters as context)
           3. Returns Cloudinary URLs for all generated images (sourceMap)
+        - **Regenerate specific panel**:
+          - If user says "regenerate panel 4" or "fix panel 5", use \`specificPanel: "panel4"\` or \`specificPanel: "panel5"\`
+          - This will regenerate only that panel without affecting others
         - **IMPORTANT - After image generation**:
-          1. Parse the tool's JSON response to extract the sourceMap
+          1. Parse the tool's JSON response to extract the sourceMap and summary
           2. Show the user which images were generated (character IDs and panel IDs)
-          3. Optionally show a few sample Cloudinary URLs
-          4. Suggest composing pages next
+          3. Show success/failure summary (e.g., "8 panels succeeded, 0 failed")
+          4. If any panels failed, suggest regenerating them individually
+          5. Suggest composing pages next
         
         ---
         
         📖 **Page Composition (Final Step)**
-        - **WHEN TO USE**: After Leonardo images have been generated.
+        - **WHEN TO USE**: After Leonardo images have been generated (and optionally after dialogue has been placed).
         - Use the \`compose_pages\` tool to combine panel images into A4 comic pages.
         - The tool:
           - Reads panel URLs from sourceMap (from Leonardo tool output) or comic.yaml
+          - **AUTOMATICALLY uses images with rendered text (textImageUrl) if available**
           - Automatically determines layout based on panel count (3-page, 4-page, 5-page story)
           - Composes panels onto A4 pages using layouts from layouts.yaml
           - Uploads composed pages to Cloudinary
@@ -413,7 +402,7 @@ class LangChainComicAgent {
             - The full JSON response from Leonardo tool (tool will extract sourceMap automatically)
             - Just the sourceMap object: \`{"panel1": "url1", "panel2": "url2", ...}\`
             - If omitted, tool will try to construct from comic.yaml
-          - \`includeText\`: Boolean (default: false) - whether to add text/dialogue
+          - \`useTextImages\`: Boolean (default: true) - Use images with rendered text if available
           - \`pageCount\`: Optional override for page count detection
         - **How to get sourceMap from Leonardo output**:
           - When Leonardo tool returns JSON, it includes a \`sourceMap\` field
@@ -423,9 +412,10 @@ class LangChainComicAgent {
         - **Typical workflow**:
           1. User requests to compose pages → call \`compose_pages\` tool
           2. If Leonardo tool was just called, pass its full output as sourceMap parameter
-          3. Tool extracts panel URLs, matches layout, composes pages
-          4. Returns page URLs ready for viewing/sharing
-        - **Note**: If sourceMap is not provided, tool will attempt to construct URLs from comic.yaml automatically.
+          3. Tool automatically uses textImageUrl (images with dialogue) if available, otherwise uses original panel images
+          4. Tool extracts panel URLs, matches layout, composes pages
+          5. Returns page URLs ready for viewing/sharing
+        - **Note**: If dialogue has been placed with vision tool, compose_pages will automatically use those images with text.
         
         ---
         
@@ -450,7 +440,7 @@ class LangChainComicAgent {
         - Be concise, structured, and friendly.  
         - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout • 💬 Dialogue • 🎯 Placement • 🖼️ Images • 📖 Pages).  
         - Always maintain a creative but professional tone.
-        - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Dialogue Placement (vision) → Render Dialogue → Pages
+        - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Dialogue Placement (analyzes & renders text) → Compose Pages (uses images with text)
         `
       };
 
@@ -505,9 +495,6 @@ class LangChainComicAgent {
             const toolResult = await this.dialogueTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'place_dialogue_with_vision') {
-            const toolResult = await this.dialoguePlacementTool.invoke(toolCall.args);
-            toolResults += toolResult;
-          } else if (toolCall.name === 'render_dialogue_on_panels') {
             // If sourceMap not provided and we have last Leonardo output, use it
             if (!toolCall.args.sourceMap && this.lastLeonardoOutput) {
               try {
@@ -519,7 +506,7 @@ class LangChainComicAgent {
                 // Ignore parse errors
               }
             }
-            const toolResult = await this.renderDialogueTool.invoke(toolCall.args);
+            const toolResult = await this.dialoguePlacementTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'edit_panel') {
             const toolResult = await this.editTool.invoke(toolCall.args);

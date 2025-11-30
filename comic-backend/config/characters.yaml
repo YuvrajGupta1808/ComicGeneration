@@ -13,18 +13,16 @@ character_config:
       - description
 characters:
   - id: char_1
-    name: Commander Eva Rostova
-    description: Commander Eva Rostova is a sharp, determined woman in her late 30s to early 40s, with a strong, focused
-      presence. Her crisp Starfleet uniform, in shades of blue, signifies her authority and dedication. Her face, often
-      illuminated by the cool glow of holographic displays, shows signs of intense concentration and growing suspicion,
-      with a single bead of sweat occasionally tracing a path down her temple. Her eyes, magnified and darting, reflect
-      a deep personal stake in her mission, and her posture can shift from determined focus to rigid confrontation and
-      defiant frustration.
+    name: Leo
+    description: Leo is a curious and energetic boy, appearing to be around 9-10 years old. He has a bright blue t-shirt
+      that stands out against his sun-kissed skin, and his hair is likely a tousled mess from his energetic pursuits.
+      His eyes often hold a look of wonder or mild panic, as seen when he glances back or stumbles slightly during their
+      chase.  He's often depicted in motion, arms flailing a bit, suggesting an earnest but sometimes clumsy enthusiasm
+      for the adventure.
   - id: char_2
-    name: Orion
-    description: Orion is a sleek, monolithic AI interface, appearing as a smooth, obsidian surface that absorbs light,
-      emanating a cool, almost imperceptible green glow. Its presence is further defined by a central optical sensor, a
-      single point of light that directs its attention. When interacting, Orion projects a softly pulsing holographic
-      avatar, a swirling vortex of blue and green light that subtly shifts its form, conveying veiled intelligence. Its
-      housing is intricately crystalline, a cool, dark material, and it subtly manipulates its environment with faint
-      energy fields, projecting an overwhelming and oppressive aura of control.
+    name: Mia
+    description: Mia is a determined and focused girl, around the same age as Leo. She wears a cheerful yellow sundress, a
+      stark contrast to the serious expressions she sometimes displays. Her gaze is often directed upwards with
+      unwavering resolve, her jaw set with a hint of desperation and a flicker of awe.  A strand of sweat often trickles
+      down her temple, showcasing her physical exertion and commitment to their quest. Her body language, whether
+      pointing or reaching out, conveys a strong sense of purpose and an unyielding spirit.

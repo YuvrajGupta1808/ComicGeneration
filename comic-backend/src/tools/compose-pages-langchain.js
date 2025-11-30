@@ -21,7 +21,7 @@ export class ComposePagesLangChainTool {
   constructor() {
     this.name = 'compose_pages';
     this.description =
-      'Combines generated panel images into A4 comic pages using layouts from layouts.yaml. Reads panel URLs from sourceMap (from Leonardo tool output) or comic.yaml. Returns Cloudinary URLs for composed pages.';
+      'Combines generated panel images into A4 comic pages using layouts from layouts.yaml. Automatically uses images with rendered text (textImageUrl) if available. Reads panel URLs from sourceMap (from Leonardo tool output) or comic.yaml. Returns Cloudinary URLs for composed pages.';
   }
 
   /**
@@ -43,9 +43,13 @@ export class ComposePagesLangChainTool {
           .int()
           .optional()
           .describe('Override page count detection (auto-detected if not provided)'),
+        useTextImages: z
+          .boolean()
+          .optional()
+          .describe('Use images with rendered text (textImageUrl) if available. Default: true'),
       }),
-      func: async ({ sourceMap, pageCount }) => {
-        return await this.execute(sourceMap, pageCount);
+      func: async ({ sourceMap, pageCount, useTextImages = true }) => {
+        return await this.execute(sourceMap, pageCount, useTextImages);
       },
     });
   }
@@ -86,8 +90,9 @@ export class ComposePagesLangChainTool {
 
   /**
    * Get panel URLs from sourceMap, Leonardo output, or construct from results
+   * PRIORITY: Use textImageUrl (images with dialogue rendered) if available
    */
-  getPanelUrls(sourceMapStr) {
+  getPanelUrls(sourceMapStr, useTextImages = true) {
     let panelUrls = {};
 
     // Try to parse sourceMap if provided
@@ -169,6 +174,25 @@ export class ComposePagesLangChainTool {
       
       if (Object.keys(panelUrls).length === 0) {
         console.warn('⚠️  Could not construct panel URLs. Please provide sourceMap from Leonardo tool output.');
+      }
+    }
+
+    // CRITICAL: Override with textImageUrl if available and useTextImages is true
+    if (useTextImages) {
+      const comicData = this.loadComicYaml();
+      const panels = comicData.panels || [];
+      
+      let textImageCount = 0;
+      panels.forEach(panel => {
+        if (panel.textImageUrl && panelUrls[panel.id]) {
+          console.log(`✓ Using text image for ${panel.id}: ${panel.textImageUrl}`);
+          panelUrls[panel.id] = panel.textImageUrl;
+          textImageCount++;
+        }
+      });
+      
+      if (textImageCount > 0) {
+        console.log(`📝 Using ${textImageCount} panels with rendered text`);
       }
     }
 
@@ -296,10 +320,10 @@ export class ComposePagesLangChainTool {
   /**
    * Execute page composition
    */
-  async execute(sourceMapStr, pageCountOverride = null) {
+  async execute(sourceMapStr, pageCountOverride = null, useTextImages = true) {
     try {
-      // Get panel URLs
-      const panelUrls = this.getPanelUrls(sourceMapStr);
+      // Get panel URLs (prioritize text images if available)
+      const panelUrls = this.getPanelUrls(sourceMapStr, useTextImages);
 
       if (Object.keys(panelUrls).length === 0) {
         return JSON.stringify({
