@@ -1,0 +1,441 @@
+layouts:
+  single-panel:
+    name: "Single Panel Cover"
+    pages: 1
+    panels_per_page: 1
+    template: "cover"
+    dimensions: "832x1248"
+    layouts:
+      page1:
+        [
+          {
+            id: "panel1",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.02,
+            h: 0.96,
+          },
+        ]
+
+  two-page-story:
+    name: "Two Page Story"
+    pages: 2
+    panels_per_page: [1, 4]
+    template: "story"
+    layouts:
+      page1:
+        [
+          {
+            id: "panel1",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.02,
+            h: 0.96,
+          },
+        ]
+      page2:
+        [
+          {
+            id: "panel2",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.05,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel3",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.05,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+          {
+            id: "panel4",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.50,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel5",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.50,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+        ]
+
+  three-page-story:
+    name: "Three Page Story"
+    pages: 3
+    panels_per_page: [1, 4, 3]
+    template: "story"
+    layouts:
+      page1:
+        [
+          {
+            id: "panel1",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.02,
+            h: 0.96,
+          },
+        ]
+      page2:
+        [
+          {
+            id: "panel2",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.05,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel3",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.05,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+          {
+            id: "panel4",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.50,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel5",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.50,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+        ]
+      page3:
+        [
+          {
+            id: "panel6",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.03,
+            h: 0.30,
+          },
+          {
+            id: "panel7",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.35,
+            h: 0.30,
+          },
+          {
+            id: "panel8",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.67,
+            h: 0.30,
+          },
+        ]
+
+  four-page-story:
+    name: "Four Page Story"
+    pages: 4
+    panels_per_page: [1, 4, 4, 3]
+    template: "story"
+    layouts:
+      page1:
+        [
+          {
+            id: "panel1",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.02,
+            h: 0.96,
+          },
+        ]
+      page2:
+        [
+          {
+            id: "panel2",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.05,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel3",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.05,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+          {
+            id: "panel4",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.50,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel5",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.50,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+        ]
+      page3:
+        [
+          {
+            id: "panel6",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.05,
+            h: 0.41,
+            align: "left",
+          },
+          {
+            id: "panel7",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.05,
+            h: 0.41,
+            align: "right",
+          },
+          {
+            id: "panel8",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.50,
+            h: 0.41,
+            align: "left",
+          },
+          {
+            id: "panel9",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.50,
+            h: 0.41,
+            align: "right",
+          },
+        ]
+      page4:
+        [
+          {
+            id: "panel10",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.03,
+            h: 0.45,
+          },
+          {
+            id: "panel11",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.50,
+            h: 0.45,
+          },
+          {
+            id: "panel12",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.67,
+            h: 0.30,
+          },
+        ]
+
+  five-page-story:
+    name: "Five Page Story"
+    pages: 5
+    panels_per_page: [1, 4, 4, 3, 2]
+    template: "story"
+    layouts:
+      page1:
+        [
+          {
+            id: "panel1",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.02,
+            h: 0.96,
+          },
+        ]
+      page2:
+        [
+          {
+            id: "panel2",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.05,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel3",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.05,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+          {
+            id: "panel4",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.50,
+            h: 0.41,
+            align: "left",
+            offsetX: 0.042,
+          },
+          {
+            id: "panel5",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.50,
+            h: 0.41,
+            align: "right",
+            offsetX: -0.042,
+          },
+        ]
+      page3:
+        [
+          {
+            id: "panel6",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.05,
+            h: 0.41,
+            align: "left",
+          },
+          {
+            id: "panel7",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.05,
+            h: 0.41,
+            align: "right",
+          },
+          {
+            id: "panel8",
+            size: "944x1104",
+            width: 944,
+            height: 1104,
+            y: 0.50,
+            h: 0.41,
+            align: "left",
+          },
+          {
+            id: "panel9",
+            size: "832x1248",
+            width: 832,
+            height: 1248,
+            y: 0.50,
+            h: 0.41,
+            align: "right",
+          },
+        ]
+      page4:
+        [
+          {
+            id: "panel10",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.03,
+            h: 0.30,
+          },
+          {
+            id: "panel11",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.35,
+            h: 0.30,
+          },
+          {
+            id: "panel12",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.67,
+            h: 0.30,
+          },
+        ]
+      page5:
+        [
+          {
+            id: "panel13",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.03,
+            h: 0.45,
+          },
+          {
+            id: "panel14",
+            size: "1456x720",
+            width: 1456,
+            height: 720,
+            y: 0.50,
+            h: 0.45,
+          },
+        ]

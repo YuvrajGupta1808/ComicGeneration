@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'yaml';
 import { z } from 'zod';
+import comicService from '../services/comic-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +60,7 @@ export class CharacterGenerationLangChainTool {
       name: this.name,
       description: this.description,
       schema: z.object({
+        projectId: z.string().optional().describe('Project ID to add characters to (auto-injected if not provided)'),
         storyContext: z.string()
           .optional()
           .describe('Brief description of the story or genre to inform character generation'),
@@ -66,16 +68,30 @@ export class CharacterGenerationLangChainTool {
           .optional()
           .describe('Genre of the comic (e.g., sci-fi, fantasy, mystery, adventure)')
       }),
-      func: async ({ storyContext, genre }) => {
-        return await this.execute(storyContext, genre);
+      func: async ({ projectId, storyContext, genre }) => {
+        return await this.execute(projectId, storyContext, genre);
       }
     });
   }
 
   /**
-   * Load panels from comic.yaml
+   * Load panels from database
    */
-  loadPanelsFromComic() {
+  async loadPanelsFromDatabase(projectId) {
+    try {
+      const comicData = await comicService.getComicData(projectId);
+      return comicData.panels || [];
+    } catch (error) {
+      console.warn('Could not load panels from database:', error.message);
+      // Fallback to YAML
+      return this.loadPanelsFromYAML();
+    }
+  }
+
+  /**
+   * Load panels from comic.yaml (fallback)
+   */
+  loadPanelsFromYAML() {
     try {
       const comicPath = path.join(__dirname, '../../config/comic.yaml');
       if (fs.existsSync(comicPath)) {
@@ -91,16 +107,25 @@ export class CharacterGenerationLangChainTool {
 
   /**
    * Execute character generation based on panels
+   * @param {string} projectId - Project ID
    * @param {string} storyContext - Optional story context
    * @param {string} genre - Optional genre
    * @returns {Promise<string>} JSON string with formatted character data
    */
-  async execute(storyContext = '', genre = '') {
+  async execute(projectId, storyContext = '', genre = '') {
     try {
+      if (!projectId) {
+        return JSON.stringify({
+          success: false,
+          error: 'Project ID is required. Please generate panels first.',
+          characters: []
+        });
+      }
+
       const characterCount = this.config.default_count || 2;
 
-      // Load panels from comic.yaml first
-      const panels = this.loadPanelsFromComic();
+      // Load panels from database
+      const panels = await this.loadPanelsFromDatabase(projectId);
       
       if (panels.length === 0) {
         return JSON.stringify({
@@ -235,14 +260,12 @@ Output ONLY the JSON array, no explanations, no markdown.
         });
       }
 
-      // Save to characters.yaml
-      await this.saveCharactersToYaml(characters);
-
-      // Also update comic.yaml if it exists
-      await this.updateComicYaml(characters);
+      // Save to database
+      await this.saveCharactersToDatabase(projectId, characters);
 
       return JSON.stringify({
         success: true,
+        projectId: projectId,
         characterCount: characters.length,
         model: 'gemini-2.5-flash-lite',
         characters: characters
@@ -254,6 +277,32 @@ Output ONLY the JSON array, no explanations, no markdown.
         error: `Failed to generate characters: ${error.message}`,
         characters: []
       });
+    }
+  }
+
+  /**
+   * Save characters to database
+   */
+  async saveCharactersToDatabase(projectId, characters) {
+    try {
+      const formattedCharacters = characters.map((char, index) => {
+        const prompt = `${char.description}, ${this.config.fixed_prompt_elements.join(', ')}`;
+        return {
+          characterId: char.id,
+          name: char.name,
+          description: char.description,
+          prompt: prompt,
+          width: this.config.image_specs.width,
+          height: this.config.image_specs.height,
+          contextImages: []
+        };
+      });
+
+      await comicService.saveCharacters(projectId, formattedCharacters);
+      console.log(`✓ Saved ${formattedCharacters.length} characters to database (project: ${projectId})`);
+    } catch (error) {
+      console.error('Failed to save characters to database:', error.message);
+      throw error;
     }
   }
 

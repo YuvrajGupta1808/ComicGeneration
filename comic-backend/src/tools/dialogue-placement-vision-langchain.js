@@ -31,7 +31,17 @@ export class DialoguePlacementVisionLangChainTool {
       "Uses Gemini Vision to analyze comic panel images and determine optimal dialogue bubble positions.";
   }
 
-  loadComicData() {
+  async loadComicData(projectId) {
+    try {
+      return await comicService.getComicData(projectId);
+    } catch (err) {
+      console.warn("⚠️ Failed to load comic data from database", err.message);
+      // Fallback to YAML
+      return this.loadComicDataFromYAML();
+    }
+  }
+
+  loadComicDataFromYAML() {
     try {
       const comicPath = path.join(__dirname, "../../config/comic.yaml");
       if (fs.existsSync(comicPath)) {
@@ -55,14 +65,15 @@ export class DialoguePlacementVisionLangChainTool {
       name: this.name,
       description: this.description,
       schema: z.object({
+        projectId: z.string().describe('Project ID to place dialogue for'),
         panelId: z.string().optional(),
         sourceMap: z.union([
           z.record(z.string()),
           z.string()
         ]).optional()
       }),
-      func: async ({ panelId, sourceMap }) =>
-        await this.execute(panelId, sourceMap)
+      func: async ({ projectId, panelId, sourceMap }) =>
+        await this.execute(projectId, panelId, sourceMap)
     });
   }
 
@@ -80,7 +91,7 @@ export class DialoguePlacementVisionLangChainTool {
     };
   }
 
-  async execute(panelId = null, sourceMap = null) {
+  async execute(projectId, panelId = null, sourceMap = null) {
     try {
       // Parse sourceMap if it's a string (JSON from Leonardo tool)
       if (typeof sourceMap === 'string') {
@@ -99,7 +110,7 @@ export class DialoguePlacementVisionLangChainTool {
         }
       }
       
-      const comicData = this.loadComicData();
+      const comicData = await this.loadComicData(projectId);
       
       if (!comicData.panels || !comicData.panels.length) {
         return JSON.stringify({
@@ -293,12 +304,16 @@ BEGIN ANALYSIS AND RETURN JSON:
       // Render images with text
       const renderedImages = await this.renderDialogueImages(analyze, outputs);
       
-      // Save placements with Cloudinary URLs
+      // Save placements to database
+      await this.savePlacementsToDatabase(projectId, outputs, renderedImages);
+      
+      // Also save to YAML for backward compatibility
       await this.savePlacements(outputs, renderedImages);
 
       return JSON.stringify(
         {
           success: true,
+          projectId: projectId,
           analyzedPanels: outputs.length,
           placements: outputs,
           renderedImages
@@ -312,6 +327,36 @@ BEGIN ANALYSIS AND RETURN JSON:
         error: err.message,
         placements: []
       });
+    }
+  }
+
+  async savePlacementsToDatabase(projectId, list, renderedImages = []) {
+    try {
+      for (const placement of list) {
+        const rendered = renderedImages.find((r) => r.panelId === placement.panelId);
+        
+        // Update panel with text image URL
+        if (rendered && rendered.cloudinaryUrl) {
+          await comicService.updatePanelImages(projectId, placement.panelId, null, rendered.cloudinaryUrl);
+        }
+        
+        // Update dialogue positions
+        if (placement.placements && placement.placements.length > 0) {
+          const panel = await panelRepo.getByPanelId(projectId, placement.panelId);
+          if (panel && panel.dialogue) {
+            for (let i = 0; i < placement.placements.length; i++) {
+              const dialoguePlacement = placement.placements[i];
+              if (panel.dialogue[i]) {
+                await panelRepo.updateDialoguePosition(panel.dialogue[i].id, dialoguePlacement);
+              }
+            }
+          }
+        }
+      }
+      console.log(`✓ Saved dialogue placements to database (project: ${projectId})`);
+    } catch (error) {
+      console.error('Failed to save placements to database:', error.message);
+      // Don't throw - placement succeeded, just database update failed
     }
   }
 

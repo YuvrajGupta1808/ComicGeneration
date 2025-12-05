@@ -5,6 +5,8 @@ Professional CLI agent for AI-powered comic generation workflows using LangChain
 ## 📋 Features
 
 - **Interactive CLI** - Conversational interface for comic creation
+- **🧠 Memory System** - Persistent and volatile memory for learning from experience
+- **🤖 Decision Engine** - Intelligent retry logic and failure recovery
 - **Story Generation** - AI-powered story ideas and expansion
 - **Panel Generation** - Create detailed panel descriptions with camera angles
 - **Character Creation** - Generate consistent character designs
@@ -12,7 +14,7 @@ Professional CLI agent for AI-powered comic generation workflows using LangChain
 - **Dialogue Generation** - Create dialogue, narration, and sound effects
 - **Dialogue Placement (Vision)** - AI vision-based optimal dialogue bubble positioning with normalized coordinates
 - **Dialogue Rendering** - Draw speech bubbles with text on panel images (white bubbles, black text)
-- **Leonardo AI Integration** - Generate images using Leonardo Phoenix 1.0
+- **Leonardo AI Integration** - Generate images using Leonardo Phoenix 1.0 with automatic retries
 - **Page Composition** - Combine panels into A4 comic pages
 - **Edit Tools** - Modify panels and characters after generation
 
@@ -46,6 +48,33 @@ CLOUDINARY_API_SECRET=your_cloudinary_secret
 ```bash
 npm run langchain
 ```
+
+## 🧠 Memory & Decision System
+
+The agent now includes intelligent memory and decision-making capabilities:
+
+### Features
+- **Persistent Memory** - Learns from past successes and failures across sessions
+- **Volatile Memory** - Tracks attempts and results within current session
+- **Automatic Retries** - Intelligently retries failed operations with different strategies
+- **Partial Success Handling** - Continues with successful panels, retries failed ones individually
+- **Leonardo-Specific Strategies** - Reduces context, changes seeds, simplifies prompts on retry
+
+### Commands
+```bash
+memory          # View memory status
+clear session   # Reset session memory (keeps learned patterns)
+```
+
+### How It Works
+When Leonardo AI or other tools fail:
+1. **Evaluates error** - Determines if recoverable
+2. **Decides strategy** - Reduces context, changes seed, or simplifies prompt
+3. **Applies modifications** - Updates parameters automatically
+4. **Retries** - Executes with new parameters (up to 3 attempts for Leonardo)
+5. **Learns** - Records success/failure for future use
+
+See [MEMORY_SYSTEM.md](./MEMORY_SYSTEM.md) for detailed documentation.
 
 ## 💬 Usage
 

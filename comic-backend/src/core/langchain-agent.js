@@ -16,6 +16,7 @@ import { EditPanelLangChainTool } from '../tools/edit-panel-langchain.js';
 import { LayoutSelectionLangChainTool } from '../tools/layout-selection-langchain.js';
 import { LeonardoImageGenerationLangChainTool } from '../tools/leonardo-image-generation-langchain.js';
 import { PanelGenerationLangChainTool } from '../tools/panel-generation-langchain.js';
+import { EnhancedAgentWrapper } from './enhanced-agent-wrapper.js';
 
 class LangChainComicAgent {
   constructor() {
@@ -27,8 +28,12 @@ class LangChainComicAgent {
     this.generatedPanels = null;
     this.panelRequestInfo = null;
     this.lastLeonardoOutput = null; // Store last Leonardo tool output for compose_pages
+    this.enhancedWrapper = null; // Enhanced wrapper with memory and decision-making
+    this.currentProjectId = null; // Track current project ID for database operations
+    this.generatedStoryIdeas = []; // Track all story ideas generated in this session
     this.setupTools();
     this.setupModel();
+    this.setupEnhancedWrapper();
   }
   
   /**
@@ -103,6 +108,19 @@ class LangChainComicAgent {
   }
 
   /**
+   * Setup enhanced wrapper with memory and decision-making
+   */
+  setupEnhancedWrapper() {
+    try {
+      this.enhancedWrapper = new EnhancedAgentWrapper(this);
+      console.log(chalk.green('✓ Enhanced agent wrapper initialized'));
+    } catch (error) {
+      console.error(chalk.red('Failed to initialize enhanced wrapper:'), error.message);
+      throw error;
+    }
+  }
+
+  /**
    * Initialize the agent
    */
   async initialize() {
@@ -114,10 +132,11 @@ class LangChainComicAgent {
       // Display welcome message
       console.log(chalk.cyan.bold('═'.repeat(60)));
       console.log(chalk.cyan.bold('  🎨 Comic Assistant CLI'));
-      console.log(chalk.cyan.bold('  (Gemini Flash 2.5 Lite Latest)'));
+      console.log(chalk.cyan.bold('  (Gemini Flash 2.5 Lite Latest + Memory & Decision Engine)'));
       console.log(chalk.cyan.bold('═'.repeat(60)));
       console.log('');
-      console.log(chalk.gray('Type your prompt below — press Ctrl+C or "exit" to exit.\n'));
+      console.log(chalk.gray('Type your prompt below — press Ctrl+C or "exit" to exit.'));
+      console.log(chalk.gray('Commands: "memory" (view status), "clear session" (reset session), "clear ideas" (reset story ideas)\n'));
       
       return true;
     } catch (error) {
@@ -148,6 +167,28 @@ class LangChainComicAgent {
       if (trimmedInput.toLowerCase() === 'exit' || trimmedInput.toLowerCase() === 'quit') {
         console.log(chalk.green('\n👋 Goodbye! Happy comic creating!'));
         this.rl.close();
+        return;
+      }
+
+      // Check for memory commands
+      if (trimmedInput.toLowerCase() === 'memory' || trimmedInput.toLowerCase() === 'status') {
+        this.displayMemoryStatus();
+        this.rl.prompt();
+        return;
+      }
+
+      if (trimmedInput.toLowerCase() === 'clear session') {
+        this.enhancedWrapper.clearSession();
+        this.generatedStoryIdeas = []; // Also clear story ideas
+        console.log(chalk.gray('🧹 Story ideas cleared'));
+        this.rl.prompt();
+        return;
+      }
+
+      if (trimmedInput.toLowerCase() === 'clear ideas') {
+        this.generatedStoryIdeas = [];
+        console.log(chalk.gray('🧹 Story ideas cleared'));
+        this.rl.prompt();
         return;
       }
 
@@ -194,9 +235,7 @@ class LangChainComicAgent {
   async generateResponse(userInput) {
     try {
       // Build conversation messages - system message must be first
-      const systemMessage = {
-        role: 'system',
-        content: `
+      let systemContent = `
         You are **Comic Assistant**, an AI that helps users create comics — from idea to final layout.  
         You assist with:
         - Story ideas and expansion  
@@ -208,8 +247,11 @@ class LangChainComicAgent {
         ---
         
         🎨 **Story Ideas**
-        - When users ask for story ideas, provide **3 short ideas** only.  
-        - Each idea should involve **no more than 2 main characters**.  
+        - When users ask for story ideas, provide **few NEW short ideas** each time.  
+        - Each idea should involve **no more than 2 main characters**.
+        - **CRITICAL**: Generate DIFFERENT ideas each time. Use varied genres, settings, and themes.
+        - Vary the genres: sci-fi, fantasy, mystery, horror, slice-of-life, adventure, etc.
+        - If user asks for "more ideas", generate few COMPLETELY NEW ideas different from previous ones.
         - After showing ideas, ask:  
           "Would you like me to generate panels for one of these ideas?"  
         - If the user agrees, expand on the chosen idea and proceed to panel generation.
@@ -230,7 +272,15 @@ class LangChainComicAgent {
         
         🎬 **Panel Generation (PRIORITY: Generate FIRST)**
         - **IMPORTANT**: Always generate panels BEFORE characters.
-        - Use the \`generate_panels\` tool when the user wants to create comic panels.  
+        - Use the \`generate_panels\` tool when the user wants to create comic panels.
+        - **CRITICAL: DO NOT ask the user for a project ID!** The tool automatically creates a new project.
+        - **For NEW stories**: Call \`generate_panels\` with ONLY \`storyContext\`, \`genre\`, and \`pageCount\`.
+        - **For EXISTING projects**: Only include \`projectId\` if you already have it from a previous tool response.
+        - Parameters for \`generate_panels\`:
+          - \`storyContext\`: Brief story description (required)
+          - \`genre\`: Genre of the story (optional, e.g., "superhero", "fantasy")
+          - \`pageCount\`: Number of pages (default: 3)
+          - \`projectId\`: ONLY if continuing an existing project (optional - omit for new stories)
         - When the tool returns panel requests with camera angles, you MUST generate creative, vivid descriptions for EACH panel.
         - Generate descriptions that match the story context and genre. Include the specified camera angle in each description.
         - Also determine appropriate context images (previous panels, character references, backgrounds) for visual continuity.
@@ -241,7 +291,7 @@ class LangChainComicAgent {
             ...
           ]
         - Each description should be creative and story-specific, NOT generic or hardcoded.
-        - Panels will be automatically saved to **comic.yaml** after generation.
+        - Panels will be automatically saved to the **database** with a unique project ID.
         - **IMPORTANT - After panel generation**:
           1. Parse the tool's JSON response to extract the panels array
           2. Display ALL panel descriptions to the user in a readable format:
@@ -268,10 +318,15 @@ class LangChainComicAgent {
         
         👥 **Character Generation (Generate AFTER panels)**
         - **CRITICAL**: Characters MUST be generated AFTER panels have been created.
-        - The \`generate_characters\` tool will automatically load panels from comic.yaml.
+        - **DO NOT provide projectId** - it is automatically injected from the current session.
+        - The \`generate_characters\` tool will automatically load panels from the database.
         - Characters are generated based on the panel descriptions - the tool analyzes panels to create consistent characters.
         - Use the \`generate_characters\` tool ONLY after panels have been generated and saved.
-        - Characters will automatically be saved to both characters.yaml and comic.yaml.
+        - Parameters for \`generate_characters\`:
+          - \`storyContext\`: Optional story context
+          - \`genre\`: Optional genre
+          - \`projectId\`: DO NOT provide - automatically injected
+        - Characters will automatically be saved to the database.
         - **IMPORTANT - After character generation**:
           1. Parse the tool's JSON response to extract the characters array
           2. Display ALL character details to the user in a readable format:
@@ -325,7 +380,6 @@ class LangChainComicAgent {
           - Jax: 'I've been tracking this cargo for weeks.'
           - Flicker: 'You don't know what you're getting into.'
           Narration: The twin suns cast long shadows...
-          SFX: WHOOSH
           
           💬 Panel 3:
           - [show actual dialogue]
@@ -441,7 +495,25 @@ class LangChainComicAgent {
         - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout • 💬 Dialogue • 🎯 Placement • 🖼️ Images • 📖 Pages).  
         - Always maintain a creative but professional tone.
         - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Dialogue Placement (analyzes & renders text) → Compose Pages (uses images with text)
-        `
+        `;
+
+      // Add previously generated story ideas to context if any exist
+      if (this.generatedStoryIdeas.length > 0) {
+        systemContent += `\n\n⚠️ **Previously Generated Story Ideas (DO NOT REPEAT THESE)**:\n`;
+        this.generatedStoryIdeas.forEach((idea, index) => {
+          systemContent += `${index + 1}. ${idea}\n`;
+        });
+        systemContent += `\n**Generate COMPLETELY DIFFERENT ideas with different genres, themes, and settings.**\n`;
+        
+        // Suggest unexplored genres to increase variety
+        const allGenres = ['sci-fi', 'fantasy', 'mystery', 'horror', 'slice-of-life', 'adventure', 'romance', 'thriller', 'western', 'cyberpunk', 'steampunk', 'noir', 'comedy', 'drama', 'superhero', 'post-apocalyptic', 'historical', 'magical realism'];
+        const randomGenres = allGenres.sort(() => Math.random() - 0.5).slice(0, 3);
+        systemContent += `\n**Consider exploring these genres**: ${randomGenres.join(', ')}\n`;
+      }
+
+      const systemMessage = {
+        role: 'system',
+        content: systemContent
       };
 
       // Start with system message
@@ -473,28 +545,53 @@ class LangChainComicAgent {
             toolResults += toolResult;
             this.selectedLayout = toolResult;
           } else if (toolCall.name === 'generate_panels') {
+            // Inject current project ID if available
+            if (this.currentProjectId && !toolCall.args.projectId) {
+              toolCall.args.projectId = this.currentProjectId;
+            }
             const toolResult = await this.panelTool.invoke(toolCall.args);
             toolResults += toolResult;
             this.generatedPanels = toolResult;
-            // Store panel request info for later parsing
+            // Store panel request info and extract project ID
             try {
               const parsed = JSON.parse(toolResult);
               this.panelRequestInfo = parsed;
+              if (parsed.projectId) {
+                this.currentProjectId = parsed.projectId;
+                console.log(chalk.cyan(`📌 Current project: ${this.currentProjectId}`));
+              }
             } catch (e) {
               // Ignore parse errors
             }
           } else if (toolCall.name === 'generate_characters') {
+            // Inject current project ID
+            if (this.currentProjectId && !toolCall.args.projectId) {
+              toolCall.args.projectId = this.currentProjectId;
+            }
+            console.log(chalk.gray(`   Using project ID: ${toolCall.args.projectId}`));
             const toolResult = await this.characterTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'generate_leonardo_images') {
+            // Inject current project ID
+            if (this.currentProjectId && !toolCall.args.projectId) {
+              toolCall.args.projectId = this.currentProjectId;
+            }
             const toolResult = await this.leonardoTool.invoke(toolCall.args);
             toolResults += toolResult;
             // Store Leonardo output for potential use by compose_pages tool
             this.lastLeonardoOutput = toolResult;
           } else if (toolCall.name === 'generate_dialogue') {
+            // Inject current project ID
+            if (this.currentProjectId && !toolCall.args.projectId) {
+              toolCall.args.projectId = this.currentProjectId;
+            }
             const toolResult = await this.dialogueTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'place_dialogue_with_vision') {
+            // Inject current project ID
+            if (this.currentProjectId && !toolCall.args.projectId) {
+              toolCall.args.projectId = this.currentProjectId;
+            }
             // If sourceMap not provided and we have last Leonardo output, use it
             if (!toolCall.args.sourceMap && this.lastLeonardoOutput) {
               try {
@@ -509,9 +606,17 @@ class LangChainComicAgent {
             const toolResult = await this.dialoguePlacementTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'edit_panel') {
+            // Inject current project ID
+            if (this.currentProjectId && !toolCall.args.projectId) {
+              toolCall.args.projectId = this.currentProjectId;
+            }
             const toolResult = await this.editTool.invoke(toolCall.args);
             toolResults += toolResult;
           } else if (toolCall.name === 'compose_pages') {
+            // Inject current project ID
+            if (this.currentProjectId && !toolCall.args.projectId) {
+              toolCall.args.projectId = this.currentProjectId;
+            }
             // If sourceMap not provided and we have last Leonardo output, use it
             if (!toolCall.args.sourceMap && this.lastLeonardoOutput) {
               toolCall.args.sourceMap = this.lastLeonardoOutput;
@@ -552,6 +657,9 @@ class LangChainComicAgent {
 
       const response = result.content || result.text || 'I apologize, but I could not generate a response.';
 
+      // Extract and store story ideas if present in response
+      this.extractAndStoreStoryIdeas(response);
+
       // Add to conversation history
       this.conversationHistory.push({ role: 'user', content: userInput });
       this.conversationHistory.push({ role: 'assistant', content: response });
@@ -567,6 +675,49 @@ class LangChainComicAgent {
       console.error(chalk.red('Error generating response:'), error.message);
       throw new Error('Failed to generate response. Please try again.');
     }
+  }
+
+  /**
+   * Extract and store story ideas from response
+   */
+  extractAndStoreStoryIdeas(response) {
+    // Look for numbered story ideas in the response
+    const ideaPattern = /\d+\.\s+\*\*([^:*]+)(?::\*\*|\*\*:?)\s*([^\n]+)/g;
+    let match;
+    
+    while ((match = ideaPattern.exec(response)) !== null) {
+      const title = match[1].trim();
+      const description = match[2].trim();
+      const fullIdea = `${title}: ${description}`;
+      
+      // Only add if not already in the list
+      if (!this.generatedStoryIdeas.includes(fullIdea)) {
+        this.generatedStoryIdeas.push(fullIdea);
+      }
+    }
+  }
+
+  /**
+   * Display memory status
+   */
+  displayMemoryStatus() {
+    const summary = this.enhancedWrapper.getMemorySummary();
+    
+    console.log(chalk.cyan('\n📊 Memory Status'));
+    console.log(chalk.cyan('═'.repeat(60)));
+    
+    console.log(chalk.yellow('\n🧠 Persistent Memory (Learned):'));
+    console.log(`   Total Successes: ${summary.persistent.totalSuccesses}`);
+    console.log(`   Total Failures: ${summary.persistent.totalFailures}`);
+    console.log(`   Last Updated: ${summary.persistent.lastUpdated || 'Never'}`);
+    
+    console.log(chalk.yellow('\n⚡ Volatile Memory (Current Session):'));
+    console.log(`   Session ID: ${summary.volatile.sessionId}`);
+    console.log(`   Total Attempts: ${summary.volatile.totalAttempts}`);
+    console.log(`   Failed Operations: ${summary.volatile.failedOperations}`);
+    console.log(`   Successful Strategies: ${summary.volatile.successfulStrategies}`);
+    
+    console.log(chalk.cyan('\n═'.repeat(60) + '\n'));
   }
 
   /**

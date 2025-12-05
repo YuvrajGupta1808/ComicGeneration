@@ -5,6 +5,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'yaml';
 import { z } from 'zod';
+import prisma from '../db/client.js';
+import comicService from '../services/comic-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -118,19 +120,20 @@ export class PanelGenerationLangChainTool {
       name: this.name,
       description: this.description,
       schema: z.object({
+        projectId: z.string().optional().describe('Project ID (if not provided, creates new project)'),
         storyContext: z.string().describe('Brief story or plot for panel generation'),
         genre: z.string().optional().describe('Comic genre (sci-fi, fantasy, etc.)'),
         pageCount: z.number().int().min(1).max(5).default(3),
       }),
-      func: async ({ storyContext, genre, pageCount }) =>
-        await this.execute(storyContext, genre, pageCount),
+      func: async ({ projectId, storyContext, genre, pageCount }) =>
+        await this.execute(projectId, storyContext, genre, pageCount),
     });
   }
 
   /** ───────────────────────────────────────────────
    *  Execute: call Gemini to generate panel data
    *  ─────────────────────────────────────────────── */
-  async execute(storyContext = '', genre = '', pageCount = 3) {
+  async execute(projectId = null, storyContext = '', genre = '', pageCount = 3) {
     try {
       const layouts = this.loadLayouts();
       const layoutKey =
@@ -347,13 +350,24 @@ CRITICAL REQUIREMENTS:
         console.warn('Raw response:', text.substring(0, 200) + '...');
       }
 
-      // Save to comic.yaml (characters + panels with full data)
+      // Save to database
       if (panels.length > 0) {
-        await this.saveComicYaml(panels, pageCount);
-        // Clean panels.yaml to remove panels data (keep only config)
-        await this.cleanPanelsYaml();
+        // Create or get project
+        if (!projectId) {
+          const userId = await this.getDefaultUserId();
+          const project = await comicService.createProject(userId, {
+            title: 'New Comic Project',
+            genre: genre || null,
+            storyContext: storyContext,
+            pageCount: pageCount
+          });
+          projectId = project.id;
+          console.log(`✓ Created new project: ${projectId}`);
+        }
+        
+        await this.savePanelsToDatabase(projectId, panels, pageCount);
       } else {
-        console.error('❌ No valid panels generated, cannot save to YAML');
+        console.error('❌ No valid panels generated, cannot save');
         return JSON.stringify({
           success: false,
           error: 'Failed to generate valid panel descriptions from LLM',
@@ -365,6 +379,7 @@ CRITICAL REQUIREMENTS:
       return JSON.stringify(
         {
           success: true,
+          projectId: projectId,
           totalPanels,
           model: 'gemini-2.5-flash-lite',
           panels: panels.length > 0 ? panels : text,
@@ -379,6 +394,84 @@ CRITICAL REQUIREMENTS:
         panels: [],
       });
     }
+  }
+
+  /** ───────────────────────────────────────────────
+   *  Get default user ID (for CLI usage)
+   *  ─────────────────────────────────────────────── */
+  async getDefaultUserId() {
+    const user = await prisma.user.findFirst({
+      where: { email: 'admin@comic-backend.local' }
+    });
+    return user?.id || (await prisma.user.create({
+      data: {
+        email: 'admin@comic-backend.local',
+        passwordHash: 'temp',
+        name: 'Admin User'
+      }
+    })).id;
+  }
+
+  /** ───────────────────────────────────────────────
+   *  Save panels to database
+   *  ─────────────────────────────────────────────── */
+  async savePanelsToDatabase(projectId, panels, pageCount) {
+    try {
+      const formattedPanels = panels.map((panel, index) => {
+        const dimensions = this.getPanelDimensions(panel.panelid, pageCount);
+        const prompt = this.generatePanelPrompt(panel.description, panel.cameraAngle);
+        
+        return {
+          panelId: panel.panelid,
+          pageNumber: this.getPageNumber(index, pageCount),
+          panelNumber: this.getPanelNumberOnPage(index, pageCount),
+          description: panel.description,
+          prompt: prompt,
+          cameraAngle: panel.cameraAngle,
+          width: dimensions.width,
+          height: dimensions.height,
+          contextImages: panel.contextImages || []
+        };
+      });
+
+      await comicService.savePanels(projectId, formattedPanels);
+      console.log(`✓ Saved ${formattedPanels.length} panels to database (project: ${projectId})`);
+    } catch (error) {
+      console.error('Failed to save panels to database:', error.message);
+      throw error;
+    }
+  }
+
+  /** ───────────────────────────────────────────────
+   *  Get page number for panel index
+   *  ─────────────────────────────────────────────── */
+  getPageNumber(panelIndex, pageCount) {
+    const panelsPerPage = pageCount === 3 ? [3, 3, 2] : pageCount === 4 ? [3, 3, 3, 3] : [3, 3, 3, 3, 2];
+    let currentPanelCount = 0;
+    
+    for (let p = 0; p < panelsPerPage.length; p++) {
+      if (panelIndex < currentPanelCount + panelsPerPage[p]) {
+        return p + 1;
+      }
+      currentPanelCount += panelsPerPage[p];
+    }
+    return 1;
+  }
+
+  /** ───────────────────────────────────────────────
+   *  Get panel number on its page
+   *  ─────────────────────────────────────────────── */
+  getPanelNumberOnPage(panelIndex, pageCount) {
+    const panelsPerPage = pageCount === 3 ? [3, 3, 2] : pageCount === 4 ? [3, 3, 3, 3] : [3, 3, 3, 3, 2];
+    let currentPanelCount = 0;
+    
+    for (let p = 0; p < panelsPerPage.length; p++) {
+      if (panelIndex < currentPanelCount + panelsPerPage[p]) {
+        return panelIndex - currentPanelCount + 1;
+      }
+      currentPanelCount += panelsPerPage[p];
+    }
+    return 1;
   }
 
   /** ───────────────────────────────────────────────
@@ -424,190 +517,5 @@ CRITICAL REQUIREMENTS:
     return `${description}, ${cameraAngle} camera angle, ${fixedElements}`;
   }
 
-  /** ───────────────────────────────────────────────
-   *  Save to comic.yaml (characters + panels with full data)
-   *  PRESERVES existing dialogue, narration, title, and soundEffects
-   *  ─────────────────────────────────────────────── */
-  async saveComicYaml(panels, pageCount) {
-    try {
-      const comicPath = path.join(__dirname, '../../config/comic.yaml');
-      
-      // Load existing comic.yaml to preserve dialogue data
-      let existingPanels = [];
-      try {
-        if (fs.existsSync(comicPath)) {
-          const comicFile = fs.readFileSync(comicPath, 'utf8');
-          const parsed = yaml.parse(comicFile);
-          if (parsed.panels && Array.isArray(parsed.panels)) {
-            existingPanels = parsed.panels;
-          }
-        }
-      } catch (e) {
-        console.warn('Could not load existing comic.yaml:', e.message);
-      }
-      
-      // Load characters from characters.yaml or existing comic.yaml
-      let characters = [];
-      let charConfig = {
-        image_specs: { width: 832, height: 1248 },
-        fixed_prompt_elements: ['full body pose, center, white background, comic book style']
-      };
-      
-      // First try to load from characters.yaml
-      try {
-        const charPath = path.join(__dirname, '../../config/characters.yaml');
-        if (fs.existsSync(charPath)) {
-          const charFile = fs.readFileSync(charPath, 'utf8');
-          const parsed = yaml.parse(charFile);
-          
-          if (parsed.character_config) {
-            charConfig = {
-              image_specs: parsed.character_config.image_specs || charConfig.image_specs,
-              fixed_prompt_elements: parsed.character_config.fixed_prompt_elements || charConfig.fixed_prompt_elements
-            };
-          }
-          
-          if (parsed.characters && Array.isArray(parsed.characters) && parsed.characters.length > 0) {
-            characters = parsed.characters;
-          }
-        }
-      } catch (e) {
-        console.warn('Could not load characters from characters.yaml:', e.message);
-      }
 
-      // If no characters found, try to load from existing comic.yaml
-      if (characters.length === 0) {
-        try {
-          const comicPath = path.join(__dirname, '../../config/comic.yaml');
-          if (fs.existsSync(comicPath)) {
-            const comicFile = fs.readFileSync(comicPath, 'utf8');
-            const parsed = yaml.parse(comicFile);
-            
-            if (parsed.characters && Array.isArray(parsed.characters) && parsed.characters.length > 0) {
-              // Extract character data from comic.yaml format (preserve all fields)
-              characters = parsed.characters.map(char => ({
-                id: char.id,
-                name: char.name || char.id,
-                description: char.description || '',
-                width: char.width,
-                height: char.height,
-                contextImages: char.contextImages,
-                prompt: char.prompt
-              })).filter(c => c.description.length > 0);
-            }
-          }
-        } catch (e) {
-          console.warn('Could not load characters from comic.yaml:', e.message);
-        }
-      }
-
-      // Format characters with: id, width, height, description, contextImages, prompt
-      const formattedCharacters = characters.map((char, index) => {
-        const charId = char.id || `char_${index + 1}`;
-        const description = char.description || '';
-        const prompt = `${description}, ${charConfig.fixed_prompt_elements.join(', ')}`;
-        
-        // If character already has prompt/width/height (from comic.yaml), preserve them
-        return {
-          id: charId,
-          width: char.width || charConfig.image_specs.width || 832,
-          height: char.height || charConfig.image_specs.height || 1248,
-          description: description,
-          contextImages: char.contextImages || [],
-          prompt: char.prompt || prompt
-        };
-      });
-
-      // Format panels with: id, width, height, description, contextImages, prompt
-      // PRESERVE dialogue, narration, title, soundEffects from existing panels
-      const formattedPanels = panels.map((panel) => {
-        const dimensions = this.getPanelDimensions(panel.panelid, pageCount);
-        const prompt = this.generatePanelPrompt(panel.description, panel.cameraAngle);
-        
-        // Limit context images to max 4
-        let contextImages = Array.isArray(panel.contextImages) ? panel.contextImages : [];
-        if (contextImages.length > 4) {
-          contextImages = contextImages.slice(0, 4);
-        }
-        
-        // Find existing panel data to preserve dialogue
-        const existingPanel = existingPanels.find(p => p.id === panel.panelid);
-        
-        const formattedPanel = {
-          id: panel.panelid,
-          width: dimensions.width,
-          height: dimensions.height,
-          description: panel.description,
-          contextImages: contextImages,
-          prompt: prompt
-        };
-        
-        // Preserve dialogue data if it exists
-        if (existingPanel) {
-          if (existingPanel.title) formattedPanel.title = existingPanel.title;
-          if (existingPanel.dialogue && existingPanel.dialogue.length > 0) {
-            formattedPanel.dialogue = existingPanel.dialogue;
-          }
-          if (existingPanel.narration) formattedPanel.narration = existingPanel.narration;
-          if (existingPanel.soundEffects && existingPanel.soundEffects.length > 0) {
-            formattedPanel.soundEffects = existingPanel.soundEffects;
-          }
-        }
-        
-        return formattedPanel;
-      });
-
-      const comicData = {
-        characters: formattedCharacters,
-        panels: formattedPanels
-      };
-      
-      const yamlContent = yaml.stringify(comicData, {
-        indent: 2,
-        lineWidth: 120,
-        simpleKeys: false
-      });
-      
-      await fs.writeFile(comicPath, yamlContent, 'utf8');
-      console.log(`✓ Saved ${formattedPanels.length} panels to comic.yaml`);
-    } catch (error) {
-      console.error('Failed to save comic.yaml:', error.message);
-      throw error;
-    }
-  }
-
-  /** ───────────────────────────────────────────────
-   *  Clean panels.yaml (remove panels, keep only config)
-   *  ─────────────────────────────────────────────── */
-  async cleanPanelsYaml() {
-    try {
-      const configPath = path.join(__dirname, '../../config/panels.yaml');
-      
-      // Preserve existing panel_config if it exists
-      let existingConfig = {};
-      try {
-        if (fs.existsSync(configPath)) {
-          const existingFile = fs.readFileSync(configPath, 'utf8');
-          existingConfig = yaml.parse(existingFile) || {};
-        }
-      } catch (e) {
-        // Ignore if file doesn't exist or can't be parsed
-      }
-
-      const panelConfig = {
-        panel_config: existingConfig.panel_config || this.config
-      };
-      
-      const yamlContent = yaml.stringify(panelConfig, {
-        indent: 2,
-        lineWidth: 120,
-        simpleKeys: false
-      });
-      
-      await fs.writeFile(configPath, yamlContent, 'utf8');
-    } catch (error) {
-      console.error('Failed to clean panels.yaml:', error.message);
-      // Don't throw - this is cleanup
-    }
-  }
 }

@@ -1,0 +1,28 @@
+dialogue_config:
+  template:
+    fields:
+      - title
+      - dialogue
+      - narration
+      - soundEffects
+  cover_page:
+    panel_id: panel1
+    has_title: true
+    has_dialogue: false
+  dialogue_format:
+    fields:
+      - speaker
+      - text
+  tone_options:
+    - dramatic
+    - humorous
+    - dark
+    - light
+    - action
+  genre_options:
+    - sci-fi
+    - fantasy
+    - horror
+    - superhero
+    - western
+    - noir

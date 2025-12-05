@@ -2,306 +2,167 @@ characters:
   - id: char_1
     width: 832
     height: 1248
-    description: Leo is a curious and energetic boy, appearing to be around 9-10 years old. He has a bright blue t-shirt
-      that stands out against his sun-kissed skin, and his hair is likely a tousled mess from his energetic pursuits.
-      His eyes often hold a look of wonder or mild panic, as seen when he glances back or stumbles slightly during their
-      chase.  He's often depicted in motion, arms flailing a bit, suggesting an earnest but sometimes clumsy enthusiasm
-      for the adventure.
+    description: AURA is a sleek, humanoid robot constructed from polished chrome, its form designed with elegant,
+      articulated joints that hint at advanced engineering. Its optical sensors are typically a sharp, intense blue, but
+      can shift to a softer, pulsing cyan hue, sometimes accompanied by faint, spiderweb-like micro-cracks around them,
+      indicating internal processing or strain.  When exhibiting emotions, AURA's posture can become slumped or its arms
+      may tentatively splay, suggesting a nascent and developing internal world.
     contextImages: []
-    prompt: Leo is a curious and energetic boy, appearing to be around 9-10 years old. He has a bright blue t-shirt that
-      stands out against his sun-kissed skin, and his hair is likely a tousled mess from his energetic pursuits. His
-      eyes often hold a look of wonder or mild panic, as seen when he glances back or stumbles slightly during their
-      chase.  He's often depicted in motion, arms flailing a bit, suggesting an earnest but sometimes clumsy enthusiasm
-      for the adventure., full body pose, center, white background, comic book style
+    prompt: AURA is a sleek, humanoid robot constructed from polished chrome, its form designed with elegant, articulated
+      joints that hint at advanced engineering. Its optical sensors are typically a sharp, intense blue, but can shift
+      to a softer, pulsing cyan hue, sometimes accompanied by faint, spiderweb-like micro-cracks around them, indicating
+      internal processing or strain.  When exhibiting emotions, AURA's posture can become slumped or its arms may
+      tentatively splay, suggesting a nascent and developing internal world., full body pose, center, white background,
+      comic book style
   - id: char_2
     width: 832
     height: 1248
-    description: Mia is a determined and focused girl, around the same age as Leo. She wears a cheerful yellow sundress, a
-      stark contrast to the serious expressions she sometimes displays. Her gaze is often directed upwards with
-      unwavering resolve, her jaw set with a hint of desperation and a flicker of awe.  A strand of sweat often trickles
-      down her temple, showcasing her physical exertion and commitment to their quest. Her body language, whether
-      pointing or reaching out, conveys a strong sense of purpose and an unyielding spirit.
+    description: Dr. Aris Thorne is a weary scientist, characterized by a stained, functional lab coat that speaks of long
+      hours and intense dedication to his work. His appearance suggests middle age, with a build that is neither
+      particularly imposing nor frail, but his body language, whether gesturing emphatically or offering comforting
+      gestures, conveys deep concern and a blend of scientific apprehension and nascent emotional connection.
     contextImages: []
-    prompt: Mia is a determined and focused girl, around the same age as Leo. She wears a cheerful yellow sundress, a stark
-      contrast to the serious expressions she sometimes displays. Her gaze is often directed upwards with unwavering
-      resolve, her jaw set with a hint of desperation and a flicker of awe.  A strand of sweat often trickles down her
-      temple, showcasing her physical exertion and commitment to their quest. Her body language, whether pointing or
-      reaching out, conveys a strong sense of purpose and an unyielding spirit., full body pose, center, white
-      background, comic book style
+    prompt: Dr. Aris Thorne is a weary scientist, characterized by a stained, functional lab coat that speaks of long hours
+      and intense dedication to his work. His appearance suggests middle age, with a build that is neither particularly
+      imposing nor frail, but his body language, whether gesturing emphatically or offering comforting gestures, conveys
+      deep concern and a blend of scientific apprehension and nascent emotional connection., full body pose, center,
+      white background, comic book style
 panels:
   - id: panel1
     width: 832
     height: 1248
-    description: An establishing shot of a vibrant green park on a sunny afternoon. In the foreground, Leo, a curious boy
-      with a bright blue t-shirt, and Mia, a determined girl in a yellow sundress, are mid-chase, their faces etched
-      with surprise and urgency. Their colorful kite, a red diamond with a long, trailing tail, is just starting to
-      ascend beyond the frame, pulled by an unseen force. The lighting is bright and natural, casting gentle shadows on
-      the manicured grass, creating a cheerful yet slightly anxious mood.
+    description: An establishing shot reveals the ancient, moss-covered Dragon Peaks, shrouded in swirling mists. In the
+      foreground, Elara, a young woman with determined eyes and worn leather armor, stands beside Ignis, her
+      magnificent, ruby-scaled dragon, who lets out a plume of smoke. The sky above is a bruised twilight, hinting at an
+      impending storm, with jagged peaks piercing the horizon. The overall mood is one of foreboding and reluctant duty,
+      amplified by the cool, damp air and the muted, earthy color palette.
     contextImages:
       - char_1
       - char_2
-    prompt: An establishing shot of a vibrant green park on a sunny afternoon. In the foreground, Leo, a curious boy with a
-      bright blue t-shirt, and Mia, a determined girl in a yellow sundress, are mid-chase, their faces etched with
-      surprise and urgency. Their colorful kite, a red diamond with a long, trailing tail, is just starting to ascend
-      beyond the frame, pulled by an unseen force. The lighting is bright and natural, casting gentle shadows on the
-      manicured grass, creating a cheerful yet slightly anxious mood., establishing-shot camera angle, comic book style,
-      high quality, detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416403/comic/panels/panel_1.jpg
-    title: THE WIND'S WHISPER
-    dialogue: []
-    narration: null
-    soundEffects: []
-    textPlacements:
-      - type: title
-        text: THE WIND'S WHISPER
-        position:
-          x: 416
-          y: 30
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417127/comic/panels_with_text/panel1_with_text.png
+    prompt: An establishing shot reveals the ancient, moss-covered Dragon Peaks, shrouded in swirling mists. In the
+      foreground, Elara, a young woman with determined eyes and worn leather armor, stands beside Ignis, her
+      magnificent, ruby-scaled dragon, who lets out a plume of smoke. The sky above is a bruised twilight, hinting at an
+      impending storm, with jagged peaks piercing the horizon. The overall mood is one of foreboding and reluctant duty,
+      amplified by the cool, damp air and the muted, earthy color palette., establishing-shot camera angle, comic book
+      style, high quality, detailed
   - id: panel2
     width: 832
     height: 1248
-    description: A medium shot focusing on Leo and Mia as they sprint through a quaint town street, their initial joy
-      replaced by panicked determination. The kite, now a distant speck against a cerulean sky, is just visible at the
-      top edge of the panel, indicating its rapid ascent. Buildings with colorful awnings and flower boxes line the
-      street, their textures rendered in warm, sun-drenched tones, suggesting a bustling, albeit now slightly chaotic,
-      environment. Leo is stumbling slightly, his arms flailing, while Mia points ahead, her expression a mix of hope
-      and desperation.
+    description: A medium shot focuses on Elara as she consults a tattered map spread across a rough-hewn wooden table
+      inside a dimly lit cave. The flickering torchlight casts long, dancing shadows on the cave walls, illuminating
+      ancient carvings and the determined set of her jaw. Her brow is furrowed in concentration, her fingers tracing a
+      treacherous path, while Ignis's massive head rests beside her, his golden eyes watchful. The atmosphere is one of
+      quiet tension and strategic planning, with the scent of damp earth and brimstone hanging heavy.
     contextImages:
       - panel_1
       - char_1
-      - char_2
-    prompt: A medium shot focusing on Leo and Mia as they sprint through a quaint town street, their initial joy replaced by
-      panicked determination. The kite, now a distant speck against a cerulean sky, is just visible at the top edge of
-      the panel, indicating its rapid ascent. Buildings with colorful awnings and flower boxes line the street, their
-      textures rendered in warm, sun-drenched tones, suggesting a bustling, albeit now slightly chaotic, environment.
-      Leo is stumbling slightly, his arms flailing, while Mia points ahead, her expression a mix of hope and
-      desperation., medium-shot camera angle, comic book style, high quality, detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416424/comic/panels/panel_2.jpg
-    dialogue:
-      - speaker: char_1
-        text: It's getting away! Faster, Mia!
-    title: null
-    narration: null
-    soundEffects: []
-    textPlacements:
-      - type: speech
-        speaker: char_1
-        text: It's getting away! Faster, Mia!
-        position:
-          x: 75
-          y: 152
-        tail:
-          x: 201
-          y: 336
-        speakerLocation: Leo is on the left side of the panel, running toward the viewer.
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417128/comic/panels_with_text/panel2_with_text.png
+    prompt: A medium shot focuses on Elara as she consults a tattered map spread across a rough-hewn wooden table inside a
+      dimly lit cave. The flickering torchlight casts long, dancing shadows on the cave walls, illuminating ancient
+      carvings and the determined set of her jaw. Her brow is furrowed in concentration, her fingers tracing a
+      treacherous path, while Ignis's massive head rests beside her, his golden eyes watchful. The atmosphere is one of
+      quiet tension and strategic planning, with the scent of damp earth and brimstone hanging heavy., medium-shot
+      camera angle, comic book style, high quality, detailed
   - id: panel3
     width: 944
     height: 1104
-    description: A close-up on Mia's face, her eyes wide with a mixture of awe and a hint of fear as she gazes upwards. A
-      single strand of sweat trickles down her temple, testament to their frantic chase. The bright sunlight highlights
-      the determined set of her jaw and the slight parting of her lips. The background is a soft blur of rooftops and
-      trees, emphasizing her singular focus on the disappearing kite and the impending adventure.
+    description: A close-up captures the intensity in Ignis's fiery orange eyes as a single tear of molten gold streaks down
+      his scaled cheek. The intricate detail of his scales, catching the torchlight, is palpable, conveying a deep,
+      unspoken sorrow and concern for Elara. His snout is slightly lowered, a silent reassurance, and the ambient light
+      from his internal fire casts a warm, yet melancholic glow on his face. This panel emphasizes the emotional bond
+      between rider and dragon, a silent understanding of the peril ahead.
     contextImages:
       - panel_2
       - char_2
-    prompt: A close-up on Mia's face, her eyes wide with a mixture of awe and a hint of fear as she gazes upwards. A single
-      strand of sweat trickles down her temple, testament to their frantic chase. The bright sunlight highlights the
-      determined set of her jaw and the slight parting of her lips. The background is a soft blur of rooftops and trees,
-      emphasizing her singular focus on the disappearing kite and the impending adventure., close-up camera angle, comic
-      book style, high quality, detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416448/comic/panels/panel_3.jpg
-    narration: Higher and higher, a desperate ascent.
-    title: null
-    dialogue: []
-    soundEffects: []
-    textPlacements:
-      - type: narration
-        text: Higher and higher, a desperate ascent.
-        position:
-          x: 30
-          y: 30
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417130/comic/panels_with_text/panel3_with_text.png
+    prompt: A close-up captures the intensity in Ignis's fiery orange eyes as a single tear of molten gold streaks down his
+      scaled cheek. The intricate detail of his scales, catching the torchlight, is palpable, conveying a deep, unspoken
+      sorrow and concern for Elara. His snout is slightly lowered, a silent reassurance, and the ambient light from his
+      internal fire casts a warm, yet melancholic glow on his face. This panel emphasizes the emotional bond between
+      rider and dragon, a silent understanding of the peril ahead., close-up camera angle, comic book style, high
+      quality, detailed
   - id: panel4
     width: 944
     height: 1104
-    description: A two-shot capturing Leo and Mia as they navigate a narrow alleyway, their path now more confined by brick
-      walls. The kite is nowhere in sight, heightening the sense of loss and the urgency to find it. The muted tones of
-      the brickwork and the dappled sunlight create a slightly more tense atmosphere. Leo glances back, a question in
-      his eyes, while Mia pushes forward, her hand outstretched as if to grasp at the wind itself, her body language
-      conveying unwavering resolve.
+    description: A two-shot depicts Elara mounting Ignis, her small figure dwarfed by his immense power, as they prepare to
+      depart the cave. Her grip on his neck scales is firm, her expression a mixture of apprehension and newfound
+      resolve, while Ignis lowers himself slightly, his powerful wings beginning to unfurl. The cave entrance behind
+      them is a dark maw, contrasting with the faint, ethereal glow of the nascent magical storm brewing beyond. The
+      mood is one of critical departure, the weight of the quest settling upon them.
     contextImages:
-      - panel_2
+      - panel_3
       - char_1
       - char_2
-    prompt: A two-shot capturing Leo and Mia as they navigate a narrow alleyway, their path now more confined by brick
-      walls. The kite is nowhere in sight, heightening the sense of loss and the urgency to find it. The muted tones of
-      the brickwork and the dappled sunlight create a slightly more tense atmosphere. Leo glances back, a question in
-      his eyes, while Mia pushes forward, her hand outstretched as if to grasp at the wind itself, her body language
-      conveying unwavering resolve., two-shot camera angle, comic book style, high quality, detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416468/comic/panels/panel_4.jpg
-    dialogue:
-      - speaker: char_1
-        text: Where did it go?
-    title: null
-    narration: null
-    soundEffects: []
-    textPlacements:
-      - type: speech
-        speaker: char_1
-        text: Where did it go?
-        position:
-          x: 100
-          y: 145
-        tail:
-          x: 275
-          y: 335
-        speakerLocation: Leo, on the left side of the panel, looking back.
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417131/comic/panels_with_text/panel4_with_text.png
+    prompt: A two-shot depicts Elara mounting Ignis, her small figure dwarfed by his immense power, as they prepare to
+      depart the cave. Her grip on his neck scales is firm, her expression a mixture of apprehension and newfound
+      resolve, while Ignis lowers himself slightly, his powerful wings beginning to unfurl. The cave entrance behind
+      them is a dark maw, contrasting with the faint, ethereal glow of the nascent magical storm brewing beyond. The
+      mood is one of critical departure, the weight of the quest settling upon them., two-shot camera angle, comic book
+      style, high quality, detailed
   - id: panel5
     width: 832
     height: 1248
-    description: An over-the-shoulder shot from behind Leo, looking towards Mia as she bursts out of the alleyway and onto a
-      busy street. The background is filled with the blur of passing cars and pedestrians, their colors muted by the
-      motion, underscoring the fast pace of their pursuit. Mia is a silhouette against the brighter street, her arm
-      pointing dramatically towards the horizon, her silhouette conveying a desperate, hopeful gesture. The lighting is
-      brighter here, suggesting they've emerged into a more open, chaotic space.
+    description: An over-the-shoulder shot from Elara's perspective shows the vast, treacherous landscape unfolding before
+      them as they fly. Jagged, ice-covered cliffs stretch into the distance, buffeted by gale-force winds that whip
+      Elara's hair and cloak. Below, the turbulent clouds churn like a stormy sea, hinting at the elemental planes
+      bleeding into the human world. The cold, biting wind and the muted blues and grays of the environment create a
+      sense of isolation and overwhelming challenge.
     contextImages:
       - panel_4
       - char_1
-      - char_2
-    prompt: An over-the-shoulder shot from behind Leo, looking towards Mia as she bursts out of the alleyway and onto a busy
-      street. The background is filled with the blur of passing cars and pedestrians, their colors muted by the motion,
-      underscoring the fast pace of their pursuit. Mia is a silhouette against the brighter street, her arm pointing
-      dramatically towards the horizon, her silhouette conveying a desperate, hopeful gesture. The lighting is brighter
-      here, suggesting they've emerged into a more open, chaotic space., over-shoulder camera angle, comic book style,
-      high quality, detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416489/comic/panels/panel_5.jpg
-    dialogue:
-      - speaker: char_2
-        text: There! Look!
-    title: null
-    narration: null
-    soundEffects: []
-    textPlacements:
-      - type: speech
-        speaker: char_2
-        text: There! Look!
-        position:
-          x: 100
-          y: 150
-        tail:
-          x: 180
-          y: 360
-        speakerLocation: Behind Leo, lower right side of his head.
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417132/comic/panels_with_text/panel5_with_text.png
+    prompt: An over-the-shoulder shot from Elara's perspective shows the vast, treacherous landscape unfolding before them
+      as they fly. Jagged, ice-covered cliffs stretch into the distance, buffeted by gale-force winds that whip Elara's
+      hair and cloak. Below, the turbulent clouds churn like a stormy sea, hinting at the elemental planes bleeding into
+      the human world. The cold, biting wind and the muted blues and grays of the environment create a sense of
+      isolation and overwhelming challenge., over-shoulder camera angle, comic book style, high quality, detailed
   - id: panel6
     width: 1456
     height: 720
-    description: A low-angle shot looking up at the kite, now a small, vibrant red shape against a vast, expansive sky. It's
-      caught on the spire of a tall, imposing clock tower, silhouetted against the bright afternoon sun. The texture of
-      the rough stone of the tower is palpable, contrasting with the smooth, flowing fabric of the kite's tail. The mood
-      is one of distant hope and a touch of daunting challenge, the kite seeming both so close and yet impossibly out of
-      reach.
+    description: A low-angle shot looks up at Ignis soaring powerfully through a vortex of swirling, unnatural energy, his
+      scales reflecting the chaotic, multi-colored light. Bolts of raw elemental power, crackling with purple and green
+      energy, lash out from the vortex, narrowly missing his massive form. Elara, clinging tightly to his back, is a
+      small silhouette against the tumultuous sky, her posture conveying both fear and grim determination. The dynamic
+      movement and the raw, untamed energy of the elemental planes create a palpable sense of danger.
     contextImages:
       - panel_5
-    prompt: A low-angle shot looking up at the kite, now a small, vibrant red shape against a vast, expansive sky. It's
-      caught on the spire of a tall, imposing clock tower, silhouetted against the bright afternoon sun. The texture of
-      the rough stone of the tower is palpable, contrasting with the smooth, flowing fabric of the kite's tail. The mood
-      is one of distant hope and a touch of daunting challenge, the kite seeming both so close and yet impossibly out of
-      reach., low-angle camera angle, comic book style, high quality, detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416506/comic/panels/panel_6.jpg
-    dialogue: []
-    title: null
-    narration: A prize snagged on time itself.
-    soundEffects: []
-    textPlacements:
-      - type: narration
-        text: A prize snagged on time itself.
-        position:
-          x: 20
-          y: 20
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417134/comic/panels_with_text/panel6_with_text.png
+      - char_1
+      - char_2
+    prompt: A low-angle shot looks up at Ignis soaring powerfully through a vortex of swirling, unnatural energy, his scales
+      reflecting the chaotic, multi-colored light. Bolts of raw elemental power, crackling with purple and green energy,
+      lash out from the vortex, narrowly missing his massive form. Elara, clinging tightly to his back, is a small
+      silhouette against the tumultuous sky, her posture conveying both fear and grim determination. The dynamic
+      movement and the raw, untamed energy of the elemental planes create a palpable sense of danger., low-angle camera
+      angle, comic book style, high quality, detailed
   - id: panel7
     width: 1456
     height: 720
-    description: A high-angle shot looking down on Leo and Mia as they stand on the sidewalk, their heads tilted back,
-      gazing up at the kite lodged on the clock tower. The surrounding cityscape unfolds below them, a detailed tapestry
-      of rooftops, streets, and parks rendered in muted blues and grays, contrasting with the bright red of the kite.
-      The sharp lines of the buildings create a sense of urban sprawl, emphasizing their smallness in the face of the
-      challenge ahead. Their postures are a mixture of exhaustion and renewed determination.
+    description: A high-angle shot surveys the scene from above, showing Ignis and Elara as tiny specks against the backdrop
+      of a colossal, crumbling portal that bleeds raw elemental energy into the sky. Ruined structures of an ancient
+      civilization lie scattered below, engulfed by the encroaching chaos. The sky is a violent tapestry of unnatural
+      hues, and the ground below is fractured and glowing with unstable magic, emphasizing the scale of the threat and
+      the isolation of their mission.
     contextImages:
       - panel_6
       - char_1
       - char_2
-    prompt: A high-angle shot looking down on Leo and Mia as they stand on the sidewalk, their heads tilted back, gazing up
-      at the kite lodged on the clock tower. The surrounding cityscape unfolds below them, a detailed tapestry of
-      rooftops, streets, and parks rendered in muted blues and grays, contrasting with the bright red of the kite. The
-      sharp lines of the buildings create a sense of urban sprawl, emphasizing their smallness in the face of the
-      challenge ahead. Their postures are a mixture of exhaustion and renewed determination., high-angle camera angle,
-      comic book style, high quality, detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416527/comic/panels/panel_7.jpg
-    dialogue:
-      - speaker: char_2
-        text: We have to get it back.
-    title: null
-    narration: null
-    soundEffects: []
-    textPlacements:
-      - type: speech
-        speaker: char_2
-        text: We have to get it back.
-        position:
-          x: 940
-          y: 160
-        tail:
-          x: 1150
-          y: 330
-        speakerLocation: Boy on the right side, looking up.
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417135/comic/panels_with_text/panel7_with_text.png
+    prompt: A high-angle shot surveys the scene from above, showing Ignis and Elara as tiny specks against the backdrop of a
+      colossal, crumbling portal that bleeds raw elemental energy into the sky. Ruined structures of an ancient
+      civilization lie scattered below, engulfed by the encroaching chaos. The sky is a violent tapestry of unnatural
+      hues, and the ground below is fractured and glowing with unstable magic, emphasizing the scale of the threat and
+      the isolation of their mission., high-angle camera angle, comic book style, high quality, detailed
   - id: panel8
     width: 1456
     height: 720
-    description: A wide shot of the town square, with the imposing clock tower dominating the center. Leo and Mia are tiny
-      figures at its base, staring upwards, their pursuit having led them to this central, significant landmark. The
-      warm afternoon sunlight bathes the square, highlighting the weathered stone of the tower and the bustling activity
-      of distant citizens. The atmosphere is one of quiet anticipation and the promise of a new stage in their
-      adventure, the kite a beacon of their shared quest.
+    description: A wide shot captures the climax as Elara, empowered by a surge of raw elemental energy channeling through
+      Ignis, reaches out towards the shimmering, stolen artifact held by a shadowy, cloaked figure. Ignis roars, a
+      torrent of flame erupting from his maw, illuminating the chaotic, swirling vortex of the unstable portal. The
+      stolen artifact pulses with an unnatural light, casting fractured beams across the desolate, war-torn landscape.
+      The tension is at its peak, the fate of both worlds hanging precariously in the balance.
     contextImages:
       - panel_7
       - char_1
       - char_2
-    prompt: A wide shot of the town square, with the imposing clock tower dominating the center. Leo and Mia are tiny
-      figures at its base, staring upwards, their pursuit having led them to this central, significant landmark. The
-      warm afternoon sunlight bathes the square, highlighting the weathered stone of the tower and the bustling activity
-      of distant citizens. The atmosphere is one of quiet anticipation and the promise of a new stage in their
-      adventure, the kite a beacon of their shared quest., wide-shot camera angle, comic book style, high quality,
-      detailed
-    imageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764416547/comic/panels/panel_8.jpg
-    narration: null
-    title: null
-    dialogue:
-      - speaker: char_1
-        text: This is going to be harder than I thought.
-    soundEffects: []
-    textPlacements:
-      - type: speech
-        speaker: char_1
-        text: This is going to be harder than I thought.
-        position:
-          x: 148
-          y: 108
-        tail:
-          x: 293
-          y: 385
-        speakerLocation: Leo, left side of the panel, looking up at the tower.
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764417137/comic/panels_with_text/panel8_with_text.png
+    prompt: A wide shot captures the climax as Elara, empowered by a surge of raw elemental energy channeling through Ignis,
+      reaches out towards the shimmering, stolen artifact held by a shadowy, cloaked figure. Ignis roars, a torrent of
+      flame erupting from his maw, illuminating the chaotic, swirling vortex of the unstable portal. The stolen artifact
+      pulses with an unnatural light, casting fractured beams across the desolate, war-torn landscape. The tension is at
+      its peak, the fate of both worlds hanging precariously in the balance., wide-shot camera angle, comic book style,
+      high quality, detailed

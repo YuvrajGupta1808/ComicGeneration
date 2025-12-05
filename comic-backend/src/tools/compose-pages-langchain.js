@@ -32,6 +32,7 @@ export class ComposePagesLangChainTool {
       name: this.name,
       description: this.description,
       schema: z.object({
+        projectId: z.string().describe('Project ID to compose pages for'),
         sourceMap: z
           .string()
           .optional()
@@ -48,8 +49,8 @@ export class ComposePagesLangChainTool {
           .optional()
           .describe('Use images with rendered text (textImageUrl) if available. Default: true'),
       }),
-      func: async ({ sourceMap, pageCount, useTextImages = true }) => {
-        return await this.execute(sourceMap, pageCount, useTextImages);
+      func: async ({ projectId, sourceMap, pageCount, useTextImages = true }) => {
+        return await this.execute(projectId, sourceMap, pageCount, useTextImages);
       },
     });
   }
@@ -72,7 +73,20 @@ export class ComposePagesLangChainTool {
   }
 
   /**
-   * Load comic.yaml
+   * Load comic data from database
+   */
+  async loadComicData(projectId) {
+    try {
+      return await comicService.getComicData(projectId);
+    } catch (error) {
+      console.warn('⚠️  Failed to load comic data from database:', error.message);
+      // Fallback to YAML
+      return this.loadComicYaml();
+    }
+  }
+
+  /**
+   * Load comic.yaml (fallback)
    */
   loadComicYaml() {
     try {
@@ -86,6 +100,35 @@ export class ComposePagesLangChainTool {
       console.warn('⚠️  Failed to load comic.yaml:', error.message);
     }
     return { characters: [], panels: [] };
+  }
+
+  /**
+   * Get panel URLs from comic data and sourceMap
+   * PRIORITY: Use textImageUrl (images with dialogue rendered) if available
+   */
+  getPanelUrlsFromData(comicData, sourceMapStr, useTextImages = true) {
+    let panelUrls = {};
+    
+    // First, try to get URLs from sourceMap
+    if (sourceMapStr) {
+      panelUrls = this.getPanelUrls(sourceMapStr, false); // Don't use text images yet
+    }
+    
+    // Then, get URLs from comic data (database or YAML)
+    const panels = comicData.panels || [];
+    panels.forEach(panel => {
+      if (panel.imageUrl && !panelUrls[panel.id]) {
+        panelUrls[panel.id] = panel.imageUrl;
+      }
+      
+      // Override with textImageUrl if available and useTextImages is true
+      if (useTextImages && panel.textImageUrl) {
+        console.log(`✓ Using text image for ${panel.id}`);
+        panelUrls[panel.id] = panel.textImageUrl;
+      }
+    });
+    
+    return panelUrls;
   }
 
   /**
@@ -320,10 +363,13 @@ export class ComposePagesLangChainTool {
   /**
    * Execute page composition
    */
-  async execute(sourceMapStr, pageCountOverride = null, useTextImages = true) {
+  async execute(projectId, sourceMapStr, pageCountOverride = null, useTextImages = true) {
     try {
+      // Load comic data from database
+      const comicData = await this.loadComicData(projectId);
+      
       // Get panel URLs (prioritize text images if available)
-      const panelUrls = this.getPanelUrls(sourceMapStr, useTextImages);
+      const panelUrls = this.getPanelUrlsFromData(comicData, sourceMapStr, useTextImages);
 
       if (Object.keys(panelUrls).length === 0) {
         return JSON.stringify({

@@ -27,21 +27,34 @@ export class EditPanelLangChainTool {
       name: this.name,
       description: this.description,
       schema: z.object({
+        projectId: z.string().describe('Project ID'),
         targetType: z.enum(['panel', 'character']).describe('Type of target to edit: "panel" or "character"'),
         targetId: z.string().describe('ID of the panel or character to edit (e.g., "panel1", "char_1")'),
         field: z.string().describe('Field to edit (e.g., "description", "dialogue", "narration", "title", "soundEffects")'),
         value: z.union([z.string(), z.array(z.record(z.string(), z.string())), z.null()]).describe('New value for the field. Can be string, array of objects, or null'),
       }),
-      func: async ({ targetType, targetId, field, value }) =>
-        await this.execute(targetType, targetId, field, value),
+      func: async ({ projectId, targetType, targetId, field, value }) =>
+        await this.execute(projectId, targetType, targetId, field, value),
     });
   }
 
   /** ───────────────────────────────────────────────
-   *  Execute: edit a specific field in comic.yaml
+   *  Execute: edit a specific field in database and comic.yaml
    *  ─────────────────────────────────────────────── */
-  async execute(targetType, targetId, field, value) {
+  async execute(projectId, targetType, targetId, field, value) {
     try {
+      // Update in database
+      const updates = { [field]: value };
+      
+      if (targetType === 'panel') {
+        await comicService.updatePanel(projectId, targetId, updates);
+      } else if (targetType === 'character') {
+        await comicService.updateCharacter(projectId, targetId, updates);
+      }
+      
+      console.log(`✓ Updated ${targetType} ${targetId} in database`);
+      
+      // Also update YAML for backward compatibility
       const comicPath = path.join(__dirname, '../../config/comic.yaml');
       
       // Load existing comic.yaml

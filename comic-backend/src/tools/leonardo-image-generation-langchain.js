@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import yaml from 'yaml';
 import { z } from 'zod';
 import { LEONARDO } from '../../config/leonardo.js';
+import comicService from '../services/comic-service.js';
 import { uploadBuffer } from '../utils/cloudinary.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -37,6 +38,7 @@ export class LeonardoImageGenerationLangChainTool {
       name: this.name,
       description: this.description,
       schema: z.object({
+        projectId: z.string().describe('Project ID to generate images for'),
         generateType: z
           .enum(['characters', 'panels', 'both'])
           .optional()
@@ -49,14 +51,27 @@ export class LeonardoImageGenerationLangChainTool {
           .optional()
           .describe('Optional: Generate only a specific panel by ID (e.g., "panel4", "panel5")'),
       }),
-      func: async ({ generateType, specificPanel }) => {
-        return await this.execute(generateType, specificPanel);
+      func: async ({ projectId, generateType, specificPanel }) => {
+        return await this.execute(projectId, generateType, specificPanel);
       },
     });
   }
 
   /**
-   * Load comic.yaml
+   * Load comic data from database
+   */
+  async loadComicData(projectId) {
+    try {
+      return await comicService.getComicData(projectId);
+    } catch (error) {
+      console.warn('⚠️  Failed to load comic data from database:', error.message);
+      // Fallback to YAML
+      return this.loadComicYaml();
+    }
+  }
+
+  /**
+   * Load comic.yaml (fallback)
    */
   loadComicYaml() {
     try {
@@ -70,6 +85,32 @@ export class LeonardoImageGenerationLangChainTool {
       console.warn('⚠️  Failed to load comic.yaml:', error.message);
     }
     return { characters: [], panels: [] };
+  }
+
+  /**
+   * Save image URLs to database
+   */
+  async saveImageUrlsToDatabase(projectId, results) {
+    try {
+      // Save character image URLs
+      for (const char of results.characters) {
+        if (char.url && !char.error) {
+          await comicService.updateCharacterImage(projectId, char.id, char.url, char.leonardoId);
+        }
+      }
+
+      // Save panel image URLs
+      for (const panel of results.panels) {
+        if (panel.url && !panel.error) {
+          await comicService.updatePanelImages(projectId, panel.id, panel.url);
+        }
+      }
+
+      console.log(`✓ Saved image URLs to database (project: ${projectId})`);
+    } catch (error) {
+      console.error('Failed to save image URLs to database:', error.message);
+      // Don't throw - image generation succeeded, just database update failed
+    }
   }
 
   /**
@@ -155,9 +196,9 @@ export class LeonardoImageGenerationLangChainTool {
   /**
    * Execute image generation
    */
-  async execute(generateType = 'both', specificPanel = null) {
+  async execute(projectId, generateType = 'both', specificPanel = null) {
     try {
-      const comicData = this.loadComicYaml();
+      const comicData = await this.loadComicData(projectId);
       const { characters = [], panels = [] } = comicData;
 
       if (characters.length === 0 && panels.length === 0) {
@@ -450,6 +491,9 @@ export class LeonardoImageGenerationLangChainTool {
         ...results.characters.map((r) => ({ type: 'Character', id: r.id, status: r.error ? '❌ Failed' : '✓ Success' })),
         ...results.panels.map((r) => ({ type: 'Panel', id: r.id, status: r.error ? '❌ Failed' : (r.retried ? '✓ Retried' : '✓ Success') })),
       ]);
+
+      // Save image URLs to database
+      await this.saveImageUrlsToDatabase(projectId, results);
 
       return JSON.stringify(
         {

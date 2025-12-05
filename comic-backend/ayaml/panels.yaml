@@ -1,0 +1,11 @@
+panel_config:
+  fixed_prompt_elements:
+    - comic book style
+    - high quality
+    - detailed
+  template:
+    fields:
+      - panelid
+      - description
+      - cameraAngle
+      - contextImages

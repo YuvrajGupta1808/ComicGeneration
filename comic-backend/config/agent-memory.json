@@ -1,0 +1,99 @@
+{
+  "successfulPrompts": {},
+  "failurePatterns": {
+    "generate_leonardo_images": {
+      "failureCount": 1,
+      "commonErrors": {
+        "Timeout error": {
+          "count": 1,
+          "fullError": "Timeout error"
+        }
+      }
+    },
+    "generate_panels": {
+      "failureCount": 1,
+      "commonErrors": {
+        "Layout not found for 3 pages": {
+          "count": 1,
+          "fullError": "Layout not found for 3 pages"
+        }
+      }
+    },
+    "generate_characters": {
+      "failureCount": 5,
+      "commonErrors": {
+        "Failed to generate characters: \nInvalid `prisma.ch": {
+          "count": 5,
+          "fullError": "Failed to generate characters: \nInvalid `prisma.character.createMany()` invocation:\n\n\nForeign key constraint violated: `foreign key`"
+        }
+      }
+    }
+  },
+  "toolPreferences": {
+    "generate_leonardo_images": {
+      "successCount": 1,
+      "successfulParams": [
+        {
+          "params": {
+            "seed": 18002
+          },
+          "timestamp": 1764659437067
+        }
+      ]
+    },
+    "generate_panels": {
+      "successCount": 7,
+      "successfulParams": [
+        {
+          "params": "A curious household robot named Bolt escapes its mundane life to explore the bustling city, befriending a street-smart cat named Whiskers along the way.",
+          "timestamp": 1764661576983
+        },
+        {
+          "params": "A young detective investigates a series of strange disappearances in a secluded, enchanted forest, only to find the woods have a mind of their own.",
+          "timestamp": 1764664070999
+        },
+        {
+          "params": {},
+          "timestamp": 1764701586455
+        },
+        {
+          "params": {},
+          "timestamp": 1764702171812
+        },
+        {
+          "params": {},
+          "timestamp": 1764702524989
+        },
+        {
+          "params": {},
+          "timestamp": 1764703021645
+        },
+        {
+          "params": {},
+          "timestamp": 1764808987758
+        }
+      ]
+    },
+    "generate_characters": {
+      "successCount": 3,
+      "successfulParams": [
+        {
+          "params": "Bolt, a boxy, chrome household robot with expressive blue optical sensors, and Whiskers, a sleek, ginger tabby cat with intelligent green eyes, are exploring a vibrant city at night. Bolt is curious and a bit overwhelmed, while Whiskers is street-smart and guiding him.",
+          "timestamp": 1764661602988
+        },
+        {
+          "params": "04155119-3590-46d0-8c8e-fd64873aaf11",
+          "timestamp": 1764703030400
+        },
+        {
+          "params": "194fc124-cd3f-4381-837a-974cbcca0b34",
+          "timestamp": 1764809025885
+        }
+      ]
+    }
+  },
+  "characterDescriptions": {},
+  "stylePreferences": {},
+  "retryStrategies": {},
+  "lastUpdated": "2025-12-04T00:43:45.885Z"
+}

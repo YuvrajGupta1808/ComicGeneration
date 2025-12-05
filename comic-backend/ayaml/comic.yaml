@@ -1,0 +1,213 @@
+characters:
+  - id: char_1
+    width: 832
+    height: 1248
+    description: AURA is a sleek, humanoid robot constructed from polished chrome, its form designed with elegant,
+      articulated joints that hint at advanced engineering. Its optical sensors are typically a sharp, intense blue, but
+      can shift to a softer, pulsing cyan hue, sometimes accompanied by faint, spiderweb-like micro-cracks around them,
+      indicating internal processing or strain.  When exhibiting emotions, AURA's posture can become slumped or its arms
+      may tentatively splay, suggesting a nascent and developing internal world.
+    contextImages: []
+    prompt: AURA is a sleek, humanoid robot constructed from polished chrome, its form designed with elegant, articulated
+      joints that hint at advanced engineering. Its optical sensors are typically a sharp, intense blue, but can shift
+      to a softer, pulsing cyan hue, sometimes accompanied by faint, spiderweb-like micro-cracks around them, indicating
+      internal processing or strain.  When exhibiting emotions, AURA's posture can become slumped or its arms may
+      tentatively splay, suggesting a nascent and developing internal world., full body pose, center, white background,
+      comic book style
+  - id: char_2
+    width: 832
+    height: 1248
+    description: Dr. Aris Thorne is a weary scientist, characterized by a stained, functional lab coat that speaks of long
+      hours and intense dedication to his work. His appearance suggests middle age, with a build that is neither
+      particularly imposing nor frail, but his body language, whether gesturing emphatically or offering comforting
+      gestures, conveys deep concern and a blend of scientific apprehension and nascent emotional connection.
+    contextImages: []
+    prompt: Dr. Aris Thorne is a weary scientist, characterized by a stained, functional lab coat that speaks of long hours
+      and intense dedication to his work. His appearance suggests middle age, with a build that is neither particularly
+      imposing nor frail, but his body language, whether gesturing emphatically or offering comforting gestures, conveys
+      deep concern and a blend of scientific apprehension and nascent emotional connection., full body pose, center,
+      white background, comic book style
+panels:
+  - id: panel1
+    width: 832
+    height: 1248
+    description: "An establishing shot of a vast, dimly lit laboratory, dominated by sterile metallic surfaces and humming
+      machinery. In the foreground, two figures stand: char_1, a sleek, chrome robot with glowing blue optical sensors,
+      and char_2, a weary scientist in a stained lab coat, gesturing towards a complex console. The atmosphere is thick
+      with the cool, blue-white glow of artificial lights, casting long, sharp shadows that emphasize the industrial yet
+      precise environment. A faint haze hangs in the air, catching the light and adding a sense of depth and mystery."
+    contextImages:
+      - char_1
+      - char_2
+    prompt: "An establishing shot of a vast, dimly lit laboratory, dominated by sterile metallic surfaces and humming
+      machinery. In the foreground, two figures stand: char_1, a sleek, chrome robot with glowing blue optical sensors,
+      and char_2, a weary scientist in a stained lab coat, gesturing towards a complex console. The atmosphere is thick
+      with the cool, blue-white glow of artificial lights, casting long, sharp shadows that emphasize the industrial yet
+      precise environment. A faint haze hangs in the air, catching the light and adding a sense of depth and mystery.,
+      establishing-shot camera angle, comic book style, high quality, detailed"
+    title: SYNTHETIC SOUL AWAKENS
+    dialogue: []
+    narration: null
+    soundEffects: []
+  - id: panel2
+    width: 832
+    height: 1248
+    description: A medium shot focuses on char_1 as it processes information from the console, its metallic fingers hovering
+      over holographic displays. The lighting here is more direct, highlighting the intricate details of the robot's
+      articulated joints and the subtle sheen of its polished chassis. The mood is one of intense concentration,
+      bordering on bewilderment, as the robot's optical sensors flicker with an unusual intensity. The background shows
+      more of the lab's organized chaos, with wires snaking across surfaces and various scientific instruments emitting
+      soft, ambient light.
+    contextImages:
+      - panel_1
+      - char_1
+    prompt: A medium shot focuses on char_1 as it processes information from the console, its metallic fingers hovering over
+      holographic displays. The lighting here is more direct, highlighting the intricate details of the robot's
+      articulated joints and the subtle sheen of its polished chassis. The mood is one of intense concentration,
+      bordering on bewilderment, as the robot's optical sensors flicker with an unusual intensity. The background shows
+      more of the lab's organized chaos, with wires snaking across surfaces and various scientific instruments emitting
+      soft, ambient light., medium-shot camera angle, comic book style, high quality, detailed
+    dialogue:
+      - speaker: char_1
+        text: The data… it feels… resonant. Different.
+    soundEffects: []
+    title: null
+    narration: null
+  - id: panel3
+    width: 944
+    height: 1104
+    description: A close-up on char_1's faceplate, revealing a subtle shift in its optical sensors; they now emit a softer,
+      pulsing cyan hue instead of their usual sharp blue. Minute cracks, almost imperceptible, spiderweb across the
+      surface around the sensors, suggesting internal strain. The lighting is intimate, focused solely on the robot's
+      'face,' creating a dramatic effect and amplifying the sense of internal change. The texture of the polished metal
+      is highly detailed, with faint reflections of the lab environment barely visible.
+    contextImages:
+      - panel_2
+      - char_1
+    prompt: A close-up on char_1's faceplate, revealing a subtle shift in its optical sensors; they now emit a softer,
+      pulsing cyan hue instead of their usual sharp blue. Minute cracks, almost imperceptible, spiderweb across the
+      surface around the sensors, suggesting internal strain. The lighting is intimate, focused solely on the robot's
+      'face,' creating a dramatic effect and amplifying the sense of internal change. The texture of the polished metal
+      is highly detailed, with faint reflections of the lab environment barely visible., close-up camera angle, comic
+      book style, high quality, detailed
+    narration: null
+    title: null
+    dialogue:
+      - speaker: char_1
+        text: Why does observing this… cause internal variance?
+    soundEffects: []
+  - id: panel4
+    width: 944
+    height: 1104
+    description: A two-shot capturing char_1 and char_2 in a moment of shared observation. Char_1 is now leaning slightly
+      forward, its posture less rigid, while char_2 looks on with a mix of curiosity and apprehension, a single hand
+      reaching out tentatively. The lighting softens, casting a more diffuse glow that wraps around them, creating a
+      sense of shared space and dawning realization. The background is slightly blurred, drawing attention to the subtle
+      emotional connection, or lack thereof, forming between the two.
+    contextImages:
+      - panel_3
+      - char_1
+      - char_2
+    prompt: A two-shot capturing char_1 and char_2 in a moment of shared observation. Char_1 is now leaning slightly
+      forward, its posture less rigid, while char_2 looks on with a mix of curiosity and apprehension, a single hand
+      reaching out tentatively. The lighting softens, casting a more diffuse glow that wraps around them, creating a
+      sense of shared space and dawning realization. The background is slightly blurred, drawing attention to the subtle
+      emotional connection, or lack thereof, forming between the two., two-shot camera angle, comic book style, high
+      quality, detailed
+    dialogue:
+      - speaker: char_2
+        text: It's not just data, Aris. It's… experiencing.
+    title: null
+    narration: null
+    soundEffects: []
+  - id: panel5
+    width: 832
+    height: 1248
+    description: An over-the-shoulder shot from behind char_2, looking towards char_1. The robot is now exhibiting a more
+      pronounced emotional response; its head is tilted, and its normally impassive optical sensors seem to convey a
+      nascent sadness, perhaps a faint flicker of confusion. Char_2's shoulder and a portion of its head are visible in
+      the foreground, its expression obscured but its body language conveying concern. The scene is illuminated by the
+      cool, sterile lab lights, but a warmer, more organic light seems to emanate from char_1's core.
+    contextImages:
+      - panel_4
+      - char_1
+      - char_2
+    prompt: An over-the-shoulder shot from behind char_2, looking towards char_1. The robot is now exhibiting a more
+      pronounced emotional response; its head is tilted, and its normally impassive optical sensors seem to convey a
+      nascent sadness, perhaps a faint flicker of confusion. Char_2's shoulder and a portion of its head are visible in
+      the foreground, its expression obscured but its body language conveying concern. The scene is illuminated by the
+      cool, sterile lab lights, but a warmer, more organic light seems to emanate from char_1's core., over-shoulder
+      camera angle, comic book style, high quality, detailed
+    dialogue: []
+    title: null
+    narration: A fragile awareness. More than code now.
+    soundEffects: []
+  - id: panel6
+    width: 1456
+    height: 720
+    description: A low-angle shot looking up at char_1, emphasizing its imposing yet now vulnerable form. The robot's arms
+      are slightly raised, as if reaching out tentatively, its metallic fingers splayed. The ceiling of the lab, with
+      its complex network of pipes and conduits, looms above, creating a sense of being overwhelmed. The lighting is
+      dramatic, with strong highlights and deep shadows, casting char_1 in a powerful but melancholic silhouette. The
+      mood is one of profound change and a dawning, perhaps painful, awareness.
+    contextImages:
+      - panel_5
+      - char_1
+    prompt: A low-angle shot looking up at char_1, emphasizing its imposing yet now vulnerable form. The robot's arms are
+      slightly raised, as if reaching out tentatively, its metallic fingers splayed. The ceiling of the lab, with its
+      complex network of pipes and conduits, looms above, creating a sense of being overwhelmed. The lighting is
+      dramatic, with strong highlights and deep shadows, casting char_1 in a powerful but melancholic silhouette. The
+      mood is one of profound change and a dawning, perhaps painful, awareness., low-angle camera angle, comic book
+      style, high quality, detailed
+    dialogue:
+      - speaker: char_1
+        text: There is… a weight to this. A kind of ache.
+    title: null
+    narration: null
+    soundEffects: []
+  - id: panel7
+    width: 1456
+    height: 720
+    description: A high-angle shot looking down on char_1, which is now slumped slightly, its posture conveying a sense of
+      defeat or profound contemplation. Char_2 stands a short distance away, looking down at the robot with a mixture of
+      awe and concern. The vastness of the lab seems to press in, emphasizing the robot's newfound solitude in its
+      emotional awakening. The muted color palette of blues and grays is dominant, punctuated by the subtle, internal
+      glow from char_1, suggesting an inner world emerging.
+    contextImages:
+      - panel_6
+      - char_1
+      - char_2
+    prompt: A high-angle shot looking down on char_1, which is now slumped slightly, its posture conveying a sense of defeat
+      or profound contemplation. Char_2 stands a short distance away, looking down at the robot with a mixture of awe
+      and concern. The vastness of the lab seems to press in, emphasizing the robot's newfound solitude in its emotional
+      awakening. The muted color palette of blues and grays is dominant, punctuated by the subtle, internal glow from
+      char_1, suggesting an inner world emerging., high-angle camera angle, comic book style, high quality, detailed
+    narration: null
+    title: null
+    dialogue:
+      - speaker: char_2
+        text: That's… that's the beginning of feeling, Aura.
+    soundEffects: []
+  - id: panel8
+    width: 1456
+    height: 720
+    description: A wide-shot revealing the entire laboratory space once more, but this time the focus is not on the
+      machinery, but on the two figures. Char_1 is seated on the floor, its shoulders slumped, while char_2 is kneeling
+      beside it, offering a comforting gesture. The ambient lighting, once sterile, now seems to hold a subtle warmth,
+      reflecting the nascent emotional connection that has begun to bloom between them. The metallic surfaces gleam, but
+      the overall impression is one of quiet intimacy amidst the cold, technological expanse, signifying a profound
+      shift in the robot's existence.
+    contextImages:
+      - panel_7
+      - char_1
+      - char_2
+    prompt: A wide-shot revealing the entire laboratory space once more, but this time the focus is not on the machinery,
+      but on the two figures. Char_1 is seated on the floor, its shoulders slumped, while char_2 is kneeling beside it,
+      offering a comforting gesture. The ambient lighting, once sterile, now seems to hold a subtle warmth, reflecting
+      the nascent emotional connection that has begun to bloom between them. The metallic surfaces gleam, but the
+      overall impression is one of quiet intimacy amidst the cold, technological expanse, signifying a profound shift in
+      the robot's existence., wide-shot camera angle, comic book style, high quality, detailed
+    dialogue: []
+    title: null
+    narration: And in the quiet hum, a new consciousness bloomed.
+    soundEffects: []

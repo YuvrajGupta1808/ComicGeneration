@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'yaml';
 import { z } from 'zod';
+import comicService from '../services/comic-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,9 +51,26 @@ export class DialogueGenerationLangChainTool {
   }
 
   /** ───────────────────────────────────────────────
-   *  Load comic.yaml (characters + panels)
+   *  Load comic data from database
    *  ─────────────────────────────────────────────── */
-  loadComicData() {
+  async loadComicData(projectId) {
+    try {
+      const comicData = await comicService.getComicData(projectId);
+      return {
+        characters: comicData.characters || [],
+        panels: comicData.panels || []
+      };
+    } catch (error) {
+      console.warn('⚠️  Failed to load comic data from database:', error.message);
+      // Fallback to YAML
+      return this.loadComicDataFromYAML();
+    }
+  }
+
+  /** ───────────────────────────────────────────────
+   *  Load comic.yaml (fallback)
+   *  ─────────────────────────────────────────────── */
+  loadComicDataFromYAML() {
     try {
       const comicPath = path.join(__dirname, '../../config/comic.yaml');
       if (fs.existsSync(comicPath)) {
@@ -77,21 +95,22 @@ export class DialogueGenerationLangChainTool {
       name: this.name,
       description: this.description,
       schema: z.object({
+        projectId: z.string().describe('Project ID to generate dialogue for'),
         genre: z.string().optional().describe('Comic genre (sci-fi, fantasy, etc.)'),
         tone: z.string().optional().describe('Tone of dialogue (dramatic, humorous, dark, etc.)'),
         storyContext: z.string().optional().describe('Additional story context for dialogue generation')
       }),
-      func: async ({ genre, tone, storyContext }) =>
-        await this.execute(genre, tone, storyContext),
+      func: async ({ projectId, genre, tone, storyContext }) =>
+        await this.execute(projectId, genre, tone, storyContext),
     });
   }
 
   /** ───────────────────────────────────────────────
    *  Execute: call Gemini to generate dialogue
    *  ─────────────────────────────────────────────── */
-  async execute(genre = 'general fiction', tone = 'dramatic', storyContext = '') {
+  async execute(projectId, genre = 'general fiction', tone = 'dramatic', storyContext = '') {
     try {
-      const { characters, panels } = this.loadComicData();
+      const { characters, panels } = await this.loadComicData(projectId);
 
       if (characters.length === 0 || panels.length === 0) {
         return JSON.stringify({
@@ -343,12 +362,16 @@ Output ONLY the JSON array.
         });
       }
 
-      // Save to comic.yaml (merge with existing panels)
+      // Save to database
+      await this.saveDialogueToDatabase(projectId, dialogueData);
+
+      // Also save to YAML for backward compatibility (temporary)
       await this.saveDialogueToComicYaml(dialogueData);
 
       return JSON.stringify(
         {
           success: true,
+          projectId: projectId,
           totalPanels: dialogueData.length,
           model: 'gemini-2.5-flash-lite',
           dialogue: dialogueData
@@ -362,6 +385,32 @@ Output ONLY the JSON array.
         error: `Dialogue generation failed: ${error.message}`,
         dialogue: []
       });
+    }
+  }
+
+  /** ───────────────────────────────────────────────
+   *  Save dialogue to database
+   *  ─────────────────────────────────────────────── */
+  async saveDialogueToDatabase(projectId, dialogueData) {
+    try {
+      for (const panelDialogue of dialogueData) {
+        // Update panel with title, narration, sound effects
+        await comicService.updatePanel(projectId, panelDialogue.panelId, {
+          title: panelDialogue.title || null,
+          narration: panelDialogue.narration || null,
+          soundEffects: panelDialogue.soundEffects || []
+        });
+
+        // Add dialogue items
+        if (panelDialogue.dialogue && panelDialogue.dialogue.length > 0) {
+          await comicService.addDialogue(projectId, panelDialogue.panelId, panelDialogue.dialogue);
+        }
+      }
+
+      console.log(`✓ Saved dialogue to database (project: ${projectId})`);
+    } catch (error) {
+      console.error('Failed to save dialogue to database:', error.message);
+      throw error;
     }
   }
 

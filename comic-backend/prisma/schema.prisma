@@ -1,0 +1,200 @@
+// Prisma Schema for Comic Backend
+// Database: SQLite (for development)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Users & Authentication
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String?
+  tier         String   @default("free") // free, pro, enterprise
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  
+  projects     Project[]
+  usage        UsageTracking[]
+  
+  @@index([email])
+  @@map("users")
+}
+
+// Projects (replaces comic.yaml root)
+model Project {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  title        String
+  genre        String?
+  tone         String?
+  storyContext String?  @map("story_context")
+  pageCount    Int      @default(3) @map("page_count")
+  status       String   @default("draft") // draft, generating, completed, failed
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  characters   Character[]
+  panels       Panel[]
+  generations  Generation[]
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("projects")
+}
+
+// Characters (replaces characters.yaml + comic.yaml characters)
+model Character {
+  id            String   @id @default(uuid())
+  projectId     String   @map("project_id")
+  characterId   String   @map("character_id") // char_1, char_2
+  name          String?
+  description   String
+  prompt        String
+  width         Int      @default(832)
+  height        Int      @default(1248)
+  contextImages String   @default("[]") @map("context_images") // JSON string array
+  imageUrl      String?  @map("image_url")
+  leonardoId    String?  @map("leonardo_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@unique([projectId, characterId])
+  @@index([projectId])
+  @@map("characters")
+}
+
+// Panels (replaces comic.yaml panels)
+model Panel {
+  id            String   @id @default(uuid())
+  projectId     String   @map("project_id")
+  panelId       String   @map("panel_id") // panel1, panel2
+  pageNumber    Int      @map("page_number")
+  panelNumber   Int      @map("panel_number")
+  description   String
+  prompt        String
+  cameraAngle   String   @map("camera_angle")
+  width         Int      @default(832)
+  height        Int      @default(1248)
+  contextImages String   @default("[]") @map("context_images") // JSON string array
+  imageUrl      String?  @map("image_url")
+  textImageUrl  String?  @map("text_image_url") // Panel with dialogue rendered
+  leonardoId    String?  @map("leonardo_id")
+  title         String?
+  narration     String?
+  soundEffects  String   @default("[]") @map("sound_effects") // JSON string array
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  dialogue      Dialogue[]
+  
+  @@unique([projectId, panelId])
+  @@index([projectId])
+  @@index([projectId, pageNumber])
+  @@map("panels")
+}
+
+// Dialogue (extracted from panels)
+model Dialogue {
+  id          String   @id @default(uuid())
+  panelId     String   @map("panel_id")
+  speakerId   String?  @map("speaker_id") // char_1, char_2, or NULL for narration
+  text        String
+  bubbleType  String   @default("speech") @map("bubble_type") // speech, thought, narration, title
+  position    String?  // JSON string: {x, y, width, height, tailDirection}
+  orderIndex  Int      @map("order_index") // Reading order
+  createdAt   DateTime @default(now()) @map("created_at")
+  
+  panel       Panel    @relation(fields: [panelId], references: [id], onDelete: Cascade)
+  
+  @@index([panelId])
+  @@map("dialogue")
+}
+
+// Layouts (replaces layouts.yaml - can be static or dynamic)
+model Layout {
+  id            String   @id @default(uuid())
+  name          String   @unique // three-page-story, four-page-story
+  pageCount     Int      @map("page_count")
+  panelsPerPage String   @map("panels_per_page") // JSON string: [3, 3, 2]
+  layoutData    String   @map("layout_data") // JSON string: Full layout structure
+  createdAt     DateTime @default(now()) @map("created_at")
+  
+  @@index([pageCount])
+  @@map("layouts")
+}
+
+// Image Generations (track all generation attempts)
+model Generation {
+  id                    String    @id @default(uuid())
+  projectId             String    @map("project_id")
+  targetType            String    @map("target_type") // character, panel
+  targetId              String    @map("target_id") // UUID of character or panel
+  leonardoGenerationId  String?   @map("leonardo_generation_id")
+  prompt                String
+  seed                  Int?
+  width                 Int?
+  height                Int?
+  contextImages         String    @default("[]") @map("context_images") // JSON string array
+  status                String    @default("pending") // pending, processing, completed, failed
+  errorMessage          String?   @map("error_message")
+  cloudinaryUrl         String?   @map("cloudinary_url")
+  attemptNumber         Int       @default(1) @map("attempt_number")
+  executionTimeMs       Int?      @map("execution_time_ms")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  completedAt           DateTime? @map("completed_at")
+  
+  project               Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@index([projectId])
+  @@index([status])
+  @@index([targetType, targetId])
+  @@index([createdAt])
+  @@map("generations")
+}
+
+// Agent Memory (replaces agent-memory.json)
+model AgentMemory {
+  id              String   @id @default(uuid())
+  toolName        String   @map("tool_name")
+  operationType   String   @map("operation_type") // success, failure
+  params          String?  // JSON string
+  result          String?  // JSON string
+  errorMessage    String?  @map("error_message")
+  executionTimeMs Int?     @map("execution_time_ms")
+  createdAt       DateTime @default(now()) @map("created_at")
+  
+  @@index([toolName])
+  @@index([operationType])
+  @@index([createdAt])
+  @@map("agent_memory")
+}
+
+// Usage Tracking (for cost management)
+model UsageTracking {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  resourceType String   @map("resource_type") // leonardo_api, gemini_api, cloudinary_storage
+  quantity     Int      @default(1)
+  costUsd      Float?   @map("cost_usd")
+  metadata     String?  // JSON string
+  createdAt    DateTime @default(now()) @map("created_at")
+  
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([resourceType])
+  @@index([createdAt])
+  @@map("usage_tracking")
+}
