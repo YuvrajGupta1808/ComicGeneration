@@ -31,7 +31,28 @@ npm install --prefix comic-frontend
 
 ### Environment Setup
 
-Each project requires its own `.env` file. See individual project READMEs for details.
+For Backend_v2 env
+# Backend Port
+PORT=4000
+
+# Disable mock mode (use real Leonardo + real Cloudinary)
+USE_MOCK_LEONARDO=false
+
+# Leonardo API Key (required for real AI generation)
+LEONARDO_API_KEY=your leonardo api key here
+
+# Cloudinary credentials (for uploading generated images, some might not be needed)
+CLOUDINARY_CLOUD_NAME=your cloudinary cloud name here
+CLOUDINARY_API_KEY=your cloudinary api key here
+CLOUDINARY_API_SECRET=your cloudinary api secret here
+
+For Front End
+# URL of the backend server
+REACT_APP_API_BASE_URL=http://localhost:4000
+
+# Use real backend, not mock mode. 
+REACT_APP_USE_MOCK=false
+
 
 ## 🎯 Features
 
