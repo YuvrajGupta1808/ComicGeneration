@@ -30,7 +30,7 @@ npm install --prefix comic-frontend
 ```
 
 ### Environment Setup
-
+```bash
 # For Backend_v2 env
 ## Backend Port
 PORT=4000
@@ -52,7 +52,7 @@ REACT_APP_API_BASE_URL=http://localhost:4000
 
 ## Use real backend, not mock mode. 
 REACT_APP_USE_MOCK=false
-
+```
 
 ## 🎯 Features
 
