@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "server": "node src/server.js",
     "generate": "node generate-comic.js",
     "combine": "node combine-dynamic.js",
     "upload": "node upload-reference.js",
@@ -21,7 +22,10 @@
   "dependencies": {
     "axios": "^1.12.2",
     "canvas": "^3.2.0",
+    "cloudinary": "^2.8.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "form-data": "^4.0.4",
     "sharp": "^0.34.4"
   }

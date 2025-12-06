@@ -1,8 +1,10 @@
-import { Image, Sparkles, Upload, X } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import AppNavbar from '../components/AppNavbar';
 import Footer from '../components/sections/Footer';
 import { PlaceholdersAndVanishInput } from "../components/ui/placeholders-and-vanish-input";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 type ChatRole = "user" | "assistant";
 
@@ -15,7 +17,14 @@ type ChatMessage =
       pages: { page: number; url: string }[];
     };
 
-// Shown under the input, not in the chat bubbles
+// Frontend environment variables (CRA-style)
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:4000";
+
+const USE_FRONTEND_MOCK =
+  process.env.REACT_APP_USE_MOCK === "true";
+
+// Info message
 const GENERATION_INFO = "Generation typically takes 30–60 seconds.";
 
 const GENERATION_STEPS = [
@@ -27,29 +36,16 @@ const GENERATION_STEPS = [
 
 const CreateComic: React.FC = () => {
   const [prompt, setPrompt] = useState('');
-  const [artStyle] = useState<'manga' | 'western' | 'watercolor'>('manga'); // kept for future backend use
-  const [referenceImages, setReferenceImages] = useState<File[]>([]);
+  const [artStyle] = useState<'manga' | 'western' | 'watercolor'>('manga');
   const [isGenerating, setIsGenerating] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [inputKey, setInputKey] = useState(0); // used to reset the Aceternity input
+  const [inputKey, setInputKey] = useState(0);
+  const [isDownloadingAll, setIsDownloadingAll] = useState(false);
 
-  // Used to scroll the whole page to the latest message + input
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
-  // simple id helper for chat messages
   const createId = () => Date.now() + Math.random();
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files);
-      setReferenceImages((prev) => [...prev, ...filesArray].slice(0, 4)); // Max 4 images
-    }
-  };
-
-  const removeImage = (index: number) => {
-    setReferenceImages((prev) => prev.filter((_, i) => i !== index));
-  };
 
   const pushMessage = (msg: ChatMessage) => {
     setMessages((prev) => [...prev, msg]);
@@ -57,9 +53,8 @@ const CreateComic: React.FC = () => {
 
   const handleSendPrompt = () => {
     const trimmed = prompt.trim();
-    if (!trimmed || isGenerating) return; // block while generating
+    if (!trimmed || isGenerating) return;
 
-    // user message
     pushMessage({
       id: createId(),
       role: "user",
@@ -67,34 +62,26 @@ const CreateComic: React.FC = () => {
       content: trimmed,
     });
 
-    // clear prompt state + visually reset the Aceternity input
     setPrompt('');
     setInputKey((k) => k + 1);
 
-    // start simulated generation for now
-    startMockGeneration(trimmed);
+    if (USE_FRONTEND_MOCK) {
+      startMockGeneration(trimmed);
+    } else {
+      startBackendGeneration(trimmed);
+    }
   };
 
+  // FRONTEND-ONLY MOCK MODE
   const startMockGeneration = (userPrompt: string) => {
     setIsGenerating(true);
 
-    // mock pages for now – replace with backend response later
     const mockPages: { page: number; url: string }[] = [
-      {
-        page: 1,
-        url: 'https://via.placeholder.com/800x1200?text=Comic+Page+1',
-      },
-      {
-        page: 2,
-        url: 'https://via.placeholder.com/800x1200?text=Comic+Page+2',
-      },
-      {
-        page: 3,
-        url: 'https://via.placeholder.com/800x1200?text=Comic+Page+3',
-      },
+      { page: 1, url: 'https://via.placeholder.com/800x1200?text=Comic+Page+1' },
+      { page: 2, url: 'https://via.placeholder.com/800x1200?text=Comic+Page+2' },
+      { page: 3, url: 'https://via.placeholder.com/800x1200?text=Comic+Page+3' },
     ];
 
-    // show first step right away
     pushMessage({
       id: createId(),
       role: "assistant",
@@ -102,7 +89,6 @@ const CreateComic: React.FC = () => {
       content: GENERATION_STEPS[0],
     });
 
-    // queue the remaining steps
     GENERATION_STEPS.slice(1).forEach((stepText, idx) => {
       setTimeout(() => {
         pushMessage({
@@ -117,7 +103,6 @@ const CreateComic: React.FC = () => {
     const totalDelay = 1000 * GENERATION_STEPS.slice(1).length + 500;
 
     setTimeout(() => {
-      // show pages inside chat
       pushMessage({
         id: createId(),
         role: "assistant",
@@ -125,7 +110,6 @@ const CreateComic: React.FC = () => {
         pages: mockPages,
       });
 
-      // description message
       pushMessage({
         id: createId(),
         role: "assistant",
@@ -134,26 +118,121 @@ const CreateComic: React.FC = () => {
           "Here are your comic pages! You can click any thumbnail to see it full size or download individual pages.",
       });
 
-      // final question about downloading all images
-      pushMessage({
-        id: createId(),
-        role: "assistant",
-        kind: "text",
-        content: "Download all pages together as a single bundle?",
-      });
-
       setIsGenerating(false);
 
-      // just for debugging for now
       console.log("Generated (mock) comic with:", {
         userPrompt,
         artStyle,
-        referenceImages,
       });
     }, totalDelay);
   };
 
-  // auto-scroll: scroll the entire page so the last message + input are visible
+  // REAL BACKEND GENERATION
+  const startBackendGeneration = async (userPrompt: string) => {
+    // store timeout IDs so we can cancel any remaining ones
+    const stepTimeouts: number[] = [];
+
+    try {
+      setIsGenerating(true);
+
+      // First status message
+      pushMessage({
+        id: createId(),
+        role: "assistant",
+        kind: "text",
+        content: GENERATION_STEPS[0],
+      });
+
+      // Schedule the remaining status messages while we wait
+      GENERATION_STEPS.slice(1).forEach((step, idx) => {
+        const timeoutId = window.setTimeout(() => {
+          pushMessage({
+            id: createId(),
+            role: "assistant",
+            kind: "text",
+            content: step,
+          });
+        }, (idx + 1) * 1200);
+
+        stepTimeouts.push(timeoutId);
+      });
+
+      const response = await fetch(`${API_BASE_URL}/api/generate-comic`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: userPrompt,
+          artStyle,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      const data: { pages: { page: number; url: string }[] } =
+        await response.json();
+
+      // Intro line BEFORE pages
+      pushMessage({
+        id: createId(),
+        role: "assistant",
+        kind: "text",
+        content:
+          "Here are your comic pages! You can click any page to view or download it.",
+      });
+
+      // Then the pages
+      pushMessage({
+        id: createId(),
+        role: "assistant",
+        kind: "pages",
+        pages: data.pages,
+      });
+    } catch (err) {
+      console.error("Backend error:", err);
+      pushMessage({
+        id: createId(),
+        role: "assistant",
+        kind: "text",
+        content:
+          "Something went wrong while generating your comic. Please try again later.",
+      });
+    } finally {
+      // cancel any step messages that haven't fired yet,
+      // so they can't show up after the pages
+      stepTimeouts.forEach((id) => window.clearTimeout(id));
+      setIsGenerating(false);
+    }
+  };
+
+  // Download all pages as a single ZIP
+  const handleDownloadAllPages = async (pages: { page: number; url: string }[]) => {
+    try {
+      setIsDownloadingAll(true);
+
+      const zip = new JSZip();
+
+      for (const page of pages) {
+        const response = await fetch(page.url);
+        if (!response.ok) {
+          console.warn(`Failed to fetch page ${page.page} from ${page.url}`);
+          continue;
+        }
+        const blob = await response.blob();
+        zip.file(`comic-page-${page.page}.png`, blob);
+      }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      saveAs(content, "comic-pages.zip");
+    } catch (err) {
+      console.error("Download-all error:", err);
+      alert("Sorry, something went wrong preparing the ZIP file.");
+    } finally {
+      setIsDownloadingAll(false);
+    }
+  };
+
   useEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({
@@ -169,7 +248,6 @@ const CreateComic: React.FC = () => {
 
       <div className="flex-1 pt-28 pb-12 px-6">
         <div className="max-w-5xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center space-x-2 bg-white/90 dark:bg-neutral-900/60 backdrop-blur-sm text-gray-700 dark:text-white px-4 py-2 rounded-full text-sm font-medium border border-gray-200 dark:border-neutral-800 shadow-sm mb-6">
               <Sparkles className="w-4 h-4" />
@@ -179,18 +257,16 @@ const CreateComic: React.FC = () => {
               Bring your story to life
             </h1>
             <p className="text-lg text-gray-600 dark:text-neutral-400 max-w-2xl mx-auto">
-              Describe your comic scene and optionally add character and background references
+              Describe your comic scene and I’ll generate your comic pages.
             </p>
           </div>
 
-          {/* Chat card – messages grow, page scrolls */}
           <div className="mb-10">
             <div className="bg-white/90 dark:bg-neutral-900 rounded-2xl border border-gray-200 dark:border-neutral-800 shadow-sm">
-              {/* Messages (no internal scroll) */}
               <div className="space-y-4 px-4 pt-4 pb-2">
                 {messages.length === 0 && (
                   <p className="text-xs text-gray-500 dark:text-neutral-500">
-                    Start by describing your comic scene. I&apos;ll walk you through the generation steps and then show your pages here.
+                    Start by describing your comic scene. I’ll walk you through each step and then show your final pages.
                   </p>
                 )}
 
@@ -215,7 +291,7 @@ const CreateComic: React.FC = () => {
                     );
                   }
 
-                  // pages bubble: thumbnails in a column
+                  // pages bubble
                   return (
                     <div key={msg.id} className="flex justify-start">
                       <div className="w-full rounded-2xl px-4 py-4 bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 shadow-sm">
@@ -240,12 +316,13 @@ const CreateComic: React.FC = () => {
                                 />
                               </button>
 
-                              {/* Page label + download */}
                               <div className="flex items-center justify-between mt-2 text-xs text-gray-600 dark:text-neutral-400">
                                 <span>Page {page.page}</span>
                                 <a
                                   href={page.url}
                                   download={`comic-page-${page.page}.png`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                   className="font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
                                 >
                                   Download
@@ -254,21 +331,35 @@ const CreateComic: React.FC = () => {
                             </div>
                           ))}
                         </div>
+
+                        {msg.pages.length > 0 && (
+                          <div className="mt-4 flex items-center justify-between">
+                            <span className="text-xs text-gray-500 dark:text-neutral-400">
+                              Download all pages together as a single bundle.
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleDownloadAllPages(msg.pages)}
+                              disabled={isDownloadingAll}
+                              className="px-3 py-1 text-xs font-medium rounded-full bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                            >
+                              {isDownloadingAll ? "Preparing ZIP…" : "Download all"}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* Input at bottom of chat card */}
               <div className="border-t border-gray-200 dark:border-neutral-800 px-4 py-3">
                 <label className="block text-xs font-medium text-gray-700 dark:text-neutral-300 mb-2">
                   Describe your comic scene
                 </label>
                 <div className="relative flex items-center">
-                  {/* Aceternity input */}
                   <PlaceholdersAndVanishInput
-                    key={inputKey} // reset on send so internal value clears
+                    key={inputKey}
                     placeholders={[
                       "A superhero saving the city from a giant robot",
                       "A quiet moment between friends on a rooftop",
@@ -281,7 +372,6 @@ const CreateComic: React.FC = () => {
                     }}
                   />
 
-                  {/* Send button (arrow) */}
                   <button
                     type="button"
                     onClick={handleSendPrompt}
@@ -304,18 +394,23 @@ const CreateComic: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Info text under input, not in chat bubbles */}
                 <p className="mt-2 text-[11px] text-gray-500 dark:text-neutral-500">
                   {GENERATION_INFO}
                 </p>
               </div>
 
-              {/* 🔽 Auto-scroll target at the very bottom of the chat card */}
               <div ref={endOfMessagesRef} />
             </div>
           </div>
 
-          {/* Reference Images Upload */}
+          {/* 
+            Reference image upload UI (disabled for now).
+
+            Previously allowed users to upload up to 4 reference images,
+            but the current backend pipeline does not accept or use
+            frontend-uploaded files. Leaving this block commented out
+            so it can be restored or wired up in a future version if needed.
+          
           <div className="mb-12">
             <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-4 text-center">
               <Image className="w-4 h-4 inline-block mr-2" />
@@ -376,10 +471,10 @@ const CreateComic: React.FC = () => {
               )}
             </div>
           </div>
+          */}
         </div>
       </div>
 
-      {/* Full-size image overlay */}
       {selectedImage && (
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center">
           <button
@@ -398,6 +493,8 @@ const CreateComic: React.FC = () => {
             <a
               href={selectedImage}
               download="comic-page.png"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-xs font-medium text-indigo-200 hover:text-white underline"
             >
               Download this page
