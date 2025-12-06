@@ -41,7 +41,7 @@ npm run server
 
 ### Environment Setup
 ```bash
-# For Backend_v2 env
+# For Backend_v2 env file
 ## Backend Port
 PORT=4000
 
@@ -51,13 +51,13 @@ USE_MOCK_LEONARDO=false
 ## Leonardo API Key (required for real AI generation)
 LEONARDO_API_KEY=your leonardo api key here
 
-## Cloudinary credentials (for uploading generated images, some might not be needed)
+## Cloudinary credentials (for uploading generated images)
 CLOUDINARY_CLOUD_NAME=your cloudinary cloud name here
 CLOUDINARY_API_KEY=your cloudinary api key here
 CLOUDINARY_API_SECRET=your cloudinary api secret here
 ```
 ```bash
-# For Front End
+# For Front End env file
 ## URL of the backend server
 REACT_APP_API_BASE_URL=http://localhost:4000
 
