@@ -33,9 +33,11 @@ npm install --prefix comic-frontend
 ### For testing frontend + backend
 ```bash
 cd comic-frontend
+npm install
 npm start
 
 cd comic-backend_v2
+npm install
 npm run server
 ```
 
