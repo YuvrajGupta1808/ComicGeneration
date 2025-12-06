@@ -55,7 +55,8 @@ LEONARDO_API_KEY=your leonardo api key here
 CLOUDINARY_CLOUD_NAME=your cloudinary cloud name here
 CLOUDINARY_API_KEY=your cloudinary api key here
 CLOUDINARY_API_SECRET=your cloudinary api secret here
-
+```
+```bash
 # For Front End
 ## URL of the backend server
 REACT_APP_API_BASE_URL=http://localhost:4000
