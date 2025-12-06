@@ -20,6 +20,7 @@ This monorepo contains three main components:
 - Cloudinary account (for image storage)
 - Google Gemini API key (for comic-backend)
 
+
 ### Installation
 
 ```bash
@@ -27,6 +28,15 @@ This monorepo contains three main components:
 npm install --prefix comic-backend
 npm install --prefix comic-backend_v2
 npm install --prefix comic-frontend
+```
+
+### For testing frontend + backend
+```bash
+cd comic-frontend
+npm start
+
+cd comic-backend_v2
+npm run server
 ```
 
 ### Environment Setup
