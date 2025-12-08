@@ -13,16 +13,20 @@ character_config:
       - description
 characters:
   - id: char_1
-    name: Leo
-    description: Leo is a curious and energetic boy, appearing to be around 9-10 years old. He has a bright blue t-shirt
-      that stands out against his sun-kissed skin, and his hair is likely a tousled mess from his energetic pursuits.
-      His eyes often hold a look of wonder or mild panic, as seen when he glances back or stumbles slightly during their
-      chase.  He's often depicted in motion, arms flailing a bit, suggesting an earnest but sometimes clumsy enthusiasm
-      for the adventure.
+    name: Elara Meadowlight
+    description: Elara is a young, eager adventurer with a lean, agile build, likely in her late teens or early twenties.
+      Her wide, curious eyes, often reflecting the magical light of the forest, are her most striking feature, conveying
+      a deep sense of wonder and an unbridled enthusiasm for discovery. She wears practical, well-worn adventuring gear
+      in earthy tones, but her posture and facial expressions betray a spirit of boundless excitement, always a step
+      ahead and ready to explore the unknown with a silent gasp of awe. A single bead of sweat might sometimes trickle
+      down her temple, a testament to her active engagement with the environment, and her focus is always drawn to the
+      captivating, luminous flora.
   - id: char_2
-    name: Mia
-    description: Mia is a determined and focused girl, around the same age as Leo. She wears a cheerful yellow sundress, a
-      stark contrast to the serious expressions she sometimes displays. Her gaze is often directed upwards with
-      unwavering resolve, her jaw set with a hint of desperation and a flicker of awe.  A strand of sweat often trickles
-      down her temple, showcasing her physical exertion and commitment to their quest. Her body language, whether
-      pointing or reaching out, conveys a strong sense of purpose and an unyielding spirit.
+    name: Bram Stonefist
+    description: Bram is Elara's more cautious companion, appearing to be of a similar age but with a sturdier, more
+      grounded build that suggests resilience. His expression often carries a slight frown, a subtle indicator of his
+      inherent wariness, and his hand frequently rests on the hilt of his worn dagger, a constant reminder of his
+      readiness for potential danger. His practical adventuring attire is functional and muted, designed for utility
+      rather than flash, and his gaze frequently darts into the surrounding gloom, revealing a thoughtful, albeit
+      nervous, vigilance as he navigates the magical forest. He tends to linger slightly behind Elara, a deliberate
+      choice born of his protective instincts and a deeper appreciation for the unknown's potential perils.

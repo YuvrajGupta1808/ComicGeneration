@@ -33,6 +33,28 @@ npm install --prefix comic-frontend
 
 Each project requires its own `.env` file. See individual project READMEs for details.
 
+### Running the Application
+
+**Manual Startup (Simple)**
+
+Open two terminal windows:
+
+**Terminal 1 - Start Backend Server:**
+```bash
+cd comic-backend
+npm run langchain
+```
+Wait for the message: `✓ Server running on http://localhost:8000`
+
+**Terminal 2 - Start Frontend:**
+```bash
+cd comic-frontend
+npm start
+```
+The frontend will open automatically at `http://localhost:3000`
+
+**That's it!** The frontend connects to the backend at `http://localhost:8000`
+
 ## 🎯 Features
 
 - **AI-Powered Panel Generation** - Generate comic panels with Leonardo AI
@@ -41,6 +63,65 @@ Each project requires its own `.env` file. See individual project READMEs for de
 - **Dialogue Management** - Add speech bubbles, narration, and sound effects
 - **Interactive CLI** - Conversational agent for comic creation
 - **Web Interface** - User-friendly frontend for comic generation
+- **Cloudinary Integration** - Direct display of generated panels in the frontend
+
+## 🎨 Workflow: From Generation to Display
+
+### Simple 3-Step Workflow
+
+#### 1️⃣ Start Both Servers
+
+**Terminal 1 - Backend:**
+```bash
+cd comic-backend
+npm run langchain
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd comic-frontend
+npm start
+```
+
+Open `http://localhost:3000` in your browser.
+
+#### 2️⃣ Generate Your Comic
+
+In the frontend chat, have a conversation with the agent:
+
+```
+You: "Create a sci-fi comic about a space explorer"
+
+Agent: 
+✅ Generated 8 panels successfully!
+▸ Panel 1 (establishing-shot): [description]
+▸ Panel 2 (medium-shot): [description]
+...
+
+You: "Generate characters"
+
+Agent:
+✅ Generated 2 characters successfully!
+👤 Character 1 (char_1): [details]
+👤 Character 2 (char_2): [details]
+
+You: "Generate images"
+
+Agent:
+✅ Comic panels generated! Your comic grid is now displayed in the frontend.
+```
+
+#### 3️⃣ View Your Comic
+
+**That's it!** The comic grid automatically appears with all your generated panels. 🎉
+
+The system automatically:
+- Generates images with Leonardo AI
+- Uploads to Cloudinary
+- Sends URLs to the frontend
+- Displays the comic grid
+
+No copying, pasting, or manual steps needed!
 
 ## 📚 Documentation
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import Chat from './pages/Chat';
 import CreateComic from './pages/CreateComic';
 import Examples from './pages/Examples';
 import HowItWorks from './pages/HowItWorks';
@@ -29,6 +30,7 @@ function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/create" element={<CreateComic />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </Router>
   );

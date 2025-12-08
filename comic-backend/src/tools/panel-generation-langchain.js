@@ -362,16 +362,21 @@ CRITICAL REQUIREMENTS:
         });
       }
 
-      return JSON.stringify(
-        {
-          success: true,
-          totalPanels,
-          model: 'gemini-2.5-flash-lite',
-          panels: panels.length > 0 ? panels : text,
-        },
-        null,
-        2
-      );
+      // Format output for better readability
+      const formattedOutput = {
+        success: true,
+        totalPanels,
+        model: 'gemini-2.5-flash-lite',
+        summary: `Generated ${panels.length} panels successfully!`,
+        panels: panels.map((panel, idx) => ({
+          id: panel.panelid,
+          angle: panel.cameraAngle,
+          description: panel.description,
+          context: panel.contextImages.join(', ')
+        }))
+      };
+      
+      return JSON.stringify(formattedOutput, null, 2);
     } catch (error) {
       return JSON.stringify({
         success: false,

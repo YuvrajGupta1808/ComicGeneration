@@ -29,6 +29,7 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
   // index reserved for future use (e.g., synced detail view)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentIndex] = useState(0);
 
   useEffect(() => {
@@ -120,6 +121,7 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-redeclare, @typescript-eslint/no-unused-vars
 export const Card = ({
   card,
   index,

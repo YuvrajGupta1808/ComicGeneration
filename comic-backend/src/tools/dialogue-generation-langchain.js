@@ -39,7 +39,7 @@ export class DialogueGenerationLangChainTool {
 
     return {
       template: {
-        fields: ['title', 'dialogue', 'narration', 'soundEffects']
+        fields: ['title', 'dialogue', 'narration']
       },
       cover_page: {
         panel_id: 'panel1',
@@ -180,12 +180,6 @@ Follow these principles carefully to produce cinematic comic dialogue:
 
 ---
 
-### 💥 SOUND EFFECTS (SFX)
-1. Use **sparingly** — 1–2 total across the comic.
-2. Only for **major action beats**.
-3. Keep SFX expressive, not literal (“KRA-SHH”, “THOOM”, “WHRRRM”).
-
----
 
 ### ⚖️ BALANCE & PACING
 1. Some panels must remain **silent** for dramatic weight.
@@ -255,8 +249,7 @@ Each entry:
   "panelId": "panelX",
   "title": "string or null",
   "dialogue": [{"speaker": "char_id", "text": "short cinematic line"}],
-  "narration": "string or null",
-  "soundEffects": ["optional SFX"]
+  "narration": "string or null"
 }
 
 ---
@@ -318,8 +311,7 @@ Output ONLY the JSON array.
             dialogue: Array.isArray(d.dialogue) ? d.dialogue.filter(line => 
               line && line.speaker && line.text
             ) : [],
-            narration: d.narration || null,
-            soundEffects: Array.isArray(d.soundEffects) ? d.soundEffects : []
+            narration: d.narration || null
           }));
 
         // Ensure panel1 has title and no dialogue
@@ -390,8 +382,7 @@ Output ONLY the JSON array.
               ...panel,
               title: dialogue.title || null,
               dialogue: dialogue.dialogue || [],
-              narration: dialogue.narration || null,
-              soundEffects: dialogue.soundEffects || []
+              narration: dialogue.narration || null
             };
           }
           

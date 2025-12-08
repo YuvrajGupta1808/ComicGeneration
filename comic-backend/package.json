@@ -13,8 +13,8 @@
     "test": "jest",
     "build": "pkg . --out-path dist",
     "setup-ollama": "node setup-ollama.js",
-    "langchain": "node bin/langchain-agent.js",
-    "langchain-agent": "node src/core/langchain-agent.js"
+    "langchain": "node src/server/langchain-server.js",
+    "langchain-agent": "node bin/langchain-agent.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",

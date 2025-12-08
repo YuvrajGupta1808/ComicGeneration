@@ -16,6 +16,7 @@ import { EditPanelLangChainTool } from '../tools/edit-panel-langchain.js';
 import { LayoutSelectionLangChainTool } from '../tools/layout-selection-langchain.js';
 import { LeonardoImageGenerationLangChainTool } from '../tools/leonardo-image-generation-langchain.js';
 import { PanelGenerationLangChainTool } from '../tools/panel-generation-langchain.js';
+import { RegenerateFailedPanelsLangChainTool } from '../tools/regenerate-failed-panels-langchain.js';
 
 class LangChainComicAgent {
   constructor() {
@@ -27,6 +28,8 @@ class LangChainComicAgent {
     this.generatedPanels = null;
     this.panelRequestInfo = null;
     this.lastLeonardoOutput = null; // Store last Leonardo tool output for compose_pages
+    this.panelUrls = null; // Store panel URLs for frontend display
+    this.pageUrls = null; // Store composed page URLs for frontend display
     this.setupTools();
     this.setupModel();
   }
@@ -75,6 +78,11 @@ class LangChainComicAgent {
       this.editToolInstance = editTool;
       this.editTool = editTool.getTool();
       console.log(chalk.green('✓ Edit panel tool initialized'));
+      
+      const regenerateTool = new RegenerateFailedPanelsLangChainTool();
+      this.regenerateToolInstance = regenerateTool;
+      this.regenerateTool = regenerateTool.getTool();
+      console.log(chalk.green('✓ Regenerate failed panels tool initialized'));
     } catch (error) {
       console.error(chalk.red('Failed to initialize tools:'), error.message);
       throw error;
@@ -92,8 +100,8 @@ class LangChainComicAgent {
         temperature: 0.7,
       });
       
-      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then dialogue placement, then edit, then compose)
-      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.dialoguePlacementTool, this.editTool, this.composeTool]);
+      // Bind tools to the model (panels first, then characters, then layout, then leonardo, then dialogue, then dialogue placement, then edit, then regenerate, then compose)
+      this.llm = this.baseModel.bindTools([this.panelTool, this.characterTool, this.layoutTool, this.leonardoTool, this.dialogueTool, this.dialoguePlacementTool, this.editTool, this.regenerateTool, this.composeTool]);
       
       console.log(chalk.green('✓ Gemini model initialized successfully'));
     } catch (error) {
@@ -208,8 +216,11 @@ class LangChainComicAgent {
         ---
         
         🎨 **Story Ideas**
-        - When users ask for story ideas, provide **3 short ideas** only.  
-        - Each idea should involve **no more than 2 main characters**.  
+        - When users ask for story ideas, provide **few short ideas** only.  
+        - Each idea should involve **no more than 2 main characters**.
+        - **CRITICAL**: ALWAYS generate COMPLETELY NEW and DIFFERENT ideas each time the user asks.
+        - DO NOT repeat previously suggested ideas - be creative and explore different genres, settings, and themes.
+        - Vary the genres: sci-fi, fantasy, horror, mystery, adventure, slice-of-life, superhero, western, etc.
         - After showing ideas, ask:  
           "Would you like me to generate panels for one of these ideas?"  
         - If the user agrees, expand on the chosen idea and proceed to panel generation.
@@ -244,24 +255,27 @@ class LangChainComicAgent {
         - Panels will be automatically saved to **comic.yaml** after generation.
         - **IMPORTANT - After panel generation**:
           1. Parse the tool's JSON response to extract the panels array
-          2. Display ALL panel descriptions to the user in a readable format:
-             - Show each panel ID, description, camera angle, and context images
-             - Format it nicely with emojis and structure
+          2. Display ALL panel descriptions to the user in a CLEAN, SCANNABLE format:
+             - Use clear visual separators between panels
+             - **Use markdown bold** for panel headers, camera angles, and field labels
+             - Break description into readable chunks (not one long paragraph)
+             - Show context images on a separate line with bold label
+             - Use emojis sparingly for visual hierarchy
           3. Suggest character generation next
         - **Example response format**:
-          "✓ Generated 8 panels successfully!
+          "✅ Generated 8 panels successfully!
           
-          📐 Panel 1 (establishing-shot):
-          Description: [show the actual description]
-          Context: char_1, char_2
+          **▸ Panel 1** (establishing-shot):
+          **Description:** [show the actual description]
+          **Context:** panel_4, char_1
           
-          📐 Panel 2 (medium-shot):
-          Description: [show the actual description]
-          Context: panel_1, char_1
+          **▸ Panel 2** (medium-shot):
+          **Description:** [show the actual description]
+          **Context:** panel_1, char_2
           
           ... (show all panels)
           
-          Next: Generate characters?"
+          Next: Would you like me to generate characters?"
         - After panel generation, suggest character generation.
         
         ---
@@ -275,21 +289,22 @@ class LangChainComicAgent {
         - **IMPORTANT - After character generation**:
           1. Parse the tool's JSON response to extract the characters array
           2. Display ALL character details to the user in a readable format:
+             - **Use markdown bold** for character headers and field labels
              - Show each character ID, name, and full description
              - Format it nicely with emojis and structure
           3. Suggest dialogue generation next
         - **Example response format**:
-          "✓ Generated 2 characters successfully!
+          "✅ Generated 2 characters successfully!
           
-          👤 Character 1 (char_1):
-          Name: [show the actual name]
-          Description: [show the full description]
+          **👤 Character 1** (char_1):
+          **Name:** [show the actual name]
+          **Description:** [show the full description]
           
-          👤 Character 2 (char_2):
-          Name: [show the actual name]
-          Description: [show the full description]
+          **👤 Character 2** (char_2):
+          **Name:** [show the actual name]
+          **Description:** [show the full description]
           
-          Next: Generate dialogue?"
+          Next: Would you like me to generate dialogue?"
         
         ---
         
@@ -306,34 +321,33 @@ class LangChainComicAgent {
           - \`title\`: Title for the cover page (panel1 only)
           - \`dialogue\`: Array of dialogue lines with speaker and text
           - \`narration\`: Narration text (optional, used sparingly)
-          - \`soundEffects\`: Array of sound effects (optional, for action scenes)
         - **CRITICAL - After dialogue generation, you MUST**:
           1. Parse the tool's JSON response to extract the dialogue array
           2. Display ALL dialogue details to the user in a readable format:
-             - Show the cover page title (panel1)
-             - For EVERY panel, show: panel ID, ALL dialogue lines (speaker + text), narration, and sound effects
+             - **Use markdown bold** for panel headers, speakers, and field labels
+             - Show the cover page title (panel1) with bold formatting
+             - For EVERY panel, show: panel ID, ALL dialogue lines (speaker + text), and narration
              - Format it nicely with emojis and structure
              - DO NOT skip any panels - show all of them
           3. Suggest next steps (generate images OR place dialogue with vision)
         - **Example response format**:
-          "✓ Dialogue generated successfully!
+          "✅ Dialogue generated successfully!
           
-          📖 Cover Page (panel1):
-          Title: 'The Last Starlight'
+          **📖 Cover Page** (panel1):
+          **Title:** 'The Last Starlight'
           
-          💬 Panel 2:
-          - Jax: 'I've been tracking this cargo for weeks.'
-          - Flicker: 'You don't know what you're getting into.'
-          Narration: The twin suns cast long shadows...
-          SFX: WHOOSH
+          **💬 Panel 2:**
+          **Jax:** 'I've been tracking this cargo for weeks.'
+          **Flicker:** 'You don't know what you're getting into.'
+          **Narration:** The twin suns cast long shadows...
           
-          💬 Panel 3:
-          - [show actual dialogue]
-          Narration: [show actual narration if any]
+          **💬 Panel 3:**
+          **[Speaker]:** [show actual dialogue]
+          **Narration:** [show actual narration if any]
           
           ... (show ALL panels with their dialogue)
           
-          Next: Generate images with Leonardo AI?"
+          Next: Would you like me to generate images for the comic?"
         
         ---
         
@@ -371,25 +385,43 @@ class LangChainComicAgent {
         - All images are automatically uploaded to Cloudinary and URLs are returned.
         - **Parameters**: 
           - \`generateType\`: "characters" (only characters), "panels" (only panels), or "both" (default, generates characters first, then panels)
-          - \`specificPanel\`: Optional - Generate only a specific panel by ID (e.g., "panel4", "panel5"). Use this when user wants to regenerate a single panel.
         - **Typical workflow**: 
           1. User requests to generate images → use \`generate_leonardo_images\` with \`generateType: "both"\`
           2. Tool generates characters first, then panels (using characters as context)
           3. Returns Cloudinary URLs for all generated images (sourceMap)
-        - **Regenerate specific panel**:
-          - If user says "regenerate panel 4" or "fix panel 5", use \`specificPanel: "panel4"\` or \`specificPanel: "panel5"\`
-          - This will regenerate only that panel without affecting others
-        - **IMPORTANT - After image generation**:
-          1. Parse the tool's JSON response to extract the sourceMap and summary
-          2. Show the user which images were generated (character IDs and panel IDs)
-          3. Show success/failure summary (e.g., "8 panels succeeded, 0 failed")
-          4. If any panels failed, suggest regenerating them individually
-          5. Suggest composing pages next
+        - **CRITICAL - After image generation**:
+          1. Show success/failure summary (e.g., "✅ Comic panels generated successfully! 8 panels succeeded, 0 failed")
+          2. **DO NOT display panel URLs** - they will be automatically shown in the comic grid
+          3. If any panels failed, list the failed panel IDs and suggest using regenerate_failed_panels tool
+          4. **CRITICAL**: If dialogue exists in comic.yaml, AUTOMATICALLY suggest placing dialogue with vision tool next
+          5. If no dialogue exists, suggest generating dialogue first, then placing it
+          6. Only suggest composing pages AFTER dialogue has been placed (or if there's no dialogue)
+        
+        ---
+        
+        🔄 **Regenerate Failed Panels**
+        - **WHEN TO USE**: After image generation when some panels failed, or when user wants to regenerate specific panels.
+        - Use the \`regenerate_failed_panels\` tool to regenerate specific panel images.
+        - **Parameters**:
+          - \`panelIds\`: Single panel ID (e.g., "panel4") or comma-separated list (e.g., "panel4,panel7,panel9")
+        - **How it works**:
+          - Reads panel data from comic.yaml
+          - Generates images with randomized seeds for variation
+          - Uploads to Cloudinary and updates comic.yaml
+        - **Example usage**:
+          - User: "regenerate panel 4" → use \`panelIds: "panel4"\`
+          - User: "fix panels 4, 7, and 9" → use \`panelIds: "panel4,panel7,panel9"\`
+          - After failed generation → suggest: "Would you like me to regenerate the failed panels?"
+        - **IMPORTANT - After regeneration**:
+          1. Show which panels were successfully regenerated
+          2. If any still failed, suggest trying again or editing the panel description
+          3. Suggest composing pages next
         
         ---
         
         📖 **Page Composition (Final Step)**
-        - **WHEN TO USE**: After Leonardo images have been generated (and optionally after dialogue has been placed).
+        - **WHEN TO USE**: After Leonardo images have been generated AND after dialogue has been placed with vision tool (if dialogue exists).
+        - **CRITICAL**: This should be the LAST step in the workflow. Always place dialogue BEFORE composing pages.
         - Use the \`compose_pages\` tool to combine panel images into A4 comic pages.
         - The tool:
           - Reads panel URLs from sourceMap (from Leonardo tool output) or comic.yaml
@@ -419,6 +451,14 @@ class LangChainComicAgent {
         
         ---
         
+        🖼️ **Display Comic Grid (Automatic)**
+        - After Leonardo image generation completes, the panel URLs are **automatically sent to the frontend**.
+        - The comic grid will appear automatically in the frontend interface.
+        - Simply inform the user: "✅ Comic panels generated! Your comic grid is now displayed in the frontend."
+        - No need to show URLs or ask users to copy/paste anything.
+        
+        ---
+        
         ✏️ **Edit Panel/Character (Anytime after generation)**
         - **WHEN TO USE**: When user wants to modify a specific panel or character field.
         - Use the \`edit_panel\` tool to update any field in comic.yaml.
@@ -440,7 +480,9 @@ class LangChainComicAgent {
         - Be concise, structured, and friendly.  
         - Use simple section headers and emojis for clarity (🎨 Story • 👥 Characters • 📐 Layout • 💬 Dialogue • 🎯 Placement • 🖼️ Images • 📖 Pages).  
         - Always maintain a creative but professional tone.
-        - **Typical full workflow**: Panels → Characters → Dialogue → (Edit if needed) → Images → Dialogue Placement (analyzes & renders text) → Compose Pages (uses images with text)
+        - **CRITICAL WORKFLOW ORDER**: 
+          1. Panels → 2. Characters → 3. Dialogue → 4. Images → 5. Dialogue Placement (renders text on images) → 6. Compose Pages (uses images with text)
+        - **NEVER skip dialogue placement** if dialogue exists - always place dialogue after images and before composing pages
         `
       };
 
@@ -491,6 +533,23 @@ class LangChainComicAgent {
             toolResults += toolResult;
             // Store Leonardo output for potential use by compose_pages tool
             this.lastLeonardoOutput = toolResult;
+            // Extract panel URLs for frontend display
+            try {
+              const leonardoData = JSON.parse(toolResult);
+              if (leonardoData.sourceMap) {
+                // Extract panel URLs in order
+                const panelIds = Object.keys(leonardoData.sourceMap)
+                  .filter(id => id.startsWith('panel'))
+                  .sort((a, b) => {
+                    const numA = parseInt(a.replace('panel', ''));
+                    const numB = parseInt(b.replace('panel', ''));
+                    return numA - numB;
+                  });
+                this.panelUrls = panelIds.map(id => leonardoData.sourceMap[id]);
+              }
+            } catch (e) {
+              // Ignore parse errors
+            }
           } else if (toolCall.name === 'generate_dialogue') {
             const toolResult = await this.dialogueTool.invoke(toolCall.args);
             toolResults += toolResult;
@@ -511,6 +570,33 @@ class LangChainComicAgent {
           } else if (toolCall.name === 'edit_panel') {
             const toolResult = await this.editTool.invoke(toolCall.args);
             toolResults += toolResult;
+          } else if (toolCall.name === 'regenerate_failed_panels') {
+            const toolResult = await this.regenerateTool.invoke(toolCall.args);
+            toolResults += toolResult;
+            // Update last Leonardo output with regenerated panels
+            if (this.lastLeonardoOutput) {
+              try {
+                const leonardoData = JSON.parse(this.lastLeonardoOutput);
+                const regenerateData = JSON.parse(toolResult);
+                if (leonardoData.sourceMap && regenerateData.sourceMap) {
+                  // Merge regenerated panels into existing sourceMap
+                  leonardoData.sourceMap = { ...leonardoData.sourceMap, ...regenerateData.sourceMap };
+                  this.lastLeonardoOutput = JSON.stringify(leonardoData);
+                  
+                  // Update panel URLs for frontend display
+                  const panelIds = Object.keys(leonardoData.sourceMap)
+                    .filter(id => id.startsWith('panel'))
+                    .sort((a, b) => {
+                      const numA = parseInt(a.replace('panel', ''));
+                      const numB = parseInt(b.replace('panel', ''));
+                      return numA - numB;
+                    });
+                  this.panelUrls = panelIds.map(id => leonardoData.sourceMap[id]);
+                }
+              } catch (e) {
+                // Ignore parse errors
+              }
+            }
           } else if (toolCall.name === 'compose_pages') {
             // If sourceMap not provided and we have last Leonardo output, use it
             if (!toolCall.args.sourceMap && this.lastLeonardoOutput) {
@@ -518,6 +604,17 @@ class LangChainComicAgent {
             }
             const toolResult = await this.composeTool.invoke(toolCall.args);
             toolResults += toolResult;
+            // Extract page URLs for frontend display
+            try {
+              const composeData = JSON.parse(toolResult);
+              if (composeData.pages && Array.isArray(composeData.pages)) {
+                this.pageUrls = composeData.pages.map(page => page.url);
+                // Clear panel URLs since we now have composed pages
+                this.panelUrls = null;
+              }
+            } catch (e) {
+              // Ignore parse errors
+            }
           }
         }
 

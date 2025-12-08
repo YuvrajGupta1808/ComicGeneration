@@ -50,7 +50,7 @@ function drawSpeechBubbleFromPlacement(ctx, bubble) {
   const strokeWidth = 4.5;
   const paddingX = 24;
   const paddingY = 18;
-  const fontSize = 26;
+  const fontSize = 36;
 
   // Set font for measuring
   ctx.font = `${fontSize}px "ACME Secret Agent", "Comic Sans MS", cursive`;
@@ -212,7 +212,7 @@ function drawTitleFromPlacement(ctx, titleElement) {
 
   ctx.save();
 
-  const fontSize = 48;
+  const fontSize = 64;
   const strokeWidth = 6;
 
   // Set font - bold for titles
@@ -246,7 +246,7 @@ function drawNarrationFromPlacement(ctx, narrationElement) {
 
   ctx.save();
 
-  const fontSize = 22;
+  const fontSize = 32;
   const strokeWidth = 3;
   const paddingX = 20;
   const paddingY = 15;

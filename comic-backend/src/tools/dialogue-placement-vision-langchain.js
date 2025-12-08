@@ -149,8 +149,8 @@ export class DialoguePlacementVisionLangChainTool {
       for (const panel of analyze) {
         let url =
           sourceMap?.[panel.id] ||
-          panel.imageUrl ||
-          panel.cloudinaryUrl;
+          panel.cloudinaryUrl ||
+          panel.imageUrl;
 
         if (!url) continue;
 

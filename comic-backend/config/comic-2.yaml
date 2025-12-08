@@ -2,167 +2,282 @@ characters:
   - id: char_1
     width: 832
     height: 1248
-    description: Jax is a rugged space cowboy in his late 30s to early 40s, with a weathered face etched by hardship and a
-      steely gaze that speaks of unwavering resolve. He's clad in a worn, dark leather duster that trails behind him
-      like a shadow, its texture hinting at countless journeys through unforgiving environments. His build is lean but
-      muscular, honed by a life of action and survival, and a perpetual glint of defiance shines in his narrowed eyes.
-      His style is utilitarian and practical, reflecting his no-nonsense approach to life and his readiness for any
-      confrontation.
+    description: Elara is a young, determined astronaut in her early twenties, with a lean and athletic build honed by
+      rigorous training. Her face, visible through her helmet visor, is often etched with a mix of fierce concentration
+      and overwhelming panic, her wide eyes reflecting the vastness and terror of space. Her standard-issue, white EVA
+      suit is utilitarian and functional, showing signs of wear and tear from her desperate struggle, with scuff marks
+      and slightly frayed edges that speak to her ordeal. Her movements, initially fumbling and desperate, become
+      precise and focused when faced with a challenge, showcasing her resilience and quick thinking under extreme
+      pressure.
     contextImages: []
-    prompt: Jax is a rugged space cowboy in his late 30s to early 40s, with a weathered face etched by hardship and a steely
-      gaze that speaks of unwavering resolve. He's clad in a worn, dark leather duster that trails behind him like a
-      shadow, its texture hinting at countless journeys through unforgiving environments. His build is lean but
-      muscular, honed by a life of action and survival, and a perpetual glint of defiance shines in his narrowed eyes.
-      His style is utilitarian and practical, reflecting his no-nonsense approach to life and his readiness for any
-      confrontation., full body pose, center, white background, comic book style
+    prompt: Elara is a young, determined astronaut in her early twenties, with a lean and athletic build honed by rigorous
+      training. Her face, visible through her helmet visor, is often etched with a mix of fierce concentration and
+      overwhelming panic, her wide eyes reflecting the vastness and terror of space. Her standard-issue, white EVA suit
+      is utilitarian and functional, showing signs of wear and tear from her desperate struggle, with scuff marks and
+      slightly frayed edges that speak to her ordeal. Her movements, initially fumbling and desperate, become precise
+      and focused when faced with a challenge, showcasing her resilience and quick thinking under extreme pressure.,
+      full body pose, center, white background, comic book style
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994484/comic/characters/character_1.jpg
   - id: char_2
     width: 832
     height: 1248
-    description: Flicker is a small, wiry informant with a perpetually anxious demeanor, his features sharp and his eyes
-      constantly darting. He's often seen sweating profusely, his clothing nondescript and ill-fitting, suggesting he's
-      more accustomed to the shadows than the spotlight. His nervous gestures and clutching of a datapad betray his
-      volatile nature and his involvement in clandestine dealings. Flicker embodies a sense of vulnerability and unease,
-      his appearance a testament to a life lived on the edge of discovery and danger.
+    description: This isn't a sentient character, but a significant object personified through its description. The 'Echo'
+      satellite is an aged, derelict piece of spacefaring history, its metallic paneling scarred, rusted, and pockmarked
+      from years adrift. Despite its worn exterior, a faint, persistent amber glow emanates from its central antenna,
+      hinting at dormant power and a flicker of hope. Its form is sprawling and complex, a stark contrast to the sleek,
+      modern station, with exposed circuitry and tangled wires that Elara meticulously works on, giving it a fragile yet
+      determined presence.
     contextImages: []
-    prompt: Flicker is a small, wiry informant with a perpetually anxious demeanor, his features sharp and his eyes
-      constantly darting. He's often seen sweating profusely, his clothing nondescript and ill-fitting, suggesting he's
-      more accustomed to the shadows than the spotlight. His nervous gestures and clutching of a datapad betray his
-      volatile nature and his involvement in clandestine dealings. Flicker embodies a sense of vulnerability and unease,
-      his appearance a testament to a life lived on the edge of discovery and danger., full body pose, center, white
-      background, comic book style
+    prompt: This isn't a sentient character, but a significant object personified through its description. The 'Echo'
+      satellite is an aged, derelict piece of spacefaring history, its metallic paneling scarred, rusted, and pockmarked
+      from years adrift. Despite its worn exterior, a faint, persistent amber glow emanates from its central antenna,
+      hinting at dormant power and a flicker of hope. Its form is sprawling and complex, a stark contrast to the sleek,
+      modern station, with exposed circuitry and tangled wires that Elara meticulously works on, giving it a fragile yet
+      determined presence., full body pose, center, white background, comic book style
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994496/comic/characters/character_2.jpg
 panels:
   - id: panel1
     width: 832
     height: 1248
-    description: An **establishing-shot** reveals a grimy, rust-colored spaceport on a desolate, alien planet. In the
-      foreground, a rugged space cowboy, CHAR_1, with weathered leather duster and a glint of defiance in his eyes,
-      stands beside his beat-up starship. Middle ground shows a shadowy figure, CHAR_2, the pirate informant, nervously
-      gesturing towards a nondescript cargo shuttle. The background is dominated by the twin, dull orange suns of the
-      planet setting, casting long, distorted shadows and bathing the scene in a muted, dusty light.
+    description: An 'establishing-shot' that showcases the vastness of space and the precariousness of the situation. In the
+      foreground, char_1, a young astronaut, floats tethered to a sprawling, complex space station, her body angled away
+      from it, a silhouette against the starfield. The station itself, a gleaming metallic hub with illuminated windows
+      and external modules, dominates the middle ground. The background is a deep, inky black, punctuated by distant,
+      pinprick stars and the faint, curved horizon of a distant planet, establishing a sense of isolation and awe.
     contextImages:
       - char_1
       - char_2
-    prompt: An **establishing-shot** reveals a grimy, rust-colored spaceport on a desolate, alien planet. In the foreground,
-      a rugged space cowboy, CHAR_1, with weathered leather duster and a glint of defiance in his eyes, stands beside
-      his beat-up starship. Middle ground shows a shadowy figure, CHAR_2, the pirate informant, nervously gesturing
-      towards a nondescript cargo shuttle. The background is dominated by the twin, dull orange suns of the planet
-      setting, casting long, distorted shadows and bathing the scene in a muted, dusty light., establishing-shot camera
-      angle, comic book style, high quality, detailed
+    prompt: An 'establishing-shot' that showcases the vastness of space and the precariousness of the situation. In the
+      foreground, char_1, a young astronaut, floats tethered to a sprawling, complex space station, her body angled away
+      from it, a silhouette against the starfield. The station itself, a gleaming metallic hub with illuminated windows
+      and external modules, dominates the middle ground. The background is a deep, inky black, punctuated by distant,
+      pinprick stars and the faint, curved horizon of a distant planet, establishing a sense of isolation and awe.,
+      establishing-shot camera angle, comic book style, high quality, detailed
+    title: VOIDS ECHO
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994509/comic/panels/panel_1.jpg
+    textPlacements:
+      - type: title
+        text: VOIDS ECHO
+        position:
+          x: 416
+          y: 30
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995010/comic/panels_with_text/panel1_with_text.png
   - id: panel2
     width: 832
     height: 1248
-    description: A **medium-shot** focuses on CHAR_1's face as he receives the intel from CHAR_2. The harsh, flickering neon
-      signs of a nearby cantina cast sickly green and purple hues across their features. CHAR_1's brow is furrowed with
-      a mix of suspicion and grim determination, his eyes narrowed. CHAR_2, sweating profusely, clutches a datapad, his
-      gaze darting nervously from CHAR_1 to the darkened alleys. The atmosphere is tense, thick with unspoken threats
-      and the scent of stale synth-ale.
+    description: A 'medium-shot' focusing on char_1's immediate struggle. She's still tethered, but the space station is
+      receding slightly in the background, a cold, blue-white light reflecting off her helmet visor. Her gloved hands
+      are fumbling with her comms unit, wires exposed and sparking erratically, emphasizing the failure. The metallic
+      textures of her suit and the station gleam under the harsh, unforgiving light of the distant sun, highlighting her
+      growing desperation.
     contextImages:
       - panel_1
       - char_1
-      - char_2
-    prompt: A **medium-shot** focuses on CHAR_1's face as he receives the intel from CHAR_2. The harsh, flickering neon
-      signs of a nearby cantina cast sickly green and purple hues across their features. CHAR_1's brow is furrowed with
-      a mix of suspicion and grim determination, his eyes narrowed. CHAR_2, sweating profusely, clutches a datapad, his
-      gaze darting nervously from CHAR_1 to the darkened alleys. The atmosphere is tense, thick with unspoken threats
-      and the scent of stale synth-ale., medium-shot camera angle, comic book style, high quality, detailed
+    prompt: A 'medium-shot' focusing on char_1's immediate struggle. She's still tethered, but the space station is receding
+      slightly in the background, a cold, blue-white light reflecting off her helmet visor. Her gloved hands are
+      fumbling with her comms unit, wires exposed and sparking erratically, emphasizing the failure. The metallic
+      textures of her suit and the station gleam under the harsh, unforgiving light of the distant sun, highlighting her
+      growing desperation., medium-shot camera angle, comic book style, high quality, detailed
+    dialogue:
+      - speaker: char_1
+        text: No. This isn't… this can't be happening.
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994534/comic/panels/panel_2.jpg
+    textPlacements:
+      - type: speech
+        speaker: char_1
+        text: No. This isn't… this can't be happening.
+        position:
+          x: 75
+          y: 95
+        tail:
+          x: 307
+          y: 297
+        speakerLocation: char_1's face, slightly left of center, upper portion of the panel
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995014/comic/panels_with_text/panel2_with_text.png
   - id: panel3
     width: 944
     height: 1104
-    description: A **close-up** on the creature, the true cargo. Its skin shimmers with an iridescent, bioluminescent glow,
-      a soft, ethereal blue. Large, soulful, obsidian eyes blink slowly, filled with an innocent fear and a nascent
-      awareness. Delicate, tendril-like appendages twitch, expressing a subtle vulnerability. The texture of its skin is
-      like polished obsidian, reflecting the faint light of the smuggling bay, creating a mood of fragile beauty amidst
-      the encroaching darkness.
+    description: A dramatic 'close-up' on char_1's face, seen through her reflective visor. Her eyes are wide with panic,
+      pupils dilated, and her mouth is slightly agape in a silent gasp. A thin sheen of sweat glistens on her forehead,
+      visible even through the suit's internal lighting. The dominant color palette here is cold blues and whites,
+      reflecting the vacuum of space, amplifying the feeling of claustrophobia and rising fear.
     contextImages:
       - panel_2
-    prompt: A **close-up** on the creature, the true cargo. Its skin shimmers with an iridescent, bioluminescent glow, a
-      soft, ethereal blue. Large, soulful, obsidian eyes blink slowly, filled with an innocent fear and a nascent
-      awareness. Delicate, tendril-like appendages twitch, expressing a subtle vulnerability. The texture of its skin is
-      like polished obsidian, reflecting the faint light of the smuggling bay, creating a mood of fragile beauty amidst
-      the encroaching darkness., close-up camera angle, comic book style, high quality, detailed
+      - char_1
+    prompt: A dramatic 'close-up' on char_1's face, seen through her reflective visor. Her eyes are wide with panic, pupils
+      dilated, and her mouth is slightly agape in a silent gasp. A thin sheen of sweat glistens on her forehead, visible
+      even through the suit's internal lighting. The dominant color palette here is cold blues and whites, reflecting
+      the vacuum of space, amplifying the feeling of claustrophobia and rising fear., close-up camera angle, comic book
+      style, high quality, detailed
+    dialogue:
+      - speaker: char_1
+        text: Just a little more. Come on, old friend.
+    soundEffects:
+      - SPARK
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994557/comic/panels/panel_3.jpg
+    textPlacements:
+      - type: speech
+        speaker: char_1
+        text: Just a little more. Come on, old friend.
+        position:
+          x: 50
+          y: 90
+        tail:
+          x: 472
+          y: 950
+        speakerLocation: Character's face is in the center of the image, slightly below the vertical center. Her mouth is
+          located towards the bottom-center of the panel.
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995016/comic/panels_with_text/panel3_with_text.png
   - id: panel4
     width: 944
     height: 1104
-    description: A **two-shot** shows CHAR_1 confronting the pirate captain, a hulking brute with cybernetic implants and a
-      sneer etched onto his face, in the cramped cargo bay. The creature is visible in a reinforced containment unit
-      between them, its luminescence a stark contrast to the grimy metal of the ship. CHAR_1 stands with his hand
-      hovering near his blaster, his posture tense and ready. The pirate captain laughs menacingly, his gaze predatory
-      as he eyes CHAR_1. The lighting is stark and utilitarian, highlighting the metallic surfaces and the palpable
-      tension.
+    description: A 'two-shot' revealing char_1's discovery and renewed hope. She's now drifting past an old, derelict
+      satellite, its paneling scarred and rusted, but a faint, amber glow emanates from a central antenna. Char_1 is
+      reaching out, her expression shifting from panic to intense focus as she examines the satellite. The space station
+      is a distant, almost forgotten glow in the background, its blue-white lights now a stark contrast to the warmer,
+      more inviting light of the satellite.
     contextImages:
       - panel_3
       - char_1
-      - char_2
-    prompt: A **two-shot** shows CHAR_1 confronting the pirate captain, a hulking brute with cybernetic implants and a sneer
-      etched onto his face, in the cramped cargo bay. The creature is visible in a reinforced containment unit between
-      them, its luminescence a stark contrast to the grimy metal of the ship. CHAR_1 stands with his hand hovering near
-      his blaster, his posture tense and ready. The pirate captain laughs menacingly, his gaze predatory as he eyes
-      CHAR_1. The lighting is stark and utilitarian, highlighting the metallic surfaces and the palpable tension.,
-      two-shot camera angle, comic book style, high quality, detailed
+    prompt: A 'two-shot' revealing char_1's discovery and renewed hope. She's now drifting past an old, derelict satellite,
+      its paneling scarred and rusted, but a faint, amber glow emanates from a central antenna. Char_1 is reaching out,
+      her expression shifting from panic to intense focus as she examines the satellite. The space station is a distant,
+      almost forgotten glow in the background, its blue-white lights now a stark contrast to the warmer, more inviting
+      light of the satellite., two-shot camera angle, comic book style, high quality, detailed
+    narration: A ghost in the void, clinging to a whisper of power.
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994578/comic/panels/panel_4.jpg
+    textPlacements:
+      - type: narration
+        text: A ghost in the void, clinging to a whisper of power.
+        position:
+          x: 20
+          y: 20
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995019/comic/panels_with_text/panel4_with_text.png
   - id: panel5
     width: 832
     height: 1248
-    description: An **over-shoulder** shot from behind CHAR_1, looking past him at the creature. He has just sprung the
-      containment unit open, and the alien is now cautiously emerging, its iridescent glow illuminating CHAR_1's
-      determined profile. The pirate captain and his crew are visible in the background, a chaotic blur of motion and
-      raised weapons. The mood is one of urgent action, with a dramatic shaft of light cutting through the dust and
-      grime of the cargo hold.
+    description: An 'over-shoulder' shot from behind char_1, looking towards the abandoned satellite. We see her gloved
+      hands, illuminated by the dim light of her suit tools, meticulously working on the satellite's exposed circuitry.
+      Sparks fly as she manipulates wires, her movements precise and determined despite the urgency. The texture of the
+      old metal and tangled wires is rough and detailed, contrasting with the smooth, sterile surface of her suit.
     contextImages:
       - panel_4
       - char_1
-      - char_2
-    prompt: An **over-shoulder** shot from behind CHAR_1, looking past him at the creature. He has just sprung the
-      containment unit open, and the alien is now cautiously emerging, its iridescent glow illuminating CHAR_1's
-      determined profile. The pirate captain and his crew are visible in the background, a chaotic blur of motion and
-      raised weapons. The mood is one of urgent action, with a dramatic shaft of light cutting through the dust and
-      grime of the cargo hold., over-shoulder camera angle, comic book style, high quality, detailed
+    prompt: An 'over-shoulder' shot from behind char_1, looking towards the abandoned satellite. We see her gloved hands,
+      illuminated by the dim light of her suit tools, meticulously working on the satellite's exposed circuitry. Sparks
+      fly as she manipulates wires, her movements precise and determined despite the urgency. The texture of the old
+      metal and tangled wires is rough and detailed, contrasting with the smooth, sterile surface of her suit.,
+      over-shoulder camera angle, comic book style, high quality, detailed
+    dialogue:
+      - speaker: char_1
+        text: Please. Just… one transmission.
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994598/comic/panels/panel_5.jpg
+    textPlacements:
+      - type: speech
+        speaker: char_1
+        text: Please. Just… one transmission.
+        position:
+          x: 75
+          y: 65
+        tail:
+          x: 118
+          y: 277
+        speakerLocation: left side of the image, from the rear. The tail extends from her mouth area.
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995022/comic/panels_with_text/panel5_with_text.png
   - id: panel6
     width: 1456
     height: 720
-    description: A **low-angle** shot emphasizes the awe-inspiring presence of the alien creature as it hovers in mid-air,
-      its tendrils gently unfurling. CHAR_1 stands protectively in front of it, blaster drawn and aimed at the
-      retreating pirates. The ceiling of the ship is a dark expanse, making the creature appear almost divine. The
-      lighting is dramatic, with the creature's bioluminescence providing a soft, angelic glow against the dark,
-      metallic textures of the ship, creating a sense of wonder and nascent hope.
+    description: A 'low-angle' shot looking up at char_1 as she triumphantly presses a button on the repaired satellite. The
+      satellite itself looms large, its ancient, weathered surface catching faint light, creating a sense of almost
+      heroic resilience. The space station is now a tiny, distant point of light, and the stars above are sharp and
+      clear, emphasizing her solitary act of sending a signal.
     contextImages:
       - panel_5
       - char_1
-    prompt: A **low-angle** shot emphasizes the awe-inspiring presence of the alien creature as it hovers in mid-air, its
-      tendrils gently unfurling. CHAR_1 stands protectively in front of it, blaster drawn and aimed at the retreating
-      pirates. The ceiling of the ship is a dark expanse, making the creature appear almost divine. The lighting is
-      dramatic, with the creature's bioluminescence providing a soft, angelic glow against the dark, metallic textures
-      of the ship, creating a sense of wonder and nascent hope., low-angle camera angle, comic book style, high quality,
+    prompt: A 'low-angle' shot looking up at char_1 as she triumphantly presses a button on the repaired satellite. The
+      satellite itself looms large, its ancient, weathered surface catching faint light, creating a sense of almost
+      heroic resilience. The space station is now a tiny, distant point of light, and the stars above are sharp and
+      clear, emphasizing her solitary act of sending a signal., low-angle camera angle, comic book style, high quality,
       detailed
+    dialogue:
+      - speaker: char_1
+        text: They're coming. They're really coming.
+    soundEffects:
+      - WHIRRRM
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994619/comic/panels/panel_6.jpg
+    textPlacements:
+      - type: speech
+        speaker: char_1
+        text: They're coming. They're really coming.
+        position:
+          x: 185
+          y: 110
+        tail:
+          x: 250
+          y: 260
+        speakerLocation: char_1 is on the left side of the image, looking upward
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995023/comic/panels_with_text/panel6_with_text.png
   - id: panel7
     width: 1456
     height: 720
-    description: A **high-angle** shot looks down on the alien creature as it nestles into CHAR_1's protective embrace, its
-      bioluminescence pulsing softly. CHAR_1's face is etched with a newfound compassion, a stark contrast to his
-      hardened exterior. The wrecked cargo bay is spread out below them, littered with debris and the scattered forms of
-      defeated pirates. The mood is one of quiet resolution and the dawning of an unexpected connection, bathed in the
-      soft, fading light of the setting suns filtering through a cracked viewport.
+    description: A 'high-angle' shot capturing the moment of rescue confirmation. Char_1 is now looking back towards the
+      space station, her body language one of profound relief, her shoulders slumping slightly. The station's lights,
+      previously a faint glow, are now flashing brightly in a distinct pattern – her signal received. Small, sleek
+      rescue drones are visible launching from the station, depicted as sharp, metallic blurs against the dark expanse.
     contextImages:
       - panel_6
       - char_1
-    prompt: A **high-angle** shot looks down on the alien creature as it nestles into CHAR_1's protective embrace, its
-      bioluminescence pulsing softly. CHAR_1's face is etched with a newfound compassion, a stark contrast to his
-      hardened exterior. The wrecked cargo bay is spread out below them, littered with debris and the scattered forms of
-      defeated pirates. The mood is one of quiet resolution and the dawning of an unexpected connection, bathed in the
-      soft, fading light of the setting suns filtering through a cracked viewport., high-angle camera angle, comic book
-      style, high quality, detailed
+    prompt: A 'high-angle' shot capturing the moment of rescue confirmation. Char_1 is now looking back towards the space
+      station, her body language one of profound relief, her shoulders slumping slightly. The station's lights,
+      previously a faint glow, are now flashing brightly in a distinct pattern – her signal received. Small, sleek
+      rescue drones are visible launching from the station, depicted as sharp, metallic blurs against the dark expanse.,
+      high-angle camera angle, comic book style, high quality, detailed
+    narration: The signal sent. The wait… over.
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994640/comic/panels/panel_7.jpg
+    textPlacements:
+      - type: narration
+        text: The signal sent. The wait… over.
+        position:
+          x: 30
+          y: 30
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995027/comic/panels_with_text/panel7_with_text.png
   - id: panel8
     width: 1456
     height: 720
-    description: A **wide-shot** shows CHAR_1's starship blasting off from the desolate planet, leaving the grimy spaceport
-      behind. The alien creature's gentle glow is visible through the ship's main viewport. The vast, star-strewn
-      expanse of space stretches out before them, a canvas of deep blues and purples punctuated by distant nebulae. The
-      overall mood is one of escape and a new beginning, the muted colors of the planet giving way to the vibrant,
-      infinite possibilities of the cosmos.
+    description: A 'wide-shot' depicting char_1, now with her eyes closed in relief and exhaustion, drifting gently as the
+      rescue drones, tiny pinpricks of light, rapidly approach her from the now much closer space station. The vastness
+      of space remains, but the mood has shifted from dread to hope, the cold colors of the initial panels now softened
+      by the approaching rescue lights. The textures of the drones are sharp and defined against the muted backdrop of
+      the cosmos, signifying imminent salvation.
     contextImages:
       - panel_7
       - char_1
-    prompt: A **wide-shot** shows CHAR_1's starship blasting off from the desolate planet, leaving the grimy spaceport
-      behind. The alien creature's gentle glow is visible through the ship's main viewport. The vast, star-strewn
-      expanse of space stretches out before them, a canvas of deep blues and purples punctuated by distant nebulae. The
-      overall mood is one of escape and a new beginning, the muted colors of the planet giving way to the vibrant,
-      infinite possibilities of the cosmos., wide-shot camera angle, comic book style, high quality, detailed
+    prompt: A 'wide-shot' depicting char_1, now with her eyes closed in relief and exhaustion, drifting gently as the rescue
+      drones, tiny pinpricks of light, rapidly approach her from the now much closer space station. The vastness of
+      space remains, but the mood has shifted from dread to hope, the cold colors of the initial panels now softened by
+      the approaching rescue lights. The textures of the drones are sharp and defined against the muted backdrop of the
+      cosmos, signifying imminent salvation., wide-shot camera angle, comic book style, high quality, detailed
+    dialogue:
+      - speaker: char_1
+        text: I… I made it.
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764994661/comic/panels/panel_8.jpg
+    textPlacements:
+      - type: speech
+        speaker: char_1
+        text: I… I made it.
+        position:
+          x: 483
+          y: 113
+        tail:
+          x: 561
+          y: 234
+        speakerLocation: lying down on the left side of the frame
+        readingOrder: 1
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1764995028/comic/panels_with_text/panel8_with_text.png
