@@ -144,36 +144,26 @@ export class ComposePagesLangChainTool {
       }
     }
 
-    // If still no URLs, try to get from comic.yaml and construct Cloudinary URLs
+    // If still no URLs, try to get from comic.yaml cloudinaryUrl fields
     if (Object.keys(panelUrls).length === 0) {
       const comicData = this.loadComicYaml();
       const panels = comicData.panels || [];
       
-      console.log('ℹ️  Attempting to construct Cloudinary URLs from comic.yaml...');
+      console.log('ℹ️  Reading panel URLs from comic.yaml...');
       
-      // Try to construct URLs assuming panels are in Cloudinary
-      // This is a fallback - ideally sourceMap should be provided
+      // Read cloudinaryUrl from each panel
       panels.forEach(panel => {
         const panelId = panel.id;
-        if (panelId) {
-          // Construct Cloudinary URL pattern (this may not always work)
-          // Format: https://res.cloudinary.com/{cloud_name}/image/upload/comic/panels/{public_id}
-          const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-          if (cloudName) {
-            // Extract panel number from ID (panel1, panel2, etc.)
-            const match = panelId.match(/(\d+)/);
-            if (match) {
-              const panelNum = match[1];
-              // Note: This assumes the same naming convention as Leonardo tool
-              // panel_1, panel_2, etc.
-              panelUrls[panelId] = `https://res.cloudinary.com/${cloudName}/image/upload/comic/panels/panel_${panelNum}.jpg`;
-            }
-          }
+        if (panelId && panel.cloudinaryUrl) {
+          panelUrls[panelId] = panel.cloudinaryUrl;
+          console.log(`✓ Found URL for ${panelId}: ${panel.cloudinaryUrl}`);
         }
       });
       
       if (Object.keys(panelUrls).length === 0) {
-        console.warn('⚠️  Could not construct panel URLs. Please provide sourceMap from Leonardo tool output.');
+        console.warn('⚠️  No cloudinaryUrl fields found in comic.yaml panels. Please generate images first.');
+      } else {
+        console.log(`✓ Found ${Object.keys(panelUrls).length} panel URLs in comic.yaml`);
       }
     }
 

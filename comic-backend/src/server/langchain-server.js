@@ -134,9 +134,12 @@ const server = http.createServer(async (req, res) => {
 
         // Include page URLs if available (prioritize pages over panels)
         const responseData = { response };
+        console.log('🔍 Agent state - pageUrls:', agent.pageUrls, 'panelUrls:', agent.panelUrls);
+        
         if (agent.pageUrls && agent.pageUrls.length > 0) {
           responseData.pageUrls = agent.pageUrls;
-          console.log(chalk.magenta(`📖 Sending ${agent.pageUrls.length} composed page URLs to frontend`));
+          console.log(chalk.magenta(`📖 Sending ${agent.pageUrls.length} composed page URLs to frontend:`));
+          console.log(chalk.magenta(JSON.stringify(agent.pageUrls, null, 2)));
           // Clear after sending to prevent showing in next response
           agent.pageUrls = null;
         } else if (agent.panelUrls && agent.panelUrls.length > 0) {
@@ -145,6 +148,8 @@ const server = http.createServer(async (req, res) => {
           // Clear after sending to prevent showing in next response
           agent.panelUrls = null;
         }
+        
+        console.log('📤 Final response data:', JSON.stringify(responseData, null, 2));
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(responseData));

@@ -180,7 +180,8 @@ const Chat: React.FC = () => {
                     <div 
                       className="text-base leading-relaxed whitespace-pre-wrap"
                       dangerouslySetInnerHTML={{ 
-                        __html: message.content
+                        __html: (message.content || '')
+                          .toString()
                           .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                           .replace(/\n/g, '<br />')
                       }}

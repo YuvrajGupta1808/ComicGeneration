@@ -13,20 +13,18 @@ character_config:
       - description
 characters:
   - id: char_1
-    name: Elara Meadowlight
-    description: Elara is a young, eager adventurer with a lean, agile build, likely in her late teens or early twenties.
-      Her wide, curious eyes, often reflecting the magical light of the forest, are her most striking feature, conveying
-      a deep sense of wonder and an unbridled enthusiasm for discovery. She wears practical, well-worn adventuring gear
-      in earthy tones, but her posture and facial expressions betray a spirit of boundless excitement, always a step
-      ahead and ready to explore the unknown with a silent gasp of awe. A single bead of sweat might sometimes trickle
-      down her temple, a testament to her active engagement with the environment, and her focus is always drawn to the
-      captivating, luminous flora.
+    name: Detective Miles Corbin
+    description: Detective Miles Corbin is a burly, middle-aged man whose skepticism is etched into his furrowed brow. He
+      typically wears a dark, rumpled trench coat, often damp from the persistent rain, and his hand is habitually
+      resting on the holster of his sidearm, a testament to his no-nonsense approach. His face, illuminated by harsh,
+      dramatic lighting, conveys a grim determination, his eyes narrowed in suspicion as he navigates the oppressive
+      atmosphere of Blackwood Manor. Corbin is a man of solid form, a stark contrast to the spectral presence beside
+      him, his every movement suggesting a grounded, albeit wary, pragmatism.
   - id: char_2
-    name: Bram Stonefist
-    description: Bram is Elara's more cautious companion, appearing to be of a similar age but with a sturdier, more
-      grounded build that suggests resilience. His expression often carries a slight frown, a subtle indicator of his
-      inherent wariness, and his hand frequently rests on the hilt of his worn dagger, a constant reminder of his
-      readiness for potential danger. His practical adventuring attire is functional and muted, designed for utility
-      rather than flash, and his gaze frequently darts into the surrounding gloom, revealing a thoughtful, albeit
-      nervous, vigilance as he navigates the magical forest. He tends to linger slightly behind Elara, a deliberate
-      choice born of his protective instincts and a deeper appreciation for the unknown's potential perils.
+    name: Eleanor Vance
+    description: Eleanor Vance is the ethereal ghost of a Victorian woman, her translucent form shimmering with a faint,
+      otherworldly glow. Her attire is distinctly Victorian, its fabric seemingly woven from mist and memories, adding
+      to her spectral aura. Her eyes possess a soft, internal light, capable of glowing with intensity when fixated on
+      clues or a dawning realization. Wisps of ectoplasm subtly trail from her edges, emphasizing her non-corporeal
+      nature and her unique ability to interact with the physical world, often with spectral hands gesturing or pointing
+      towards hidden truths.
