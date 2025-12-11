@@ -14,7 +14,6 @@ characters:
       precise lines of a cake, and his brow can furrow, showing a thoughtful, inquisitive nature when faced with the
       unexpected. His overall appearance radiates warmth and competence, a true craftsman at heart., full body pose,
       center, white background, comic book style
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418430/comic/characters/character_1.jpg
   - id: char_2
     width: 832
     height: 1248
@@ -30,271 +29,170 @@ characters:
       book shelves with a quiet grace. Her style is understated and comfortable, prioritizing practicality for browsing
       books, and her overall demeanor suggests a gentle soul with a rich inner world., full body pose, center, white
       background, comic book style
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418442/comic/characters/character_2.jpg
 panels:
   - id: panel1
     width: 832
     height: 1248
-    description: An establishing shot reveals a charming, sun-drenched bakery interior, its shelves laden with gleaming,
-      perfectly iced pastries. In the bustling foreground, char_1, a baker with flour dusted on their apron and a look
-      of serene concentration, meticulously places a delicate macaron. Across the shop, near a window displaying vintage
-      books, char_2, a shy individual with kind eyes and a book clutched to their chest, peeks from behind a shelf, a
-      soft blush on their cheeks. The atmosphere is warm and inviting, filled with the sweet scent of sugar and the
-      gentle hum of morning activity.
+    description: An establishing shot of a quaint, sun-drenched Parisian bakery, 'Le Petit Croissant'. The foreground
+      showcases a meticulously arranged display of golden-brown pastries under warm, inviting light. In the middle
+      ground, the baker, char_1, with flour dusting his crisp white apron and a focused, slightly stressed expression,
+      kneads dough with practiced precision. In the background, char_2, a whirlwind of vibrant scarf and spilled book
+      pages, bursts through the doorway, scattering a few stray leaves of paper. The atmosphere is a blend of comforting
+      warmth from the ovens and the abrupt, bright energy of char_2's entrance, creating a visually appealing contrast.
     contextImages:
       - char_1
       - char_2
-    prompt: An establishing shot reveals a charming, sun-drenched bakery interior, its shelves laden with gleaming,
-      perfectly iced pastries. In the bustling foreground, char_1, a baker with flour dusted on their apron and a look
-      of serene concentration, meticulously places a delicate macaron. Across the shop, near a window displaying vintage
-      books, char_2, a shy individual with kind eyes and a book clutched to their chest, peeks from behind a shelf, a
-      soft blush on their cheeks. The atmosphere is warm and inviting, filled with the sweet scent of sugar and the
-      gentle hum of morning activity., establishing-shot camera angle, comic book style, high quality, detailed
+    prompt: An establishing shot of a quaint, sun-drenched Parisian bakery, 'Le Petit Croissant'. The foreground showcases a
+      meticulously arranged display of golden-brown pastries under warm, inviting light. In the middle ground, the
+      baker, char_1, with flour dusting his crisp white apron and a focused, slightly stressed expression, kneads dough
+      with practiced precision. In the background, char_2, a whirlwind of vibrant scarf and spilled book pages, bursts
+      through the doorway, scattering a few stray leaves of paper. The atmosphere is a blend of comforting warmth from
+      the ovens and the abrupt, bright energy of char_2's entrance, creating a visually appealing contrast.,
+      establishing-shot camera angle, comic book style, high quality, detailed
     title: Sweet Surrender
-    dialogue: []
-    narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418455/comic/panels/panel_1.jpg
-    textPlacements:
-      - type: title
-        text: Sweet Surrender
-        position:
-          x: 416
-          y: 30
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418701/comic/panels_with_text/panel1_with_text.png
   - id: panel2
     width: 832
     height: 1248
-    description: A medium shot focuses on char_1 in their bakery workspace, surrounded by the organized chaos of baking
-      ingredients and tools. Sunlight streams through a window, illuminating swirling flour dust and highlighting the
-      precise lines of a half-finished cake. Char_1 pauses, a slight frown of confusion on their brow, as they find a
-      folded piece of paper tucked between the pages of a well-worn recipe book, a faint smile of intrigue beginning to
-      form. The mood is one of gentle mystery and quiet discovery.
+    description: A medium shot focuses on char_1, the baker, as he reacts to char_2's chaotic arrival. His hands pause
+      mid-knead, eyebrows slightly raised in mild exasperation mixed with a flicker of curiosity. The warm, golden light
+      of the bakery illuminates the dusting of flour on his forearms and the precise lines of his chef's coat. The
+      background shows the orderly rows of cooling racks and the polished gleam of stainless steel countertops,
+      highlighting his organized world. The mood is one of gentle disruption, with char_1's controlled posture
+      contrasting with the implied chaos from the previous panel.
     contextImages:
       - panel_1
       - char_1
-    prompt: A medium shot focuses on char_1 in their bakery workspace, surrounded by the organized chaos of baking
-      ingredients and tools. Sunlight streams through a window, illuminating swirling flour dust and highlighting the
-      precise lines of a half-finished cake. Char_1 pauses, a slight frown of confusion on their brow, as they find a
-      folded piece of paper tucked between the pages of a well-worn recipe book, a faint smile of intrigue beginning to
-      form. The mood is one of gentle mystery and quiet discovery., medium-shot camera angle, comic book style, high
-      quality, detailed
+    prompt: A medium shot focuses on char_1, the baker, as he reacts to char_2's chaotic arrival. His hands pause mid-knead,
+      eyebrows slightly raised in mild exasperation mixed with a flicker of curiosity. The warm, golden light of the
+      bakery illuminates the dusting of flour on his forearms and the precise lines of his chef's coat. The background
+      shows the orderly rows of cooling racks and the polished gleam of stainless steel countertops, highlighting his
+      organized world. The mood is one of gentle disruption, with char_1's controlled posture contrasting with the
+      implied chaos from the previous panel., medium-shot camera angle, comic book style, high quality, detailed
     dialogue:
       - speaker: char_1
         text: Now what's this little secret?
-    title: null
-    narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418476/comic/panels/panel_2.jpg
-    textPlacements:
-      - type: speech
-        speaker: char_1
-        text: Now what's this little secret?
-        position:
-          x: 150
-          y: 100
-        tail:
-          x: 375
-          y: 390
-        speakerLocation: char_1's face, lower left of center
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418710/comic/panels_with_text/panel2_with_text.png
   - id: panel3
     width: 944
     height: 1104
-    description: A close-up on the discovered note reveals elegant, handwritten script on aged paper, a single red rose
-      pressed within its folds. The ink appears slightly smudged, suggesting haste or perhaps a tremor of emotion. The
-      texture of the paper is evident, with delicate fibers visible under the warm, soft bakery lighting. This intimate
-      detail heightens the sense of romance and adds a tangible element to the anonymous admirer's affection.
+    description: A close-up on char_2's face, her eyes wide with enthusiasm as she clutches a well-worn copy of 'Pride and
+      Prejudice'. A stray strand of auburn hair falls across her cheek, and a faint smudge of ink adorns her nose. The
+      lighting is soft and diffused, catching the glint of excitement in her hazel eyes and the subtle blush on her
+      cheeks. The background is a soft, shallow depth-of-field blur of pastries, emphasizing her focus on the book and
+      her vibrant, slightly disheveled appearance.
     contextImages:
       - panel_2
-    prompt: A close-up on the discovered note reveals elegant, handwritten script on aged paper, a single red rose pressed
-      within its folds. The ink appears slightly smudged, suggesting haste or perhaps a tremor of emotion. The texture
-      of the paper is evident, with delicate fibers visible under the warm, soft bakery lighting. This intimate detail
-      heightens the sense of romance and adds a tangible element to the anonymous admirer's affection., close-up camera
-      angle, comic book style, high quality, detailed
-    dialogue: []
-    title: null
+      - panel_1
+      - char_2
+    prompt: A close-up on char_2's face, her eyes wide with enthusiasm as she clutches a well-worn copy of 'Pride and
+      Prejudice'. A stray strand of auburn hair falls across her cheek, and a faint smudge of ink adorns her nose. The
+      lighting is soft and diffused, catching the glint of excitement in her hazel eyes and the subtle blush on her
+      cheeks. The background is a soft, shallow depth-of-field blur of pastries, emphasizing her focus on the book and
+      her vibrant, slightly disheveled appearance., close-up camera angle, comic book style, high quality, detailed
     narration: A whisper of admiration, pressed with a single bloom.
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418497/comic/panels/panel_3.jpg
-    textPlacements:
-      - type: narration
-        text: A whisper of admiration, pressed with a single bloom.
-        position:
-          x: 30
-          y: 30
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418712/comic/panels_with_text/panel3_with_text.png
   - id: panel4
     width: 944
     height: 1104
-    description: A two-shot shows char_1, now holding the note, standing near the bakery entrance, their expression a mix of
-      curiosity and dawning realization. Char_2, who has tentatively approached from the adjacent bookshop, stands a few
-      feet away, their hands clasped nervously, eyes downcast. The doorway between the two establishments acts as a
-      subtle divider, emphasizing their separate worlds now beginning to intertwine. The lighting shifts to a softer,
-      diffused glow as the afternoon sun begins to set.
+    description: A two-shot captures char_1 and char_2 interacting for the first time. Char_1, leaning against his counter,
+      offers a small, wry smile, his hands now resting. Char_2, a whirlwind of motion, gestures animatedly with her
+      book, nearly knocking over a delicate mille-feuille. The lighting is warm and inviting, casting soft shadows that
+      add depth to the scene and highlighting the texture of the pastries and char_2's slightly rumpled cardigan. The
+      mood is one of amiable friction, with their contrasting energies creating a dynamic visual.
     contextImages:
+      - panel_2
       - panel_3
-      - panel_1
       - char_1
       - char_2
-    prompt: A two-shot shows char_1, now holding the note, standing near the bakery entrance, their expression a mix of
-      curiosity and dawning realization. Char_2, who has tentatively approached from the adjacent bookshop, stands a few
-      feet away, their hands clasped nervously, eyes downcast. The doorway between the two establishments acts as a
-      subtle divider, emphasizing their separate worlds now beginning to intertwine. The lighting shifts to a softer,
-      diffused glow as the afternoon sun begins to set., two-shot camera angle, comic book style, high quality, detailed
+    prompt: A two-shot captures char_1 and char_2 interacting for the first time. Char_1, leaning against his counter,
+      offers a small, wry smile, his hands now resting. Char_2, a whirlwind of motion, gestures animatedly with her
+      book, nearly knocking over a delicate mille-feuille. The lighting is warm and inviting, casting soft shadows that
+      add depth to the scene and highlighting the texture of the pastries and char_2's slightly rumpled cardigan. The
+      mood is one of amiable friction, with their contrasting energies creating a dynamic visual., two-shot camera
+      angle, comic book style, high quality, detailed
     dialogue:
       - speaker: char_1
         text: Did you… lose something?
-    title: null
-    narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418518/comic/panels/panel_4.jpg
-    textPlacements:
-      - type: speech
-        speaker: char_1
-        text: Did you… lose something?
-        position:
-          x: 170
-          y: 120
-        tail:
-          x: 227
-          y: 425
-        speakerLocation: char_1 is on the left side of the panel, near the bakery entrance
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418714/comic/panels_with_text/panel4_with_text.png
   - id: panel5
     width: 832
     height: 1248
-    description: An over-the-shoulder shot from behind char_1 looks towards char_2, who is now speaking softly, their voice
-      barely audible. Char_2 gestures subtly with a book, their face still flushed but their gaze now meeting char_1's.
-      Char_1's posture has softened, their initial confusion replaced by a warm, understanding smile as they listen. The
-      background is slightly blurred, drawing the viewer's focus to the developing emotional connection between the two
-      characters.
+    description: An over-the-shoulder shot from behind char_1, looking towards char_2 as she enthusiastically recounts a
+      passage from her book. Her face is animated, her eyes sparkling, and she uses the book as a prop in her
+      storytelling. Char_1's hand, holding a piping bag filled with cream, is visible in the foreground, his gaze fixed
+      on char_2 with a growing, almost imperceptible smile. The background is a soft focus of the bakery's interior,
+      with warm light glinting off ceramic tiles and metal fixtures, creating an intimate atmosphere.
     contextImages:
       - panel_4
       - char_1
       - char_2
-    prompt: An over-the-shoulder shot from behind char_1 looks towards char_2, who is now speaking softly, their voice
-      barely audible. Char_2 gestures subtly with a book, their face still flushed but their gaze now meeting char_1's.
-      Char_1's posture has softened, their initial confusion replaced by a warm, understanding smile as they listen. The
-      background is slightly blurred, drawing the viewer's focus to the developing emotional connection between the two
-      characters., over-shoulder camera angle, comic book style, high quality, detailed
+    prompt: An over-the-shoulder shot from behind char_1, looking towards char_2 as she enthusiastically recounts a passage
+      from her book. Her face is animated, her eyes sparkling, and she uses the book as a prop in her storytelling.
+      Char_1's hand, holding a piping bag filled with cream, is visible in the foreground, his gaze fixed on char_2 with
+      a growing, almost imperceptible smile. The background is a soft focus of the bakery's interior, with warm light
+      glinting off ceramic tiles and metal fixtures, creating an intimate atmosphere., over-shoulder camera angle, comic
+      book style, high quality, detailed
     dialogue:
       - speaker: char_2
         text: I… I wrote it. For you.
-    title: null
-    narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418538/comic/panels/panel_5.jpg
-    textPlacements:
-      - type: speech
-        speaker: char_2
-        text: I… I wrote it. For you.
-        position:
-          x: 468
-          y: 312
-        tail:
-          x: 592
-          y: 541
-        speakerLocation: char_2's face is located on the right side of the panel, looking towards char_1
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418715/comic/panels_with_text/panel5_with_text.png
   - id: panel6
     width: 1456
     height: 720
-    description: A low-angle shot emphasizes char_2, standing just inside the bakery doorway, looking up at char_1 with a
-      hopeful, vulnerable expression. The overhead lighting from the bakery casts a gentle halo around char_2's head,
-      making them appear almost ethereal. Char_1 is looking down, their expression tender and encouraging, a slight tilt
-      of their head suggesting they are captivated. The warm color palette of the bakery interior creates an intimate
-      and romantic atmosphere.
+    description: A low-angle shot emphasizes char_2's energetic presence as she leans over the counter, her book open wide.
+      Sunlight streams in from a window, catching dust motes dancing in the air and casting her in a halo of light.
+      Char_1, from this perspective, appears slightly smaller, looking up at her with a mixture of amusement and a touch
+      of awe, his meticulous world being invaded. The texture of the wooden counter and the worn pages of her book are
+      palpable, creating a sense of grounded reality against her effervescent personality.
     contextImages:
       - panel_5
-      - char_1
+      - panel_4
       - char_2
-    prompt: A low-angle shot emphasizes char_2, standing just inside the bakery doorway, looking up at char_1 with a
-      hopeful, vulnerable expression. The overhead lighting from the bakery casts a gentle halo around char_2's head,
-      making them appear almost ethereal. Char_1 is looking down, their expression tender and encouraging, a slight tilt
-      of their head suggesting they are captivated. The warm color palette of the bakery interior creates an intimate
-      and romantic atmosphere., low-angle camera angle, comic book style, high quality, detailed
+    prompt: A low-angle shot emphasizes char_2's energetic presence as she leans over the counter, her book open wide.
+      Sunlight streams in from a window, catching dust motes dancing in the air and casting her in a halo of light.
+      Char_1, from this perspective, appears slightly smaller, looking up at her with a mixture of amusement and a touch
+      of awe, his meticulous world being invaded. The texture of the wooden counter and the worn pages of her book are
+      palpable, creating a sense of grounded reality against her effervescent personality., low-angle camera angle,
+      comic book style, high quality, detailed
     dialogue:
       - speaker: char_1
         text: I think… I’ve been hoping for this.
-    title: null
-    narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418561/comic/panels/panel_6.jpg
-    textPlacements:
-      - type: speech
-        speaker: char_1
-        text: I think… I’ve been hoping for this.
-        position:
-          x: 950
-          y: 100
-        tail:
-          x: 1160
-          y: 250
-        speakerLocation: right side of panel, looking down
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418717/comic/panels_with_text/panel6_with_text.png
   - id: panel7
     width: 1456
     height: 720
-    description: A high-angle shot looks down upon both char_1 and char_2 as they stand close together near a counter,
-      sharing a quiet, comfortable moment. Char_1 is handing char_2 a small, perfectly formed pastry, their fingers
-      brushing lightly. Char_2 accepts it with a shy smile, their eyes twinkling. The depth of field is shallow,
-      focusing on their interaction while the bakery's detailed environment recedes into a soft bokeh, highlighting
-      their newfound connection.
+    description: A high-angle shot looks down on char_1 meticulously decorating a cake, his brow furrowed in concentration.
+      Char_2 is seated at a small table in the background, engrossed in her book, a half-eaten éclair beside her, a
+      testament to his baking prowess. The lighting is even, revealing the intricate details of the pastry work and the
+      ordered chaos of char_2's table. The mood is one of quiet observation, highlighting the baker's dedication and the
+      reader's absorption, a peaceful moment before their interactions begin anew.
     contextImages:
       - panel_6
+      - panel_5
       - char_1
       - char_2
-    prompt: A high-angle shot looks down upon both char_1 and char_2 as they stand close together near a counter, sharing a
-      quiet, comfortable moment. Char_1 is handing char_2 a small, perfectly formed pastry, their fingers brushing
-      lightly. Char_2 accepts it with a shy smile, their eyes twinkling. The depth of field is shallow, focusing on
-      their interaction while the bakery's detailed environment recedes into a soft bokeh, highlighting their newfound
-      connection., high-angle camera angle, comic book style, high quality, detailed
+    prompt: A high-angle shot looks down on char_1 meticulously decorating a cake, his brow furrowed in concentration.
+      Char_2 is seated at a small table in the background, engrossed in her book, a half-eaten éclair beside her, a
+      testament to his baking prowess. The lighting is even, revealing the intricate details of the pastry work and the
+      ordered chaos of char_2's table. The mood is one of quiet observation, highlighting the baker's dedication and the
+      reader's absorption, a peaceful moment before their interactions begin anew., high-angle camera angle, comic book
+      style, high quality, detailed
     dialogue:
       - speaker: char_1
         text: For you.
-    title: null
-    narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418581/comic/panels/panel_7.jpg
-    textPlacements:
-      - type: speech
-        speaker: char_1
-        text: For you.
-        position:
-          x: 362
-          y: 173
-        tail:
-          x: 444
-          y: 365
-        speakerLocation: char_1 is on the left, handing the pastry
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418720/comic/panels_with_text/panel7_with_text.png
   - id: panel8
     width: 1456
     height: 720
-    description: "A wide-shot captures the two bookends of the day: the warm glow of the bakery spilling onto the street as
-      dusk settles, and the inviting, dimly lit interior of the bookshop next door. Char_1 and char_2 are seen through
-      the bakery window, standing side-by-side, their silhouettes outlined against the warm light, sharing a quiet
-      laugh. The street is empty, the only ambient light coming from the shops, creating a peaceful and intimate scene
-      that signals the start of their burgeoning romance."
+    description: A wide shot of the bakery at dusk, the 'Le Petit Croissant' sign glowing warmly from the street. Inside,
+      char_1 and char_2 are sharing a quiet moment, bathed in the soft amber light of the setting sun filtering through
+      the windows. Char_1 is leaning back, a relaxed smile on his face, while char_2 has her head resting on his
+      shoulder, her book closed beside her. The atmosphere is tender and romantic, with the day's chaos having settled
+      into a comfortable intimacy. The scene is framed by the architectural details of the Parisian street outside,
+      suggesting the beginning of their sweet, literary adventure.
     contextImages:
       - panel_7
       - char_1
       - char_2
-    prompt: "A wide-shot captures the two bookends of the day: the warm glow of the bakery spilling onto the street as dusk
-      settles, and the inviting, dimly lit interior of the bookshop next door. Char_1 and char_2 are seen through the
-      bakery window, standing side-by-side, their silhouettes outlined against the warm light, sharing a quiet laugh.
-      The street is empty, the only ambient light coming from the shops, creating a peaceful and intimate scene that
-      signals the start of their burgeoning romance., wide-shot camera angle, comic book style, high quality, detailed"
+    prompt: A wide shot of the bakery at dusk, the 'Le Petit Croissant' sign glowing warmly from the street. Inside, char_1
+      and char_2 are sharing a quiet moment, bathed in the soft amber light of the setting sun filtering through the
+      windows. Char_1 is leaning back, a relaxed smile on his face, while char_2 has her head resting on his shoulder,
+      her book closed beside her. The atmosphere is tender and romantic, with the day's chaos having settled into a
+      comfortable intimacy. The scene is framed by the architectural details of the Parisian street outside, suggesting
+      the beginning of their sweet, literary adventure., wide-shot camera angle, comic book style, high quality,
+      detailed
     narration: And so, a new chapter began between sugar and stories.
-    title: null
-    dialogue: []
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418609/comic/panels/panel_8.jpg
-    textPlacements:
-      - type: narration
-        text: And so, a new chapter began between sugar and stories.
-        position:
-          x: 25
-          y: 25
-        readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418721/comic/panels_with_text/panel8_with_text.png

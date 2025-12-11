@@ -12,6 +12,7 @@ import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { LangChainComicAgent } from '../core/langchain-agent.js';
+import { insertComicPrompt } from './db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -150,6 +151,16 @@ const server = http.createServer(async (req, res) => {
         }
         
         console.log('📤 Final response data:', JSON.stringify(responseData, null, 2));
+
+        // Store the user prompt & generated data in the database (best-effort, non-blocking for errors)
+        try {
+          await insertComicPrompt({
+            promptText: message,
+            responseData,
+          });
+        } catch (dbError) {
+          console.error(chalk.red('Failed to insert prompt into database:'), dbError.message);
+        }
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(responseData));
