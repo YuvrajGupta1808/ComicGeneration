@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import 'dotenv/config';
-import { ComposePagesLangChainTool } from './src/tools/compose-pages-langchain.js';
+import { ComposePagesLangChainTool } from '../src/tools/compose-pages-langchain.js';
 
 async function testCompose() {
   console.log('🧪 Testing compose pages tool...');

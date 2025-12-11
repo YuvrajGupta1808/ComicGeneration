@@ -13,18 +13,16 @@ character_config:
       - description
 characters:
   - id: char_1
-    name: Detective Miles Corbin
-    description: Detective Miles Corbin is a burly, middle-aged man whose skepticism is etched into his furrowed brow. He
-      typically wears a dark, rumpled trench coat, often damp from the persistent rain, and his hand is habitually
-      resting on the holster of his sidearm, a testament to his no-nonsense approach. His face, illuminated by harsh,
-      dramatic lighting, conveys a grim determination, his eyes narrowed in suspicion as he navigates the oppressive
-      atmosphere of Blackwood Manor. Corbin is a man of solid form, a stark contrast to the spectral presence beside
-      him, his every movement suggesting a grounded, albeit wary, pragmatism.
+    name: Leo Vance
+    description: Leo is a charming baker in his late twenties, with a strong, capable build honed by his profession. Flour
+      dust often settles on his practical apron, hinting at his dedication to his craft, and a serene concentration is
+      his usual expression when working. His hands are skilled, capable of the delicate placement of a macaron or the
+      precise lines of a cake, and his brow can furrow, showing a thoughtful, inquisitive nature when faced with the
+      unexpected. His overall appearance radiates warmth and competence, a true craftsman at heart.
   - id: char_2
-    name: Eleanor Vance
-    description: Eleanor Vance is the ethereal ghost of a Victorian woman, her translucent form shimmering with a faint,
-      otherworldly glow. Her attire is distinctly Victorian, its fabric seemingly woven from mist and memories, adding
-      to her spectral aura. Her eyes possess a soft, internal light, capable of glowing with intensity when fixated on
-      clues or a dawning realization. Wisps of ectoplasm subtly trail from her edges, emphasizing her non-corporeal
-      nature and her unique ability to interact with the physical world, often with spectral hands gesturing or pointing
-      towards hidden truths.
+    name: Elara Meadow
+    description: Elara is a shy bookworm in her early twenties, characterized by her kind, expressive eyes and a tendency to
+      clutch a book to her chest as a shield. A perpetual soft blush often graces her cheeks, especially when she's
+      feeling observed or vulnerable. Her build is slender, and her movements are often hesitant, peeking from behind
+      book shelves with a quiet grace. Her style is understated and comfortable, prioritizing practicality for browsing
+      books, and her overall demeanor suggests a gentle soul with a rich inner world.

@@ -2,308 +2,299 @@ characters:
   - id: char_1
     width: 832
     height: 1248
-    description: Detective Miles Corbin is a burly, middle-aged man whose skepticism is etched into his furrowed brow. He
-      typically wears a dark, rumpled trench coat, often damp from the persistent rain, and his hand is habitually
-      resting on the holster of his sidearm, a testament to his no-nonsense approach. His face, illuminated by harsh,
-      dramatic lighting, conveys a grim determination, his eyes narrowed in suspicion as he navigates the oppressive
-      atmosphere of Blackwood Manor. Corbin is a man of solid form, a stark contrast to the spectral presence beside
-      him, his every movement suggesting a grounded, albeit wary, pragmatism.
+    description: Leo is a charming baker in his late twenties, with a strong, capable build honed by his profession. Flour
+      dust often settles on his practical apron, hinting at his dedication to his craft, and a serene concentration is
+      his usual expression when working. His hands are skilled, capable of the delicate placement of a macaron or the
+      precise lines of a cake, and his brow can furrow, showing a thoughtful, inquisitive nature when faced with the
+      unexpected. His overall appearance radiates warmth and competence, a true craftsman at heart.
     contextImages: []
-    prompt: Detective Miles Corbin is a burly, middle-aged man whose skepticism is etched into his furrowed brow. He
-      typically wears a dark, rumpled trench coat, often damp from the persistent rain, and his hand is habitually
-      resting on the holster of his sidearm, a testament to his no-nonsense approach. His face, illuminated by harsh,
-      dramatic lighting, conveys a grim determination, his eyes narrowed in suspicion as he navigates the oppressive
-      atmosphere of Blackwood Manor. Corbin is a man of solid form, a stark contrast to the spectral presence beside
-      him, his every movement suggesting a grounded, albeit wary, pragmatism., full body pose, center, white background,
-      comic book style
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359334/comic/characters/character_1.jpg
+    prompt: Leo is a charming baker in his late twenties, with a strong, capable build honed by his profession. Flour dust
+      often settles on his practical apron, hinting at his dedication to his craft, and a serene concentration is his
+      usual expression when working. His hands are skilled, capable of the delicate placement of a macaron or the
+      precise lines of a cake, and his brow can furrow, showing a thoughtful, inquisitive nature when faced with the
+      unexpected. His overall appearance radiates warmth and competence, a true craftsman at heart., full body pose,
+      center, white background, comic book style
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418430/comic/characters/character_1.jpg
   - id: char_2
     width: 832
     height: 1248
-    description: Eleanor Vance is the ethereal ghost of a Victorian woman, her translucent form shimmering with a faint,
-      otherworldly glow. Her attire is distinctly Victorian, its fabric seemingly woven from mist and memories, adding
-      to her spectral aura. Her eyes possess a soft, internal light, capable of glowing with intensity when fixated on
-      clues or a dawning realization. Wisps of ectoplasm subtly trail from her edges, emphasizing her non-corporeal
-      nature and her unique ability to interact with the physical world, often with spectral hands gesturing or pointing
-      towards hidden truths.
+    description: Elara is a shy bookworm in her early twenties, characterized by her kind, expressive eyes and a tendency to
+      clutch a book to her chest as a shield. A perpetual soft blush often graces her cheeks, especially when she's
+      feeling observed or vulnerable. Her build is slender, and her movements are often hesitant, peeking from behind
+      book shelves with a quiet grace. Her style is understated and comfortable, prioritizing practicality for browsing
+      books, and her overall demeanor suggests a gentle soul with a rich inner world.
     contextImages: []
-    prompt: Eleanor Vance is the ethereal ghost of a Victorian woman, her translucent form shimmering with a faint,
-      otherworldly glow. Her attire is distinctly Victorian, its fabric seemingly woven from mist and memories, adding
-      to her spectral aura. Her eyes possess a soft, internal light, capable of glowing with intensity when fixated on
-      clues or a dawning realization. Wisps of ectoplasm subtly trail from her edges, emphasizing her non-corporeal
-      nature and her unique ability to interact with the physical world, often with spectral hands gesturing or pointing
-      towards hidden truths., full body pose, center, white background, comic book style
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359346/comic/characters/character_2.jpg
+    prompt: Elara is a shy bookworm in her early twenties, characterized by her kind, expressive eyes and a tendency to
+      clutch a book to her chest as a shield. A perpetual soft blush often graces her cheeks, especially when she's
+      feeling observed or vulnerable. Her build is slender, and her movements are often hesitant, peeking from behind
+      book shelves with a quiet grace. Her style is understated and comfortable, prioritizing practicality for browsing
+      books, and her overall demeanor suggests a gentle soul with a rich inner world., full body pose, center, white
+      background, comic book style
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418442/comic/characters/character_2.jpg
 panels:
   - id: panel1
     width: 832
     height: 1248
-    description: An establishing shot reveals the imposing, dark silhouette of Blackwood Manor against a stormy, twilight
-      sky, its gothic architecture shrouded in mist and punctuated by a few dimly lit, grimy windows.  In the
-      foreground, standing on the crumbling gravel driveway, is Detective Miles Corbin, a burly, skeptical man in a
-      trench coat, his hand resting on his holstered sidearm. Beside him, a translucent figure, the ghost detective
-      Eleanor Vance, hovers slightly above the ground, her Victorian attire shimmering with an ethereal glow, her
-      expression one of focused observation.
+    description: An establishing shot reveals a charming, sun-drenched bakery interior, its shelves laden with gleaming,
+      perfectly iced pastries. In the bustling foreground, char_1, a baker with flour dusted on their apron and a look
+      of serene concentration, meticulously places a delicate macaron. Across the shop, near a window displaying vintage
+      books, char_2, a shy individual with kind eyes and a book clutched to their chest, peeks from behind a shelf, a
+      soft blush on their cheeks. The atmosphere is warm and inviting, filled with the sweet scent of sugar and the
+      gentle hum of morning activity.
     contextImages:
       - char_1
       - char_2
-    prompt: An establishing shot reveals the imposing, dark silhouette of Blackwood Manor against a stormy, twilight sky,
-      its gothic architecture shrouded in mist and punctuated by a few dimly lit, grimy windows.  In the foreground,
-      standing on the crumbling gravel driveway, is Detective Miles Corbin, a burly, skeptical man in a trench coat, his
-      hand resting on his holstered sidearm. Beside him, a translucent figure, the ghost detective Eleanor Vance, hovers
-      slightly above the ground, her Victorian attire shimmering with an ethereal glow, her expression one of focused
-      observation., establishing-shot camera angle, comic book style, high quality, detailed
-    title: Manor of Whispers
+    prompt: An establishing shot reveals a charming, sun-drenched bakery interior, its shelves laden with gleaming,
+      perfectly iced pastries. In the bustling foreground, char_1, a baker with flour dusted on their apron and a look
+      of serene concentration, meticulously places a delicate macaron. Across the shop, near a window displaying vintage
+      books, char_2, a shy individual with kind eyes and a book clutched to their chest, peeks from behind a shelf, a
+      soft blush on their cheeks. The atmosphere is warm and inviting, filled with the sweet scent of sugar and the
+      gentle hum of morning activity., establishing-shot camera angle, comic book style, high quality, detailed
+    title: Sweet Surrender
     dialogue: []
     narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359360/comic/panels/panel_1.jpg
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418455/comic/panels/panel_1.jpg
     textPlacements:
       - type: title
-        text: Manor of Whispers
+        text: Sweet Surrender
         position:
           x: 416
           y: 30
         readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359546/comic/panels_with_text/panel1_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418701/comic/panels_with_text/panel1_with_text.png
   - id: panel2
     width: 832
     height: 1248
-    description: A medium shot focuses on Detective Corbin's face as he peers through a rain-streaked window into the
-      manor's dimly lit foyer, his brow furrowed with suspicion. Eleanor's spectral form is visible beside him, her gaze
-      intense and directed inward, her wispy hands gesturing towards something unseen within the house. The muted,
-      desaturated color palette of the stormy night outside contrasts sharply with the faint, dusty ochre and mahogany
-      hues of the manor's interior, creating an atmosphere of unease.
+    description: A medium shot focuses on char_1 in their bakery workspace, surrounded by the organized chaos of baking
+      ingredients and tools. Sunlight streams through a window, illuminating swirling flour dust and highlighting the
+      precise lines of a half-finished cake. Char_1 pauses, a slight frown of confusion on their brow, as they find a
+      folded piece of paper tucked between the pages of a well-worn recipe book, a faint smile of intrigue beginning to
+      form. The mood is one of gentle mystery and quiet discovery.
     contextImages:
       - panel_1
       - char_1
-      - char_2
-    prompt: A medium shot focuses on Detective Corbin's face as he peers through a rain-streaked window into the manor's
-      dimly lit foyer, his brow furrowed with suspicion. Eleanor's spectral form is visible beside him, her gaze intense
-      and directed inward, her wispy hands gesturing towards something unseen within the house. The muted, desaturated
-      color palette of the stormy night outside contrasts sharply with the faint, dusty ochre and mahogany hues of the
-      manor's interior, creating an atmosphere of unease., medium-shot camera angle, comic book style, high quality,
-      detailed
+    prompt: A medium shot focuses on char_1 in their bakery workspace, surrounded by the organized chaos of baking
+      ingredients and tools. Sunlight streams through a window, illuminating swirling flour dust and highlighting the
+      precise lines of a half-finished cake. Char_1 pauses, a slight frown of confusion on their brow, as they find a
+      folded piece of paper tucked between the pages of a well-worn recipe book, a faint smile of intrigue beginning to
+      form. The mood is one of gentle mystery and quiet discovery., medium-shot camera angle, comic book style, high
+      quality, detailed
     dialogue:
       - speaker: char_1
-        text: Looks like a tomb. Smells like one too.
+        text: Now what's this little secret?
     title: null
     narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359381/comic/panels/panel_2.jpg
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418476/comic/panels/panel_2.jpg
     textPlacements:
       - type: speech
         speaker: char_1
-        text: Looks like a tomb. Smells like one too.
+        text: Now what's this little secret?
         position:
-          x: 25
-          y: 225
+          x: 150
+          y: 100
         tail:
-          x: 192
-          y: 348
-        speakerLocation: Detective Corbin's face is on the left of the panel
+          x: 375
+          y: 390
+        speakerLocation: char_1's face, lower left of center
         readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359547/comic/panels_with_text/panel2_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418710/comic/panels_with_text/panel2_with_text.png
   - id: panel3
     width: 944
     height: 1104
-    description: A close-up on Eleanor's face reveals her eyes, which glow with a soft, internal light, fixated on a
-      specific spot within the darkness of the foyer. Her expression is one of dawning realization mixed with a hint of
-      spectral frustration, her lips slightly parted as if to speak. The texture of her translucent form is emphasized,
-      with faint wisps of ectoplasm trailing from her edges, creating a visually striking and otherworldly effect.
+    description: A close-up on the discovered note reveals elegant, handwritten script on aged paper, a single red rose
+      pressed within its folds. The ink appears slightly smudged, suggesting haste or perhaps a tremor of emotion. The
+      texture of the paper is evident, with delicate fibers visible under the warm, soft bakery lighting. This intimate
+      detail heightens the sense of romance and adds a tangible element to the anonymous admirer's affection.
     contextImages:
       - panel_2
-      - char_2
-    prompt: A close-up on Eleanor's face reveals her eyes, which glow with a soft, internal light, fixated on a specific
-      spot within the darkness of the foyer. Her expression is one of dawning realization mixed with a hint of spectral
-      frustration, her lips slightly parted as if to speak. The texture of her translucent form is emphasized, with
-      faint wisps of ectoplasm trailing from her edges, creating a visually striking and otherworldly effect., close-up
-      camera angle, comic book style, high quality, detailed
-    narration: She knows where to look.
-    title: null
+    prompt: A close-up on the discovered note reveals elegant, handwritten script on aged paper, a single red rose pressed
+      within its folds. The ink appears slightly smudged, suggesting haste or perhaps a tremor of emotion. The texture
+      of the paper is evident, with delicate fibers visible under the warm, soft bakery lighting. This intimate detail
+      heightens the sense of romance and adds a tangible element to the anonymous admirer's affection., close-up camera
+      angle, comic book style, high quality, detailed
     dialogue: []
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359402/comic/panels/panel_3.jpg
+    title: null
+    narration: A whisper of admiration, pressed with a single bloom.
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418497/comic/panels/panel_3.jpg
     textPlacements:
       - type: narration
-        text: She knows where to look.
+        text: A whisper of admiration, pressed with a single bloom.
         position:
-          x: 50
-          y: 50
+          x: 30
+          y: 30
         readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359550/comic/panels_with_text/panel3_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418712/comic/panels_with_text/panel3_with_text.png
   - id: panel4
     width: 944
     height: 1104
-    description: A two-shot captures Detective Corbin and Eleanor standing in the dusty, cobweb-laden foyer of Blackwood
-      Manor, the air thick with the smell of decay. Corbin cautiously shines his flashlight beam across a grand,
-      decaying staircase, while Eleanor points an accusatory, glowing finger towards a dark stain on the Persian rug.
-      The lighting is harsh and dramatic, casting long, distorted shadows that dance with the flickering beam of
-      Corbin's light, amplifying the sense of suspense.
+    description: A two-shot shows char_1, now holding the note, standing near the bakery entrance, their expression a mix of
+      curiosity and dawning realization. Char_2, who has tentatively approached from the adjacent bookshop, stands a few
+      feet away, their hands clasped nervously, eyes downcast. The doorway between the two establishments acts as a
+      subtle divider, emphasizing their separate worlds now beginning to intertwine. The lighting shifts to a softer,
+      diffused glow as the afternoon sun begins to set.
     contextImages:
       - panel_3
+      - panel_1
       - char_1
       - char_2
-    prompt: A two-shot captures Detective Corbin and Eleanor standing in the dusty, cobweb-laden foyer of Blackwood Manor,
-      the air thick with the smell of decay. Corbin cautiously shines his flashlight beam across a grand, decaying
-      staircase, while Eleanor points an accusatory, glowing finger towards a dark stain on the Persian rug. The
-      lighting is harsh and dramatic, casting long, distorted shadows that dance with the flickering beam of Corbin's
-      light, amplifying the sense of suspense., two-shot camera angle, comic book style, high quality, detailed
+    prompt: A two-shot shows char_1, now holding the note, standing near the bakery entrance, their expression a mix of
+      curiosity and dawning realization. Char_2, who has tentatively approached from the adjacent bookshop, stands a few
+      feet away, their hands clasped nervously, eyes downcast. The doorway between the two establishments acts as a
+      subtle divider, emphasizing their separate worlds now beginning to intertwine. The lighting shifts to a softer,
+      diffused glow as the afternoon sun begins to set., two-shot camera angle, comic book style, high quality, detailed
     dialogue:
       - speaker: char_1
-        text: What is that? Blood?
-      - speaker: char_2
-        text: Not fresh. But it remembers.
+        text: Did you… lose something?
     title: null
     narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359423/comic/panels/panel_4.jpg
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418518/comic/panels/panel_4.jpg
     textPlacements:
       - type: speech
         speaker: char_1
-        text: What is that? Blood?
+        text: Did you… lose something?
         position:
-          x: 127
-          y: 13
+          x: 170
+          y: 120
         tail:
-          x: 273
-          y: 176
-        speakerLocation: Detective Corbin on the left side of the panel
+          x: 227
+          y: 425
+        speakerLocation: char_1 is on the left side of the panel, near the bakery entrance
         readingOrder: 1
-      - type: speech
-        speaker: char_2
-        text: Not fresh. But it remembers.
-        position:
-          x: 601
-          y: 37
-        tail:
-          x: 724
-          y: 274
-        speakerLocation: Eleanor on the right side of the panel
-        readingOrder: 2
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359552/comic/panels_with_text/panel4_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418714/comic/panels_with_text/panel4_with_text.png
   - id: panel5
     width: 832
     height: 1248
-    description: An over-the-shoulder shot from behind Detective Corbin shows him examining an antique music box on a dusty
-      mahogany table, his expression grim. Eleanor's spectral form hovers just behind his shoulder, her translucent hand
-      reaching out towards the box as if to guide his investigation, her ethereal presence a stark contrast to Corbin's
-      solid, determined form. The shallow depth of field blurs the ornate wallpaper and peeling paint in the background,
-      drawing the viewer's eye to the central mystery.
+    description: An over-the-shoulder shot from behind char_1 looks towards char_2, who is now speaking softly, their voice
+      barely audible. Char_2 gestures subtly with a book, their face still flushed but their gaze now meeting char_1's.
+      Char_1's posture has softened, their initial confusion replaced by a warm, understanding smile as they listen. The
+      background is slightly blurred, drawing the viewer's focus to the developing emotional connection between the two
+      characters.
     contextImages:
       - panel_4
       - char_1
       - char_2
-    prompt: An over-the-shoulder shot from behind Detective Corbin shows him examining an antique music box on a dusty
-      mahogany table, his expression grim. Eleanor's spectral form hovers just behind his shoulder, her translucent hand
-      reaching out towards the box as if to guide his investigation, her ethereal presence a stark contrast to Corbin's
-      solid, determined form. The shallow depth of field blurs the ornate wallpaper and peeling paint in the background,
-      drawing the viewer's eye to the central mystery., over-shoulder camera angle, comic book style, high quality,
-      detailed
+    prompt: An over-the-shoulder shot from behind char_1 looks towards char_2, who is now speaking softly, their voice
+      barely audible. Char_2 gestures subtly with a book, their face still flushed but their gaze now meeting char_1's.
+      Char_1's posture has softened, their initial confusion replaced by a warm, understanding smile as they listen. The
+      background is slightly blurred, drawing the viewer's focus to the developing emotional connection between the two
+      characters., over-shoulder camera angle, comic book style, high quality, detailed
     dialogue:
       - speaker: char_2
-        text: He kept his secrets here. Close to his heart.
+        text: I… I wrote it. For you.
     title: null
     narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359440/comic/panels/panel_5.jpg
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418538/comic/panels/panel_5.jpg
     textPlacements:
       - type: speech
         speaker: char_2
-        text: He kept his secrets here. Close to his heart.
+        text: I… I wrote it. For you.
         position:
-          x: 165
-          y: 187
+          x: 468
+          y: 312
         tail:
-          x: 292
-          y: 445
-        speakerLocation: Eleanor, hovering behind Corbin's left shoulder
+          x: 592
+          y: 541
+        speakerLocation: char_2's face is located on the right side of the panel, looking towards char_1
         readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359553/comic/panels_with_text/panel5_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418715/comic/panels_with_text/panel5_with_text.png
   - id: panel6
     width: 1456
     height: 720
-    description: A low-angle shot emphasizes the imposing, wrought-iron chandelier hanging precariously from the high
-      ceiling of the ballroom, dust motes dancing in the faint light filtering from a single, broken window. Eleanor
-      drifts upwards, her spectral form catching the faint light, her gaze sweeping across the desolate space. The
-      warped floorboards and faded tapestries suggest a history of opulence now replaced by neglect and spectral
-      activity.
+    description: A low-angle shot emphasizes char_2, standing just inside the bakery doorway, looking up at char_1 with a
+      hopeful, vulnerable expression. The overhead lighting from the bakery casts a gentle halo around char_2's head,
+      making them appear almost ethereal. Char_1 is looking down, their expression tender and encouraging, a slight tilt
+      of their head suggesting they are captivated. The warm color palette of the bakery interior creates an intimate
+      and romantic atmosphere.
     contextImages:
       - panel_5
+      - char_1
       - char_2
-    prompt: A low-angle shot emphasizes the imposing, wrought-iron chandelier hanging precariously from the high ceiling of
-      the ballroom, dust motes dancing in the faint light filtering from a single, broken window. Eleanor drifts
-      upwards, her spectral form catching the faint light, her gaze sweeping across the desolate space. The warped
-      floorboards and faded tapestries suggest a history of opulence now replaced by neglect and spectral activity.,
-      low-angle camera angle, comic book style, high quality, detailed
-    dialogue: []
+    prompt: A low-angle shot emphasizes char_2, standing just inside the bakery doorway, looking up at char_1 with a
+      hopeful, vulnerable expression. The overhead lighting from the bakery casts a gentle halo around char_2's head,
+      making them appear almost ethereal. Char_1 is looking down, their expression tender and encouraging, a slight tilt
+      of their head suggesting they are captivated. The warm color palette of the bakery interior creates an intimate
+      and romantic atmosphere., low-angle camera angle, comic book style, high quality, detailed
+    dialogue:
+      - speaker: char_1
+        text: I think… I’ve been hoping for this.
     title: null
-    narration: Empty spaces echo louder.
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359461/comic/panels/panel_6.jpg
+    narration: null
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418561/comic/panels/panel_6.jpg
     textPlacements:
-      - type: narration
-        text: Empty spaces echo louder.
+      - type: speech
+        speaker: char_1
+        text: I think… I’ve been hoping for this.
         position:
-          x: 20
-          y: 20
+          x: 950
+          y: 100
+        tail:
+          x: 1160
+          y: 250
+        speakerLocation: right side of panel, looking down
         readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359555/comic/panels_with_text/panel6_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418717/comic/panels_with_text/panel6_with_text.png
   - id: panel7
     width: 1456
     height: 720
-    description: A high-angle shot looks down upon Detective Corbin as he crouches beside a hidden trapdoor in the ballroom
-      floor, his skepticism visibly waning as he stares into the dark abyss. Eleanor floats above him, her posture
-      conveying a sense of urgency and concern as she points towards an unseen clue below. The dramatic chiaroscuro
-      lighting accentuates the dust and grime, creating a palpable sense of dread and hidden secrets.
+    description: A high-angle shot looks down upon both char_1 and char_2 as they stand close together near a counter,
+      sharing a quiet, comfortable moment. Char_1 is handing char_2 a small, perfectly formed pastry, their fingers
+      brushing lightly. Char_2 accepts it with a shy smile, their eyes twinkling. The depth of field is shallow,
+      focusing on their interaction while the bakery's detailed environment recedes into a soft bokeh, highlighting
+      their newfound connection.
     contextImages:
       - panel_6
       - char_1
       - char_2
-    prompt: A high-angle shot looks down upon Detective Corbin as he crouches beside a hidden trapdoor in the ballroom
-      floor, his skepticism visibly waning as he stares into the dark abyss. Eleanor floats above him, her posture
-      conveying a sense of urgency and concern as she points towards an unseen clue below. The dramatic chiaroscuro
-      lighting accentuates the dust and grime, creating a palpable sense of dread and hidden secrets., high-angle camera
-      angle, comic book style, high quality, detailed
+    prompt: A high-angle shot looks down upon both char_1 and char_2 as they stand close together near a counter, sharing a
+      quiet, comfortable moment. Char_1 is handing char_2 a small, perfectly formed pastry, their fingers brushing
+      lightly. Char_2 accepts it with a shy smile, their eyes twinkling. The depth of field is shallow, focusing on
+      their interaction while the bakery's detailed environment recedes into a soft bokeh, highlighting their newfound
+      connection., high-angle camera angle, comic book style, high quality, detailed
     dialogue:
       - speaker: char_1
-        text: This leads… somewhere. I can feel it.
+        text: For you.
     title: null
     narration: null
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359481/comic/panels/panel_7.jpg
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418581/comic/panels/panel_7.jpg
     textPlacements:
       - type: speech
         speaker: char_1
-        text: This leads… somewhere. I can feel it.
+        text: For you.
         position:
-          x: 910
-          y: 110
+          x: 362
+          y: 173
         tail:
-          x: 1030
-          y: 300
-        speakerLocation: Detective Corbin crouches beside the trapdoor.
+          x: 444
+          y: 365
+        speakerLocation: char_1 is on the left, handing the pastry
         readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359556/comic/panels_with_text/panel7_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418720/comic/panels_with_text/panel7_with_text.png
   - id: panel8
     width: 1456
     height: 720
-    description: A wide-shot captures Detective Corbin descending into the dark, cavernous cellar beneath Blackwood Manor,
-      his flashlight beam cutting a hesitant path through the oppressive gloom. Eleanor, a faint, guiding light, hovers
-      just ahead of him, her spectral form leading the way into the unknown. The stone walls are slick with moisture,
-      and the air is thick with an ancient chill, hinting at the supernatural horrors that lie within the manor's
-      deepest secrets.
+    description: "A wide-shot captures the two bookends of the day: the warm glow of the bakery spilling onto the street as
+      dusk settles, and the inviting, dimly lit interior of the bookshop next door. Char_1 and char_2 are seen through
+      the bakery window, standing side-by-side, their silhouettes outlined against the warm light, sharing a quiet
+      laugh. The street is empty, the only ambient light coming from the shops, creating a peaceful and intimate scene
+      that signals the start of their burgeoning romance."
     contextImages:
       - panel_7
       - char_1
       - char_2
-    prompt: A wide-shot captures Detective Corbin descending into the dark, cavernous cellar beneath Blackwood Manor, his
-      flashlight beam cutting a hesitant path through the oppressive gloom. Eleanor, a faint, guiding light, hovers just
-      ahead of him, her spectral form leading the way into the unknown. The stone walls are slick with moisture, and the
-      air is thick with an ancient chill, hinting at the supernatural horrors that lie within the manor's deepest
-      secrets., wide-shot camera angle, comic book style, high quality, detailed
-    narration: Down. Into the darkness she fled.
+    prompt: "A wide-shot captures the two bookends of the day: the warm glow of the bakery spilling onto the street as dusk
+      settles, and the inviting, dimly lit interior of the bookshop next door. Char_1 and char_2 are seen through the
+      bakery window, standing side-by-side, their silhouettes outlined against the warm light, sharing a quiet laugh.
+      The street is empty, the only ambient light coming from the shops, creating a peaceful and intimate scene that
+      signals the start of their burgeoning romance., wide-shot camera angle, comic book style, high quality, detailed"
+    narration: And so, a new chapter began between sugar and stories.
     title: null
     dialogue: []
-    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359502/comic/panels/panel_8.jpg
+    cloudinaryUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418609/comic/panels/panel_8.jpg
     textPlacements:
       - type: narration
-        text: Down. Into the darkness she fled.
+        text: And so, a new chapter began between sugar and stories.
         position:
-          x: 20
-          y: 20
+          x: 25
+          y: 25
         readingOrder: 1
-    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765359558/comic/panels_with_text/panel8_with_text.png
+    textImageUrl: https://res.cloudinary.com/ddzodimio/image/upload/v1765418721/comic/panels_with_text/panel8_with_text.png

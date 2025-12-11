@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import 'dotenv/config';
-import { LeonardoImageGenerationLangChainTool } from './src/tools/leonardo-image-generation-langchain.js';
+import { LeonardoImageGenerationLangChainTool } from '../src/tools/leonardo-image-generation-langchain.js';
 
 async function testLeonardo() {
   console.log('🧪 Testing Leonardo image generation...');

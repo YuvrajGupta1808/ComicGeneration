@@ -5,7 +5,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'yaml';
-import { DialoguePlacementVisionLangChainTool } from './src/tools/dialogue-placement-vision-langchain.js';
+import { DialoguePlacementVisionLangChainTool } from '../src/tools/dialogue-placement-vision-langchain.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

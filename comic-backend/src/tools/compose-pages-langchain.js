@@ -42,7 +42,7 @@ export class ComposePagesLangChainTool {
           .number()
           .int()
           .optional()
-          .describe('Override page count detection (auto-detected if not provided)'),
+          .describe('Use 3 Page Layout'),
         useTextImages: z
           .boolean()
           .optional()
@@ -199,9 +199,9 @@ export class ComposePagesLangChainTool {
     if (pageCountOverride) {
       const layoutKey = 
         pageCountOverride === 3 ? 'three-page-story' :
-        pageCountOverride === 4 ? 'four-page-story' :
-        pageCountOverride === 5 ? 'five-page-story' :
-        pageCountOverride === 2 ? 'two-page-story' :
+        pageCountOverride === 4 ? 'three-page-story' :
+        pageCountOverride === 5 ? 'three-page-story' :
+        pageCountOverride === 2 ? 'three-page-story' :
         'three-page-story'; // default
       
       if (layouts[layoutKey]) {
@@ -217,9 +217,9 @@ export class ComposePagesLangChainTool {
     } else if (panelCount <= 8) {
       layoutKey = 'three-page-story';
     } else if (panelCount <= 12) {
-      layoutKey = 'four-page-story';
+      layoutKey = 'three-page-story';
     } else if (panelCount <= 14) {
-      layoutKey = 'five-page-story';
+      layoutKey = 'three-page-story';
     } else {
       layoutKey = 'three-page-story'; // default
     }

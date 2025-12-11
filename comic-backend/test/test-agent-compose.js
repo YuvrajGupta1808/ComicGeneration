@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import 'dotenv/config';
-import { LangChainComicAgent } from './src/core/langchain-agent.js';
+import { LangChainComicAgent } from '../src/core/langchain-agent.js';
 
 async function testAgentCompose() {
   console.log('🧪 Testing agent compose pages...');
