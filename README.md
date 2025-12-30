@@ -4,10 +4,9 @@ An AI-powered comic generation platform that combines Leonardo AI image generati
 
 ## 📁 Project Structure
 
-This monorepo contains three main components:
+This monorepo contains two main components:
 
-- **comic-backend** - LangChain-based CLI agent for comic generation workflows
-- **comic-backend_v2** - Leonardo AI comic generator with advanced rendering
+- **comic-backend** - LangChain-based agent for comic generation with Leonardo AI
 - **comic-frontend** - React-based web interface for comic creation
 
 ## 🚀 Quick Start
@@ -25,7 +24,6 @@ This monorepo contains three main components:
 ```bash
 # Install all dependencies
 npm install --prefix comic-backend
-npm install --prefix comic-backend_v2
 npm install --prefix comic-frontend
 ```
 
@@ -35,25 +33,21 @@ Each project requires its own `.env` file. See individual project READMEs for de
 
 ### Running the Application
 
-**Manual Startup (Simple)**
-
 Open two terminal windows:
 
-**Terminal 1 - Start Backend Server:**
+**Terminal 1 - Backend:**
 ```bash
 cd comic-backend
 npm run langchain
 ```
-Wait for the message: `✓ Server running on http://localhost:8000`
+Wait for: `✓ Server running on http://localhost:8000`
 
-**Terminal 2 - Start Frontend:**
+**Terminal 2 - Frontend:**
 ```bash
 cd comic-frontend
 npm start
 ```
-The frontend will open automatically at `http://localhost:3000`
-
-**That's it!** The frontend connects to the backend at `http://localhost:8000`
+Opens automatically at `http://localhost:3000`
 
 ## 🎯 Features
 
@@ -61,33 +55,13 @@ The frontend will open automatically at `http://localhost:3000`
 - **Character Consistency** - Maintain character appearance across panels
 - **Smart Layouts** - Automatic page composition with multiple layout options
 - **Dialogue Management** - Add speech bubbles, narration, and sound effects
-- **Interactive CLI** - Conversational agent for comic creation
+- **Interactive Agent** - Conversational interface for comic creation
 - **Web Interface** - User-friendly frontend for comic generation
-- **Cloudinary Integration** - Direct display of generated panels in the frontend
+- **Cloudinary Integration** - Direct display of generated panels
 
-## 🎨 Workflow: From Generation to Display
+## 🎨 Usage
 
-### Simple 3-Step Workflow
-
-#### 1️⃣ Start Both Servers
-
-**Terminal 1 - Backend:**
-```bash
-cd comic-backend
-npm run langchain
-```
-
-**Terminal 2 - Frontend:**
-```bash
-cd comic-frontend
-npm start
-```
-
-Open `http://localhost:3000` in your browser.
-
-#### 2️⃣ Generate Your Comic
-
-In the frontend chat, have a conversation with the agent:
+Chat with the agent in the frontend:
 
 ```
 You: "Create a sci-fi comic about a space explorer"
@@ -111,22 +85,11 @@ Agent:
 ✅ Comic panels generated! Your comic grid is now displayed in the frontend.
 ```
 
-#### 3️⃣ View Your Comic
-
-**That's it!** The comic grid automatically appears with all your generated panels. 🎉
-
-The system automatically:
-- Generates images with Leonardo AI
-- Uploads to Cloudinary
-- Sends URLs to the frontend
-- Displays the comic grid
-
-No copying, pasting, or manual steps needed!
+The system automatically generates images with Leonardo AI, uploads to Cloudinary, and displays your comic grid. No manual steps needed!
 
 ## 📚 Documentation
 
 - [comic-backend README](./comic-backend/README.md) - LangChain agent documentation
-- [comic-backend_v2 README](./comic-backend_v2/README.md) - Leonardo generator documentation
 - [comic-frontend README](./comic-frontend/README.md) - Frontend documentation
 
 ## 🛠️ Tech Stack
