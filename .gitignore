@@ -113,10 +113,5 @@ temp/
 
 # Comic generation specific
 outputs/
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.svg
 comic-agent.log
 .comic-agent-context.json
